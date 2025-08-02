@@ -1,9 +1,10 @@
+import TopHeader from "./TopHeader";
 
 const Header = () => {
   return (
-    <div>
-      
-    </div>
+    <>
+      <TopHeader />
+    </>
   );
 };
 
