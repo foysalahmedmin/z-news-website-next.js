@@ -27,18 +27,27 @@ export type TSocial = {
 
 export const SOCIALS = [
   {
-    name: "Github",
-    href: "https://github.com/dainikeidin",
-    icon: "github",
+    name: "x",
+    href: "https://x.com/dainikeidin",
+    icon: "x",
+    color: "#000000", // X (Twitter) black
   },
   {
-    name: "Linkedin",
-    href: "https://linkedin.com/in/dainikeidin",
-    icon: "linkedin",
-  },
-  {
-    name: "Facebook",
+    name: "facebook",
     href: "https://facebook.com/dainikeidin",
     icon: "facebook",
-  }
+    color: "#1877F2", // Facebook blue
+  },
+  {
+    name: "instagram",
+    href: "https://instagram.com/dainikeidin",
+    icon: "instagram",
+    color: "#E1306C", // Instagram pink
+  },
+  {
+    name: "linkedin",
+    href: "https://linkedin.com/in/dainikeidin",
+    icon: "linkedin",
+    color: "#0A66C2", // LinkedIn blue
+  },
 ];

@@ -15,7 +15,7 @@ const CategoryItem = ({
   return (
     <div className="px-2">
       <ActiveLink
-        className="underline-effect foreground hover:underline-effect-active text-xs whitespace-nowrap uppercase transition-colors duration-200"
+        className="underline-effect foreground hover:underline-effect-active text-sm whitespace-nowrap uppercase transition-colors duration-200"
         activeClassName="underline-effect-active"
         href={`/category/${category.slug}`}
       >
@@ -29,7 +29,7 @@ const CategoryDropdownItem = ({ category }: { category: TCategory }) => {
   return (
     <div className="px-2">
       <ActiveLink
-        className="underline-effect foreground hover:underline-effect-active text-xs whitespace-nowrap uppercase transition-colors duration-200"
+        className="underline-effect foreground hover:underline-effect-active text-sm whitespace-nowrap uppercase transition-colors duration-200"
         activeClassName="underline-effect-active"
         href={`/category/${category.slug}`}
       >
@@ -122,7 +122,7 @@ const Categories = ({ data }: { data?: TCategory[] }) => {
       </div>
 
       {/* Visible container */}
-      <div ref={ref} className="flex w-full items-center">
+      <div ref={ref} className="flex w-full items-center justify-center">
         {visibleItems.map((category) => (
           <div key={category._id}>
             <CategoryItem category={category} disabled />

@@ -1,11 +1,13 @@
+import { fetchCategoriesTree } from "@/services/category.service";
 import Navigation from "./Navigation";
 import TopHeader from "./TopHeader";
 
-const Header = () => {
+const Header = async () => {
+  const { data } = await fetchCategoriesTree({ page: 1, limit: 15 });
   return (
     <>
-      <TopHeader />
-      <Navigation />
+      <TopHeader categories={data!} />
+      <Navigation categories={data!} />
     </>
   );
 };

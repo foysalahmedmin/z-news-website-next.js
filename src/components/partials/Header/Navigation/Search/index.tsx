@@ -24,7 +24,7 @@ const Search: React.FC = () => {
             },
           )}
         >
-          <div className="my-auto flex h-10 w-full items-center gap-2 rounded-md px-2">
+          <div className="my-auto flex h-8 w-full items-center gap-2 rounded-md">
             <input
               className="h-full flex-1 px-2 outline-none"
               type="search"

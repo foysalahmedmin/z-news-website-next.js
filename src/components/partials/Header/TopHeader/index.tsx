@@ -1,130 +1,47 @@
 "use client";
 
+import { ButtonMenu } from "@/components/buttons/ButtonMenu";
 import { Button } from "@/components/ui/Button";
+import { Drawer } from "@/components/ui/Drawer";
 import useScrollPosition from "@/hooks/ui/useScrollPosition";
 import { cn } from "@/lib/utils";
+import { TCategory } from "@/types/category.type";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
+import Sidebar from "../../Sidebar";
 
 type HeaderProps = {
   className?: string;
+  categories?: TCategory[];
 };
-
-// Custom hook for mobile menu
-const useMobileMenu = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const toggleMobileMenu = useCallback(() => {
-    setIsMobileMenuOpen((prev) => {
-      const newState = !prev;
-      document.body.style.overflow = newState ? "hidden" : "auto";
-      return newState;
-    });
-  }, []);
-
-  const closeMobileMenu = useCallback(() => {
-    setIsMobileMenuOpen(false);
-    document.body.style.overflow = "auto";
-  }, []);
-
-  // Close menu on escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isMobileMenuOpen) {
-        closeMobileMenu();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isMobileMenuOpen, closeMobileMenu]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
-
-  return {
-    isMobileMenuOpen,
-    toggleMobileMenu,
-    closeMobileMenu,
-  };
-};
-
-// Components
-const Logo: React.FC = () => (
-  <Link href="/" aria-label="Home">
-    <Image
-      src="/logo.png"
-      alt="Logo"
-      width={96}
-      height={48}
-      className="h-16 rounded-full object-contain object-left"
-      priority
-    />
-  </Link>
-);
-
-const MenuButton: React.FC<{
-  isOpen: boolean;
-  onClick: () => void;
-}> = ({ isOpen, onClick }) => (
-  <button
-    className="flex cursor-pointer flex-col space-y-1.5 focus:outline-none"
-    onClick={onClick}
-    aria-label={isOpen ? "Close menu" : "Open menu"}
-    aria-expanded={isOpen}
-  >
-    <span
-      className={cn(
-        "bg-foreground h-0.5 w-6 transition-all duration-300 ease-in-out",
-        isOpen && "translate-y-2 rotate-45",
-      )}
-    />
-    <span
-      className={cn(
-        "bg-foreground h-0.5 w-6 transition-all duration-300 ease-in-out",
-        isOpen && "opacity-0",
-      )}
-    />
-    <span
-      className={cn(
-        "bg-foreground h-0.5 w-6 transition-all duration-300 ease-in-out",
-        isOpen && "-translate-y-2 -rotate-45",
-      )}
-    />
-  </button>
-);
 
 // Main Header Component
-const TopHeader: React.FC<HeaderProps> = ({ className }) => {
+const TopHeader: React.FC<HeaderProps> = ({ className, categories }) => {
   const { scrollTop, scrollDirection } = useScrollPosition();
-  const { isMobileMenuOpen, toggleMobileMenu } = useMobileMenu();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Header styling based on scroll and page
   const headerClassName = cn(
-    "text-foreground top-0 bg-card right-0 left-0 z-50 h-20 bg-transparent backdrop-blur-xs transition-all duration-300 ease-in-out",
+    "text-foreground bg-card z-50 h-20 bg-transparent backdrop-blur-xs transition-all duration-300 ease-in-out",
     {
-      "-mt-20": scrollDirection === "down" && scrollTop > 80,
-      "mt-0": scrollDirection === "up" || scrollTop <= 80,
+      "lg:-mt-20": scrollDirection === "down" && scrollTop > 80,
+      "lg:mt-0": scrollDirection === "up" || scrollTop <= 80,
     },
     className,
   );
 
   return (
     <>
-      <header className="sticky top-0 z-50 overflow-hidden">
-        <div className={headerClassName}>
-          <div className="container flex h-full items-center justify-between">
-            <div className="flex items-center gap-4">
-              <MenuButton
-                isOpen={isMobileMenuOpen}
-                onClick={toggleMobileMenu}
+      <div className="overflow-hidden">
+        <div>
+          <div className="container grid h-full w-full grid-cols-3 items-center justify-between">
+            <div className="flex items-center justify-start gap-4">
+              <ButtonMenu
+                isOpen={isMenuOpen}
+                onClick={() => setIsMenuOpen(true)}
               />
-              <div>
+              <div className="hidden md:block">
                 <span>
                   {new Date().toLocaleString("bn-BD", {
                     weekday: "long",
@@ -135,17 +52,42 @@ const TopHeader: React.FC<HeaderProps> = ({ className }) => {
                 </span>
               </div>
             </div>
-            <Logo />
-            <div className="flex items-center gap-4">
-              <Link className="" href="/contact">
-                <Button className="foreground" asChild={true} variant="outline">
+            <div className="">
+              <Link href="/" aria-label="Home">
+                <Image
+                  src="/logo.png"
+                  alt="Logo"
+                  width={96}
+                  height={48}
+                  className="mx-auto h-16 w-fit max-w-full rounded-full object-contain object-left"
+                  priority
+                />
+              </Link>
+            </div>
+            <div className="flex items-center justify-end gap-4">
+              <Link className="hidden md:block" href="/#">
+                <Button
+                  className="foreground"
+                  size={"sm"}
+                  asChild={true}
+                  variant="outline"
+                >
                   <span>আজকের সংবাদ</span>
                 </Button>
               </Link>
             </div>
           </div>
         </div>
-      </header>
+      </div>
+      <Drawer isOpen={isMenuOpen} setIsOpen={setIsMenuOpen}>
+        <Drawer.Backdrop />
+        <Drawer.Content className="flex h-screen w-80 max-w-[90vw] flex-col">
+          <Sidebar
+            categories={categories}
+            onClose={() => setIsMenuOpen(false)}
+          />
+        </Drawer.Content>
+      </Drawer>
     </>
   );
 };
