@@ -1,5 +1,5 @@
-const CategoryNewPage = () => {
-  return <div></div>;
+const CategoryNewPage = async ({ params }: { params: { slug: string } }) => {
+  return <div>{params.slug}</div>;
 };
 
 export default CategoryNewPage;
