@@ -140,8 +140,8 @@ const Categories = ({ data }: { data?: TCategory[] }) => {
                 আরও ({hiddenItems.length})
               </button>
             </div>
-            <div className="absolute end-0 top-full z-10 hidden min-w-40 rounded border px-2 pt-4 group-hover:block">
-              <div className="bg-card text-end opacity-0 group-hover:opacity-100">
+            <div className="absolute end-0 top-full z-10 hidden min-w-40 px-2 pt-1 group-hover:block">
+              <div className="bg-card space-y-1 rounded border py-2 text-end opacity-0 group-hover:opacity-100">
                 {hiddenItems.map((category) => (
                   <div key={category._id}>
                     <CategoryDropdownItem category={category} />
