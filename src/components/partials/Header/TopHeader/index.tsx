@@ -7,45 +7,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 
-// Types
-type NavLink = {
-  href: string;
-  name: string;
-};
-
 type HeaderProps = {
   className?: string;
 };
-
-// Constants
-const ALL_PAGE_NAV_LINKS: NavLink[] = [
-  { href: "/", name: "Home" },
-  { href: "/services", name: "Services" },
-  { href: "/about", name: "About" },
-  // { href: "/leaderships", name: "Leaderships" },
-  // { href: "/projects", name: "Projects" },
-  { href: "/blogs", name: "Blogs" },
-] as const;
-
-const HOME_PAGE_NAV_LINKS: NavLink[] = [
-  { href: "#home", name: "Home" },
-  { href: "#services", name: "Services" },
-  { href: "#about", name: "About" },
-  // { href: "#leaderships", name: "Leaderships" },
-  // { href: "#features", name: "Features" },
-  // { href: "#projects", name: "Projects" },
-  { href: "#blogs", name: "Blogs" },
-] as const;
-
-const VISIBLE_SECTIONS = [
-  "home",
-  "services",
-  "about",
-  // "leaderships",
-  "features",
-  "projects",
-  "blogs",
-];
 
 // Custom hook for mobile menu
 const useMobileMenu = () => {
@@ -135,14 +99,6 @@ const MenuButton: React.FC<{
   </button>
 );
 
-const CTAButton: React.FC = () => (
-  <Link className="" href="/contact">
-    <Button className="foreground" asChild={true} variant="outline">
-      <span>CONTACT</span>
-    </Button>
-  </Link>
-);
-
 // Main Header Component
 const TopHeader: React.FC<HeaderProps> = ({ className }) => {
   const { scrollTop, scrollDirection } = useScrollPosition();
@@ -181,7 +137,11 @@ const TopHeader: React.FC<HeaderProps> = ({ className }) => {
             </div>
             <Logo />
             <div className="flex items-center gap-4">
-              <CTAButton />
+              <Link className="" href="/contact">
+                <Button className="foreground" asChild={true} variant="outline">
+                  <span>আজকের সংবাদ</span>
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

@@ -4,165 +4,130 @@ import { useClickOutside } from "@/hooks/ui/useClickOutside";
 import type { OverlayState } from "@/hooks/ui/useOverlayState";
 import useOverlayState from "@/hooks/ui/useOverlayState";
 import { cn } from "@/lib/utils";
-import { cva, type VariantProps } from "class-variance-authority";
-import { X } from "lucide-react";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import type { ComponentProps } from "react";
-import React, { createContext, Fragment, useContext, useRef } from "react";
-import PortalWrapper from "../wrappers/PortalWrapper";
+import { createContext, useContext } from "react";
 import type { ButtonProps } from "./Button";
 import { Button } from "./Button";
 
-const drawerVariants = cva(
-  "fixed inset-0 z-[1000] invisible opacity-0 transition-all duration-300 ease-in-out",
-  {
-    variants: {
-      variant: {
-        default: "",
-        none: "",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
+const dropdownVariants = cva("relative", {
+  variants: {
+    variant: {
+      default: "",
+      none: "",
     },
   },
-);
+  defaultVariants: {
+    variant: "default",
+  },
+});
 
-const drawerBackdropVariants = cva(
-  "fixed inset-0 z-[100] bg-black/25 transition-opacity duration-300",
-  {
-    variants: {
-      variant: {
-        default: "",
-        none: "bg-transparent",
-      },
-      size: {
-        default: "w-full h-full",
-        none: "",
-      },
-      side: {
-        center: "origin-center",
-        left: "origin-left",
-        right: "origin-right",
-      },
+const dropdownContentVariants = cva("absolute z-30 shadow-lg", {
+  variants: {
+    variant: {
+      default: "border border-gray-200 bg-card rounded-lg p-1",
+      none: "",
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-      side: "center",
+    side: {
+      top: "bottom-full left-0 mb-1 origin-top",
+      bottom: "top-full left-0 mt-1 origin-bottom",
+      left: "right-full top-0 mr-1 origin-left",
+      right: "left-full top-0 ml-1 origin-right",
     },
   },
-);
-
-const drawerContentVariants = cva(
-  "fixed z-[1000] h-full overflow-y-auto bg-white border border-gray-200 shadow-xl transition-transform duration-300",
-  {
-    variants: {
-      variant: {
-        default: "",
-        none: "border-0 shadow-none",
-      },
-      size: {
-        default: "w-[85vw] sm:w-64 md:w-80 lg:w-[26rem]",
-        sm: "w-[75vw] sm:w-48 md:w-64",
-        base: "w-[85vw] sm:w-64 md:w-80 lg:w-[26rem]",
-        lg: "w-[90vw] sm:w-64 md:w-96 lg:w-[32rem]",
-        xl: "w-[95vw] sm:w-80 md:w-[32rem] lg:w-[40rem] xl:w-[48rem]",
-        none: "",
-      },
-      side: {
-        center: "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg",
-        left: "left-0 top-0 -translate-x-full",
-        right: "right-0 top-0 translate-x-full",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-      side: "left",
-    },
+  defaultVariants: {
+    variant: "default",
+    side: "bottom",
   },
-);
+});
 
-type DrawerContextType = OverlayState &
-  VariantProps<typeof drawerVariants> &
-  VariantProps<typeof drawerContentVariants>;
-type DrawerProps = ComponentProps<"div"> &
-  VariantProps<typeof drawerVariants> &
-  VariantProps<typeof drawerContentVariants> & {
+type DropdownContextType = OverlayState &
+  VariantProps<typeof dropdownVariants> &
+  VariantProps<typeof dropdownContentVariants>;
+type DropdownProps = ComponentProps<"div"> &
+  VariantProps<typeof dropdownVariants> &
+  VariantProps<typeof dropdownContentVariants> & {
     readonly isOpen?: boolean;
     readonly setIsOpen?: (open: boolean) => void;
     readonly asPortal?: boolean;
     readonly activeClassName?: string;
   };
-type DrawerBackdropProps = ComponentProps<"div"> &
-  VariantProps<typeof drawerBackdropVariants> & {
-    readonly activeClassName?: string;
-  };
-type DrawerContentProps = ComponentProps<"div"> &
-  VariantProps<typeof drawerContentVariants> & {
-    readonly activeClassName?: string;
+
+type DropdownContentProps = ComponentProps<"div"> &
+  VariantProps<typeof dropdownContentVariants> & {
+    readonly activeClassName?: boolean;
   };
 
-const DrawerContext = createContext<DrawerContextType | null>(null);
+const DropdownContext = createContext<DropdownContextType | null>(null);
 
-const useDrawer = () => {
-  const context = useContext(DrawerContext);
+const useDropdown = () => {
+  const context = useContext(DropdownContext);
   if (!context) {
-    throw new Error("useDrawer must be used within a <Drawer />");
+    throw new Error("useDropdown must be used within a <Dropdown />");
   }
   return context;
 };
 
-// Drawer Root Component
-const DrawerRoot: React.FC<DrawerProps> = ({
+// Dropdown Root Component
+const DropdownRoot: React.FC<DropdownProps> = ({
   className,
   activeClassName,
   variant,
-  size,
   side,
   isOpen: isOpenProp,
   setIsOpen: setIsOpenProp,
   children,
-  asPortal = false,
   ...props
 }) => {
   const overlayState = useOverlayState(isOpenProp, setIsOpenProp);
-  const Comp = asPortal ? PortalWrapper : Fragment;
 
   return (
-    <DrawerContext.Provider value={{ ...overlayState, variant, size, side }}>
-      <Comp>
-        <div
-          className={cn(drawerVariants({ variant, className }), {
-            [cn("visible opacity-100", activeClassName)]: overlayState.isOpen,
-          })}
-          {...props}
-        >
-          {children}
-        </div>
-      </Comp>
-    </DrawerContext.Provider>
+    <DropdownContext.Provider value={{ ...overlayState, variant, side }}>
+      <div
+        className={cn(dropdownVariants({ variant, className }), {
+          [cn("open", activeClassName)]: overlayState.isOpen,
+        })}
+        {...props}
+      >
+        {children}
+      </div>
+    </DropdownContext.Provider>
   );
 };
 
-// Drawer Backdrop Component
-const DrawerBackdrop: React.FC<DrawerBackdropProps> = ({
+// Dropdown Content Component
+const DropdownContent: React.FC<DropdownContentProps> = ({
   className,
   activeClassName,
   variant,
-  size,
   side,
   children,
   ...props
 }) => {
-  const { isOpen, onClose } = useDrawer();
+  const {
+    isOpen,
+    variant: contextVariant,
+    side: contextSide,
+    onClose,
+  } = useDropdown();
 
+  const ref = useClickOutside<HTMLDivElement>(() => {
+    if (isOpen) onClose();
+  });
   return (
     <div
-      onClick={(e) => e.target === e.currentTarget && onClose()}
+      ref={ref}
       className={cn(
-        drawerBackdropVariants({ variant, size, side, className }),
-        { [cn("opacity-100", activeClassName)]: isOpen },
+        dropdownContentVariants({
+          variant: variant ?? contextVariant,
+          side: side ?? contextSide,
+          className,
+        }),
+        {
+          [cn("visible scale-100 opacity-100", activeClassName)]: isOpen,
+          "invisible scale-95 opacity-0": !isOpen,
+        },
       )}
       {...props}
     >
@@ -171,78 +136,49 @@ const DrawerBackdrop: React.FC<DrawerBackdropProps> = ({
   );
 };
 
-// Drawer Content Component
-const DrawerContent: React.FC<DrawerContentProps> = ({
+// Dropdown Item Component
+const DropdownItem: React.FC<ComponentProps<"button">> = ({
   className,
-  activeClassName,
-  variant,
-  size,
-  side,
+  disabled = false,
   children,
+  onClick,
   ...props
 }) => {
-  const { isOpen, onClose } = useDrawer();
-  const componentRef = useRef<HTMLDivElement>(null!);
-  useClickOutside<HTMLDivElement>(componentRef, onClose);
+  const { onClose } = useDropdown();
 
   return (
-    <div
-      className={cn(drawerContentVariants({ variant, size, side, className }), {
-        [cn("translate-x-0", activeClassName)]: isOpen,
-      })}
-      ref={componentRef}
+    <button
+      className={cn(
+        "w-full rounded-md px-4 py-2 text-left text-sm hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      disabled={disabled}
+      onClick={(e) => {
+        onClick?.(e);
+        onClose();
+      }}
       {...props}
     >
       {children}
-    </div>
+    </button>
   );
 };
 
-// Drawer Header Component
-const DrawerHeader: React.FC<ComponentProps<"div">> = ({
+// Dropdown Separator Component
+const DropdownSeparator: React.FC<ComponentProps<"div">> = ({
   className,
-  children,
   ...props
-}) => (
-  <div
-    className={cn("flex items-center justify-between border-b p-6", className)}
-    {...props}
-  >
-    {children}
-  </div>
-);
+}) => <div className={cn("my-1 h-px bg-gray-200", className)} {...props} />;
 
-// Drawer Title Component
-const DrawerTitle: React.FC<ComponentProps<"h2">> = ({
-  className,
-  children,
-  ...props
-}) => (
-  <h2 className={cn("text-lg font-semibold", className)} {...props}>
-    {children}
-  </h2>
-);
-
-// Drawer Body Component
-const DrawerBody: React.FC<ComponentProps<"div">> = ({
-  className,
-  children,
-  ...props
-}) => (
-  <div className={cn("flex-1 p-6", className)} {...props}>
-    {children}
-  </div>
-);
-
-// Drawer Footer Component
-const DrawerFooter: React.FC<ComponentProps<"div">> = ({
+// Dropdown Label Component
+const DropdownLabel: React.FC<ComponentProps<"div">> = ({
   className,
   children,
   ...props
 }) => (
   <div
     className={cn(
-      "flex items-center justify-end gap-3 border-t p-6",
+      "text-muted-foreground px-4 py-2 text-xs font-medium tracking-wider uppercase",
       className,
     )}
     {...props}
@@ -251,72 +187,35 @@ const DrawerFooter: React.FC<ComponentProps<"div">> = ({
   </div>
 );
 
-// Drawer Trigger Component
-const DrawerTrigger: React.FC<ButtonProps> = ({
-  onClick,
-  children = "Open",
-  ...props
-}) => {
-  const { onOpen } = useDrawer();
+// Dropdown Trigger Component
+const DropdownTrigger: React.FC<ButtonProps> = ({ onClick, ...props }) => {
+  const { onToggle } = useDropdown();
 
   return (
     <Button
       onClick={(e) => {
-        onOpen();
+        onToggle();
         onClick?.(e);
       }}
       {...props}
-    >
-      {children}
-    </Button>
+    />
   );
 };
 
-// Drawer Close Trigger Component
-const DrawerCloseTrigger: React.FC<ButtonProps> = ({
-  onClick,
-  variant = "outline",
-  shape = "icon",
-  children = <X className="h-6 w-6" />,
-  ...props
-}) => {
-  const { onClose } = useDrawer();
-
-  return (
-    <Button
-      onClick={(e) => {
-        onClose();
-        onClick?.(e);
-      }}
-      variant={variant}
-      shape={shape}
-      {...props}
-    >
-      {children}
-    </Button>
-  );
-};
-
-// Drawer Compound Component
-const Drawer = Object.assign(DrawerRoot, {
-  Backdrop: DrawerBackdrop,
-  Content: DrawerContent,
-  Header: DrawerHeader,
-  Title: DrawerTitle,
-  Body: DrawerBody,
-  Footer: DrawerFooter,
-  Trigger: DrawerTrigger,
-  Close: DrawerCloseTrigger,
+// Dropdown Compound Component
+const Dropdown = Object.assign(DropdownRoot, {
+  Content: DropdownContent,
+  Item: DropdownItem,
+  Separator: DropdownSeparator,
+  Label: DropdownLabel,
+  Trigger: DropdownTrigger,
 });
 
 export {
-  Drawer,
-  drawerBackdropVariants,
-  drawerContentVariants,
-  drawerVariants,
-  useDrawer,
-  type DrawerBackdropProps,
-  type DrawerContentProps,
-  type DrawerProps
+  Dropdown,
+  dropdownContentVariants,
+  dropdownVariants,
+  useDropdown,
+  type DropdownContentProps,
+  type DropdownProps,
 };
-

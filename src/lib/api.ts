@@ -37,11 +37,11 @@ export interface FetchResponse<T = any> {
 }
 
 export type RequestInterceptor = (
-  config: RequestConfig
+  config: RequestConfig,
 ) => RequestConfig | Promise<RequestConfig>;
 
 export type ResponseInterceptor = (
-  response: Response
+  response: Response,
 ) => Response | Promise<Response>;
 
 // Fetch.ts (main class)
@@ -105,7 +105,7 @@ export class Fetch {
 
   private async processResponse<T>(
     response: Response,
-    config: RequestConfig
+    config: RequestConfig,
   ): Promise<FetchResponse<T>> {
     // Apply response interceptors
     let processedResponse = response;
@@ -115,7 +115,7 @@ export class Fetch {
 
     if (!processedResponse.ok) {
       const error = new Error(
-        `HTTP error! status: ${processedResponse.status}`
+        `HTTP error! status: ${processedResponse.status}`,
       );
       (error as any).response = processedResponse;
       throw error;
@@ -148,7 +148,7 @@ export class Fetch {
 
   private async fetchWithTimeout(
     url: string,
-    options: RequestInit
+    options: RequestInit,
   ): Promise<Response> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
@@ -182,7 +182,7 @@ export class Fetch {
 
   async request<T = any>(
     url: string,
-    options: RequestInit & NextFetchConfig = {}
+    options: RequestInit & NextFetchConfig = {},
   ): Promise<FetchResponse<T>> {
     const processedConfig = await this.processRequest({
       url,
@@ -192,7 +192,7 @@ export class Fetch {
     const fullUrl = this.baseURL + processedConfig.url;
     const response = await this.fetchWithTimeout(
       fullUrl,
-      processedConfig.options
+      processedConfig.options,
     );
 
     return this.processResponse<T>(response, processedConfig);
@@ -206,7 +206,7 @@ export class Fetch {
   post<T = any>(
     url: string,
     data?: any,
-    options?: Omit<RequestInit, "body">
+    options?: Omit<RequestInit, "body">,
   ): Promise<FetchResponse<T>> {
     return this.request<T>(url, {
       ...options,
@@ -218,7 +218,7 @@ export class Fetch {
   put<T = any>(
     url: string,
     data?: any,
-    options?: Omit<RequestInit, "body">
+    options?: Omit<RequestInit, "body">,
   ): Promise<FetchResponse<T>> {
     return this.request<T>(url, {
       ...options,
@@ -230,7 +230,7 @@ export class Fetch {
   patch<T = any>(
     url: string,
     data?: any,
-    options?: Omit<RequestInit, "body">
+    options?: Omit<RequestInit, "body">,
   ): Promise<FetchResponse<T>> {
     return this.request<T>(url, {
       ...options,
@@ -241,7 +241,7 @@ export class Fetch {
 
   delete<T = any>(
     url: string,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<FetchResponse<T>> {
     return this.request<T>(url, { ...options, method: "DELETE" });
   }
