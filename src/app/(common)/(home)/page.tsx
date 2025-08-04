@@ -1,8 +1,9 @@
+import NewsBreaks from "@/components/(common)/home-page/NewsBreaks";
 
-const HomePage : React.FC = () => {
+const HomePage: React.FC = () => {
   return (
     <main>
-      
+      <NewsBreaks />
     </main>
   );
 };
