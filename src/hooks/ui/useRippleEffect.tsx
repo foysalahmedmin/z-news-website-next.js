@@ -1,9 +1,10 @@
-import { RefObject, useEffect } from "react";
+"use client";
 
-const useRippleEffect = <T extends HTMLElement>(
-  ref: RefObject<T>,
-  disabled: boolean = false
-) => {
+import { useEffect, useRef } from "react";
+
+const useRippleEffect = <T extends HTMLElement>(disabled: boolean = false) => {
+  const ref = useRef<T>(null);
+
   useEffect(() => {
     if (!ref?.current || disabled) return;
 
@@ -56,6 +57,8 @@ const useRippleEffect = <T extends HTMLElement>(
       element.removeEventListener("click", createRipple);
     };
   }, [ref, disabled]);
+
+  return ref;
 };
 
 export default useRippleEffect;
