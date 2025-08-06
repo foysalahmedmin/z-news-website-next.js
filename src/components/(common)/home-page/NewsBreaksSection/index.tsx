@@ -67,7 +67,7 @@ const newsBreaks: Partial<TNewsBreak>[] = [
 
 const NewsBreaksSection = async () => {
   return (
-    <section>
+    <section className="bg-card text-card-foreground top-0 md:sticky md:z-30">
       <div className="relative container">
         <div className="via-card from-card absolute end-0 top-0 bottom-0 z-20 w-20 bg-gradient-to-l to-transparent" />
         <div className="relative flex flex-col items-center shadow lg:flex-row">

@@ -32,25 +32,25 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
     <Link
       href={`/news/${slug}`}
       className={cn(
-        "group bg-card relative flex items-start md:gap-4",
+        "group bg-card relative flex items-center gap-4",
         className,
       )}
     >
       <div className={cn("overflow-hidden", classNameThumbnail)}>
         <Image
-          className="aspect-video w-full max-w-32 object-cover object-center transition-all duration-300 group-hover:scale-105"
+          className="aspect-square w-full max-w-32 object-cover object-center transition-all duration-300 group-hover:scale-105"
           src={thumbnail}
           alt={title || "Thumbnail"}
           width={500}
           height={280}
         />
       </div>
-      <div className={cn("flex-1 py-4 md:py-0", classNameContent)}>
+      <div className={cn("flex-1", classNameContent)}>
         <div className="border-s-2 ps-2">
-          <h3 className="text-lg font-semibold">{title}</h3>
-          <div className="flex items-center gap-1">
+          <h3 className="font-semibold md:text-lg">{title}</h3>
+          <div className="flex flex-wrap items-center gap-1">
             <p className="text-muted-foreground text-xs">{date}</p>
-            <p className="text-muted-foreground border border-s ps-1 text-xs">
+            <p className="text-muted-foreground border-muted-foreground border-s ps-1 text-xs">
               {category?.name}
             </p>
           </div>

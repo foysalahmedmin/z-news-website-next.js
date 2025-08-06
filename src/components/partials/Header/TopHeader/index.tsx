@@ -3,8 +3,6 @@
 import { ButtonMenu } from "@/components/buttons/ButtonMenu";
 import { Button } from "@/components/ui/Button";
 import { Drawer } from "@/components/ui/Drawer";
-import useScrollPosition from "@/hooks/ui/useScrollPosition";
-import { cn } from "@/lib/utils";
 import { TCategory } from "@/types/category.type";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,22 +16,11 @@ type HeaderProps = {
 
 // Main Header Component
 const TopHeader: React.FC<HeaderProps> = ({ className, categories }) => {
-  const { scrollTop, scrollDirection } = useScrollPosition();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Header styling based on scroll and page
-  const headerClassName = cn(
-    "text-foreground bg-card z-50 h-20 bg-transparent backdrop-blur-xs transition-all duration-300 ease-in-out",
-    {
-      "lg:-mt-20": scrollDirection === "down" && scrollTop > 80,
-      "lg:mt-0": scrollDirection === "up" || scrollTop <= 80,
-    },
-    className,
-  );
 
   return (
     <>
-      <div className="overflow-hidden">
+      <div className="bg-card text-card-foreground sticky top-0 z-50 overflow-hidden md:static md:z-auto">
         <div>
           <div className="container grid h-full w-full grid-cols-3 items-center justify-between">
             <div className="flex items-center justify-start gap-4">

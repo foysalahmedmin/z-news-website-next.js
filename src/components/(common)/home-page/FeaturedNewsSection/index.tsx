@@ -1,37 +1,49 @@
-import NewsCardGird from "@/components/cards/NewsCardGird";
+import NewsCard from "@/components/cards/NewsCard";
+import { cn } from "@/lib/utils";
 import { fetchBulkNews } from "@/services/news.service";
-import FeaturedNewsGrid from "./FeaturedNewsBottom";
-import FeaturedNewsSide from "./FeaturedNewsSide";
 
 const FeaturedNewsSection = async () => {
   const { data } = await fetchBulkNews({
     page: 1,
-    limit: 12,
-    is_featured: true,
+    limit: 13,
+    is_top_featured: true,
     sort: "-published_at,sequence",
   });
 
-  const sideData1 = data?.slice(1, 4);
-  const sideData2 = data?.slice(4, 7);
-  const bottomData = data?.slice(7, 10);
+  const hasAd = false;
+  const endPoint = hasAd ? 5 : 9;
+
+  const topData = data?.slice(0, endPoint);
+  const bottomData = data?.slice(endPoint, endPoint + 4);
 
   return (
-    <section className="py-6">
+    <section>
       <div className="container">
-        <div>
-          <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-            <div className="md:self-stretch">
-              <NewsCardGird news={data?.[0]} />
-            </div>
-            <div className="md:self-stretch">
-              <FeaturedNewsSide news={sideData1!} />
-            </div>
-            <div className="md:col-span-2 lg:col-span-1 lg:self-stretch">
-              <FeaturedNewsSide news={sideData2!} />
-            </div>
+        <div className="space-y-6 md:space-y-10">
+          <div className="grid gap-4 md:grid-flow-col md:grid-rows-6 lg:grid-rows-4">
+            {topData?.map((item, index) => (
+              <NewsCard
+                className={cn("", {
+                  "md:col-span-1 md:row-span-4 md:text-3xl": index === 0,
+                })}
+                type={index === 0 ? "grid" : "list"}
+                news={item}
+                key={index}
+              />
+            ))}
+            {hasAd && (
+              <div className="md:row-span-4 md:text-xl">
+                <div>{/* <Ad /> */}</div>
+              </div>
+            )}
           </div>
-          <div>
-            <FeaturedNewsGrid news={bottomData!} />
+
+          <hr />
+
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {bottomData?.map((item, index) => (
+              <NewsCard type="grid" news={item} key={index} />
+            ))}
           </div>
         </div>
       </div>

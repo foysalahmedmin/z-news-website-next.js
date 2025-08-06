@@ -50,9 +50,9 @@ const NewsCardOverlap: React.FC<TNewsCardOverlapProps> = ({
       >
         <div className="border-s-2 ps-2">
           <h3 className="text-lg font-semibold">{title}</h3>
-          <div className="flex items-center gap-1">
+          <div className="flex flex-wrap items-center gap-1">
             <p className="text-muted-foreground text-xs">{date}</p>
-            <p className="text-muted-foreground border border-s ps-1 text-xs">
+            <p className="text-muted-foreground border-muted-foreground border-s ps-1 text-xs">
               {category?.name}
             </p>
           </div>
