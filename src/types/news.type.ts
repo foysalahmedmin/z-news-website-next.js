@@ -14,7 +14,11 @@ export type TNews = {
   thumbnail?: string;
   images?: string[];
   tags?: string[];
-  category: string;
+  category: {
+    _id: string;
+    name: string;
+    slug: string;
+  };
   author: string;
   status: TStatus;
   is_featured: boolean;

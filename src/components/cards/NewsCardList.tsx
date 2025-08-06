@@ -7,10 +7,17 @@ import Link from "next/link";
 export type TNewsCardListProps = {
   news?: Partial<TNews>;
   className?: string;
+  classNameContent?: string;
+  classNameThumbnail?: string;
 };
 
-const NewsCardList: React.FC<TNewsCardListProps> = ({ news, className }) => {
-  const { published_at, slug, title, description } = news || {};
+const NewsCardList: React.FC<TNewsCardListProps> = ({
+  news,
+  className,
+  classNameContent,
+  classNameThumbnail,
+}) => {
+  const { published_at, slug, title, description, category } = news || {};
   const thumbnail = news?.thumbnail
     ? URLS.news.thumbnail + "/" + news?.thumbnail
     : "/thumbnail.png";
@@ -29,7 +36,7 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({ news, className }) => {
         className,
       )}
     >
-      <div className="overflow-hidden">
+      <div className={cn("overflow-hidden", classNameThumbnail)}>
         <Image
           className="aspect-video w-full max-w-32 object-cover object-center transition-all duration-300 group-hover:scale-105"
           src={thumbnail}
@@ -38,10 +45,15 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({ news, className }) => {
           height={280}
         />
       </div>
-      <div className="flex-1 py-4 md:py-0">
+      <div className={cn("flex-1 py-4 md:py-0", classNameContent)}>
         <div className="border-s-2 ps-2">
           <h3 className="text-lg font-semibold">{title}</h3>
-          <p className="text-muted-foreground text-sm">{date}</p>
+          <div className="flex items-center gap-1">
+            <p className="text-muted-foreground text-xs">{date}</p>
+            <p className="text-muted-foreground border border-s ps-1 text-xs">
+              {category?.name}
+            </p>
+          </div>
         </div>
         <p className="text-muted-foreground mt-2 line-clamp-3 text-xs md:line-clamp-2">
           {description}

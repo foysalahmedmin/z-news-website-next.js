@@ -7,10 +7,17 @@ import Link from "next/link";
 export type TNewsCardGirdProps = {
   news?: Partial<TNews>;
   className?: string;
+  classNameContent?: string;
+  classNameThumbnail?: string;
 };
 
-const NewsCardGird: React.FC<TNewsCardGirdProps> = ({ news, className }) => {
-  const { published_at, slug, title, description } = news || {};
+const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
+  news,
+  className,
+  classNameContent,
+  classNameThumbnail,
+}) => {
+  const { published_at, slug, title, description, category } = news || {};
   const thumbnail = news?.thumbnail
     ? URLS.news.thumbnail + "/" + news?.thumbnail
     : "/thumbnail.png";
@@ -26,7 +33,7 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({ news, className }) => {
       href={`/news/${slug}`}
       className={cn("group bg-card relative", className)}
     >
-      <div className="overflow-hidden">
+      <div className={cn("overflow-hidden", classNameThumbnail)}>
         <Image
           className="aspect-video w-full object-cover object-center transition-all duration-300 group-hover:scale-105"
           src={thumbnail}
@@ -35,10 +42,15 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({ news, className }) => {
           height={280}
         />
       </div>
-      <div className="py-4">
+      <div className={cn("py-4", classNameContent)}>
         <div className="border-s-2 ps-2">
           <h3 className="text-lg font-semibold">{title}</h3>
-          <p className="text-muted-foreground text-sm">{date}</p>
+          <div className="flex items-center gap-1">
+            <p className="text-muted-foreground text-xs">{date}</p>
+            <p className="text-muted-foreground border border-s ps-1 text-xs">
+              {category?.name}
+            </p>
+          </div>
         </div>
         <p className="text-muted-foreground mt-2 line-clamp-3 text-sm">
           {description}
