@@ -1,6 +1,6 @@
 import NewsCardGird from "@/components/cards/NewsCardGird";
 import { fetchBulkNews } from "@/services/news.service";
-import FeaturedNewsBottom from "./FeaturedNewsBottom";
+import FeaturedNewsGrid from "./FeaturedNewsBottom";
 import FeaturedNewsSide from "./FeaturedNewsSide";
 
 const FeaturedNewsSection = async () => {
@@ -31,7 +31,7 @@ const FeaturedNewsSection = async () => {
             </div>
           </div>
           <div>
-            <FeaturedNewsBottom news={bottomData!} />
+            <FeaturedNewsGrid news={bottomData!} />
           </div>
         </div>
       </div>
