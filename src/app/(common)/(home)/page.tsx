@@ -1,9 +1,11 @@
-import NewsBreaks from "@/components/(common)/home-page/NewsBreaks";
+import FeaturedNewsSection from "@/components/(common)/home-page/FeaturedNewsSection";
+import NewsBreaksSection from "@/components/(common)/home-page/NewsBreaksSection";
 
-const HomePage: React.FC = () => {
+const HomePage: React.FC = async () => {
   return (
     <main>
-      <NewsBreaks />
+      <NewsBreaksSection />
+      <FeaturedNewsSection />
     </main>
   );
 };

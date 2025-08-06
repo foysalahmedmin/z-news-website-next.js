@@ -65,11 +65,12 @@ const newsBreaks: Partial<TNewsBreak>[] = [
   },
 ];
 
-const NewsBreaks = () => {
+const NewsBreaksSection = async () => {
   return (
     <section>
-      <div className="container">
-        <div className="flex flex-col items-center shadow lg:flex-row">
+      <div className="relative container">
+        <div className="via-card from-card absolute end-0 top-0 bottom-0 z-20 w-20 bg-gradient-to-l to-transparent" />
+        <div className="relative flex flex-col items-center shadow lg:flex-row">
           <div className="bg-primary text-primary-foreground flex h-12 w-full items-center justify-center gap-2 px-4 lg:w-auto">
             <span className="relative flex size-4">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
@@ -104,4 +105,4 @@ const NewsBreaks = () => {
   );
 };
 
-export default NewsBreaks;
+export default NewsBreaksSection;

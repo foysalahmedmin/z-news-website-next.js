@@ -244,8 +244,29 @@ const normalizeAutoplayConfig = (
 const createAutoplayPlugin = (config: CarouselAutoplayConfig) =>
   emblaCarouselAutoplay(config);
 
+// ----- Arrow Icon Component -----
+const ArrowIcon = ({ direction }: { direction: "left" | "right" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+      d={
+        direction === "left" ? "M6 8l-4 4 4 4M2 12h20" : "M18 8l4 4-4 4M2 12h20"
+      }
+    />
+  </svg>
+);
+
 // ----- Components -----
-const CarouselRoot = ({
+const Carousel = ({
   orientation = "horizontal",
   direction = "ltr",
   autoplay = false,
@@ -441,38 +462,18 @@ const CarouselPagination = ({
   );
 };
 
-// ----- Arrow Icon Component -----
-const ArrowIcon = ({ direction }: { direction: "left" | "right" }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
-    viewBox="0 0 24 24"
-  >
-    <path
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="1.5"
-      d={
-        direction === "left" ? "M6 8l-4 4 4 4M2 12h20" : "M18 8l4 4-4 4M2 12h20"
-      }
-    />
-  </svg>
-);
+// Export individual components
+export {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNextTrigger,
+  CarouselPagination,
+  CarouselPaginationTrigger,
+  CarouselPreviousTrigger,
+  useCarousel,
+};
 
-// ----- Compound Export -----
-const Carousel = Object.assign(CarouselRoot, {
-  Content: CarouselContent,
-  Item: CarouselItem,
-  PreviousTrigger: CarouselPreviousTrigger,
-  NextTrigger: CarouselNextTrigger,
-  Pagination: CarouselPagination,
-  PaginationTrigger: CarouselPaginationTrigger,
-});
-
-export { Carousel, useCarousel };
 export type {
   CarouselAutoplayConfig,
   CarouselContentProps,
@@ -483,6 +484,5 @@ export type {
   CarouselPaginationProps,
   CarouselPaginationTriggerProps,
   CarouselRootProps,
-  CarouselTriggerProps
+  CarouselTriggerProps,
 };
-

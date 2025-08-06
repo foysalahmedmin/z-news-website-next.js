@@ -1,23 +1,25 @@
 import { ENV } from "@/config";
-import { TCategoriesResponse } from "@/types/category.type";
+import { TBulkNewsResponse } from "@/types/news.type";
 
-export async function fetchCategoriesTree(
+export async function fetchBulkNews(
   query?: Record<string, any>,
-): Promise<TCategoriesResponse> {
+): Promise<TBulkNewsResponse> {
   const queryString = query
     ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
     : "";
 
-  const url = `${ENV.base_url}/api/category/tree/public${queryString}`;
+  const url = `${ENV.base_url}/api/news/public${queryString}`;
+
+  console.log(url);
 
   const response = await fetch(url, {
     method: "GET",
-    cache: "force-cache",
+    cache: "no-cache",
   });
 
   if (!response.ok) {
     throw new Error("Failed to fetch categories");
   }
 
-  return response.json() as Promise<TCategoriesResponse>;
+  return response.json() as Promise<TBulkNewsResponse>;
 }
