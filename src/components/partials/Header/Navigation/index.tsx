@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { TCategory } from "@/types/category.type";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import Categories from "./Categories";
 import Search from "./Search";
@@ -17,16 +18,16 @@ const Navigation: React.FC<NavigationProps> = async ({
   return (
     <nav
       className={cn(
-        "bg-card text-card-foreground sticky top-0 z-50 hidden md:block",
+        "bg-card text-card-foreground sticky top-0 z-50 hidden shadow md:block",
         className,
       )}
     >
       <div className="container h-16">
         <div className="relative flex h-full items-center gap-4">
           <div className="w-16">
-            <div className="pb-2">
+            <Link href="/" className="pb-2">
               <Image src="/logo.png" alt="Logo" width={64} height={32} />
-            </div>
+            </Link>
           </div>
           <div className="flex flex-1 items-center justify-center">
             <div className="mx-auto w-11/12">

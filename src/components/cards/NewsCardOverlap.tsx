@@ -49,7 +49,10 @@ const NewsCardOverlap: React.FC<TNewsCardOverlapProps> = ({
         )}
       >
         <div className="border-s-2 ps-2">
-          <h3 className="text-lg font-semibold">{title}</h3>
+          <h3
+            className="group-hover:text-primary mb-[0.25em] text-[1.125em] leading-[1.5] font-semibold"
+            dangerouslySetInnerHTML={{ __html: title || "" }}
+          />
           <div className="flex flex-wrap items-center gap-1">
             <p className="text-muted-foreground text-xs">{date}</p>
             <p className="text-muted-foreground border-muted-foreground border-s ps-1 text-xs">

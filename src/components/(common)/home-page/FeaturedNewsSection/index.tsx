@@ -20,7 +20,7 @@ const FeaturedNewsSection = async () => {
     <section>
       <div className="container">
         <div className="space-y-6 md:space-y-10">
-          <div className="grid gap-4 md:grid-flow-col md:grid-rows-6 lg:grid-rows-4">
+          <div className="grid gap-4 md:grid-flow-col md:grid-cols-2 md:grid-rows-6 lg:grid-cols-3 lg:grid-rows-4">
             {topData?.map((item, index) => (
               <NewsCard
                 className={cn("", {

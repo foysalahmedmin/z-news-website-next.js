@@ -20,7 +20,7 @@ const TopHeader: React.FC<HeaderProps> = ({ className, categories }) => {
 
   return (
     <>
-      <div className="bg-card text-card-foreground sticky top-0 z-50 overflow-hidden md:static md:z-auto">
+      <div className="bg-card text-card-foreground sticky top-0 z-50 overflow-hidden shadow md:static md:z-auto md:shadow-none">
         <div>
           <div className="container grid h-full w-full grid-cols-3 items-center justify-between">
             <div className="flex items-center justify-start gap-4">

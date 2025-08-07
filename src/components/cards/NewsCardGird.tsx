@@ -29,10 +29,7 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
       year: "numeric",
     });
   return (
-    <Link
-      href={`/news/${slug}`}
-      className={cn("group bg-card relative", className)}
-    >
+    <Link href={`/news/${slug}`} className={cn("group relative", className)}>
       <div className={cn("overflow-hidden", classNameThumbnail)}>
         <Image
           className="aspect-video w-full object-cover object-center transition-all duration-300 group-hover:scale-105"
@@ -44,9 +41,10 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
       </div>
       <div className={cn("py-4", classNameContent)}>
         <div className="border-s-2 ps-2">
-          <h3 className="mb-[0.25em] text-[1.125em] leading-[1.5] font-semibold">
-            {title}
-          </h3>
+          <h3
+            className="group-hover:text-primary mb-[0.25em] text-[1.125em] leading-[1.5] font-semibold"
+            dangerouslySetInnerHTML={{ __html: title || "" }}
+          />
           <div className="flex flex-wrap items-center gap-1">
             <p className="text-muted-foreground text-xs">{date}</p>
             <p className="text-muted-foreground border-muted-foreground border-s ps-1 text-xs">

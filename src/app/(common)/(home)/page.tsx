@@ -1,6 +1,6 @@
-import CategoryNewsSection from "@/components/(common)/home-page/CategoryNewsSection";
 import FeaturedNewsSection from "@/components/(common)/home-page/FeaturedNewsSection";
-import NewsBreaksSection from "@/components/(common)/home-page/NewsBreaksSection";
+import NewsHeadlinesSection from "@/components/(common)/home-page/NewsBreaksSection";
+import CategoryNewsSection from "@/components/sections/CategoryNewsSection";
 import { fetchCategories } from "@/services/category.service";
 
 const HomePage: React.FC = async () => {
@@ -11,9 +11,12 @@ const HomePage: React.FC = async () => {
   });
   return (
     <main>
-      <NewsBreaksSection />
-      <div className="space-y-6 py-6 md:space-y-10 md:py-10">
+      <NewsHeadlinesSection />
+      <div className="space-y-10 py-6 md:space-y-16 md:py-10">
         <FeaturedNewsSection />
+        <CategoryNewsSection
+          category={{ name: "সাম্প্রতিক সংবাদ", icon: "clock " }}
+        />
         <>
           {data?.map((category) => (
             <CategoryNewsSection key={category?._id} category={category} />

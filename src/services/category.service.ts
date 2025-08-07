@@ -1,5 +1,27 @@
 import { ENV } from "@/config";
-import { TCategoriesResponse } from "@/types/category.type";
+import { TCategoriesResponse, TCategoryResponse } from "@/types/category.type";
+
+export async function fetchCategory(
+  slug: string,
+  query?: Record<string, any>,
+): Promise<TCategoryResponse> {
+  const queryString = query
+    ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
+    : "";
+
+  const url = `${ENV.base_url}/api/category/${slug}/public${queryString}`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    cache: "force-cache",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch categories");
+  }
+
+  return response.json() as Promise<TCategoryResponse>;
+}
 
 export async function fetchCategories(
   query?: Record<string, any>,
