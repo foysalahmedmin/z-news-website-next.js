@@ -4,6 +4,23 @@ import CategoryPageHeaderSection from "@/components/(common)/category-page/Categ
 import CategoryNewsSection from "@/components/sections/CategoryNewsSection";
 import { fetchCategory } from "@/services/category.service";
 
+type Props = {
+  params: {
+    slug: string;
+  };
+};
+
+export const generateMetadata = async ({ params }: Props) => {
+  const { slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
+
+  const { data } = await fetchCategory(decodedSlug);
+  return {
+    title: `${data?.name} - দৈনিক এইদিন`,
+    description: data?.description,
+  };
+};
+
 const CategoryNewPage = async ({ params }: { params: { slug: string } }) => {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);

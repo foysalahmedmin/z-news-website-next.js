@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 import { TCategory } from "@/types/category.type";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import Categories from "./Categories";
-import Search from "./Search";
 
 type NavigationProps = {
   className?: string;
@@ -36,7 +36,9 @@ const Navigation: React.FC<NavigationProps> = async ({
           </div>
           <div className="flex w-16 items-center justify-end gap-4">
             <div>
-              <Search />
+              <Link href="/search" className="hover:underline">
+                <Search />
+              </Link>
             </div>
           </div>
         </div>

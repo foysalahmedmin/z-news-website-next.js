@@ -19,7 +19,12 @@ export type TNews = {
     name: string;
     slug: string;
   };
-  author: string;
+  author: {
+    _id: string;
+    name: string;
+    email: string;
+    image?: string;
+  };
   status: TStatus;
   is_featured: boolean;
   is_premium: boolean;

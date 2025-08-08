@@ -2,6 +2,12 @@ import FeaturedNewsSection from "@/components/(common)/home-page/FeaturedNewsSec
 import NewsHeadlinesSection from "@/components/(common)/home-page/NewsBreaksSection";
 import CategoryNewsSection from "@/components/sections/CategoryNewsSection";
 import { fetchCategories } from "@/services/category.service";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "দৈনিক এইদিন",
+  description: "দৈনিক এইদিন",
+};
 
 const HomePage: React.FC = async () => {
   const { data } = await fetchCategories({

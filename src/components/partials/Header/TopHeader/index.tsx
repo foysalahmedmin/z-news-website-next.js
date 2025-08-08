@@ -4,6 +4,7 @@ import { ButtonMenu } from "@/components/buttons/ButtonMenu";
 import { Button } from "@/components/ui/Button";
 import { Drawer } from "@/components/ui/Drawer";
 import { TCategory } from "@/types/category.type";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -61,6 +62,9 @@ const TopHeader: React.FC<HeaderProps> = ({ className, categories }) => {
                 >
                   <span>আজকের সংবাদ</span>
                 </Button>
+              </Link>
+              <Link href="/search" className="hover:underline md:hidden">
+                <Search />
               </Link>
             </div>
           </div>
