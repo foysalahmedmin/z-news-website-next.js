@@ -42,7 +42,7 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
       <div className={cn("py-4", classNameContent)}>
         <div className="border-s-2 ps-2">
           <h3
-            className="group-hover:text-primary mb-[0.25em] text-[1.125em] leading-[1.5] font-semibold"
+            className="mb-[0.25em] text-[1.125em] leading-[1.5] font-semibold group-hover:text-blue-900"
             dangerouslySetInnerHTML={{ __html: title || "" }}
           />
           <div className="flex flex-wrap items-center gap-1">

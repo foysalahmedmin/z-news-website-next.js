@@ -5,9 +5,9 @@ import CategoryNewsSection from "@/components/sections/CategoryNewsSection";
 import { fetchCategory } from "@/services/category.service";
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 export const generateMetadata = async ({ params }: Props) => {
@@ -21,7 +21,7 @@ export const generateMetadata = async ({ params }: Props) => {
   };
 };
 
-const CategoryNewPage = async ({ params }: { params: { slug: string } }) => {
+const CategoryNewPage = async ({ params }: Props) => {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
 
