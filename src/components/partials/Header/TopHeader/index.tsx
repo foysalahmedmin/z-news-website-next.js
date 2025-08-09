@@ -53,7 +53,10 @@ const TopHeader: React.FC<HeaderProps> = ({ className, categories }) => {
               </Link>
             </div>
             <div className="flex items-center justify-end gap-4">
-              <Link className="hidden md:block" href="/#">
+              <Link
+                className="hidden md:block"
+                href={`/search?published_at_gte=${new Date().toISOString().split("T")[0]}&published_at_lte=${new Date().toISOString().split("T")[0]}`}
+              >
                 <Button
                   className="foreground"
                   size={"sm"}
