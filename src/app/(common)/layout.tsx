@@ -1,3 +1,4 @@
+import Footer from "@/components/partials/Footer";
 import Header from "@/components/partials/Header";
 import { Metadata } from "next";
 
@@ -11,6 +12,7 @@ const CommonLayout = ({ children }) => {
     <>
       <Header />
       <main>{children}</main>
+      <Footer />
     </>
   );
 };

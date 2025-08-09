@@ -1,10 +1,14 @@
 "use client";
 
+import NewsCard from "@/components/cards/NewsCard";
 import { Button } from "@/components/ui/Button";
+import { FormControl } from "@/components/ui/FormControl";
+import { useClickOutside } from "@/hooks/ui/useClickOutside";
 import { fetchCategories } from "@/services/category.service";
 import { fetchBulkNews } from "@/services/news.service";
 import { TCategory } from "@/types/category.type";
 import { TNews } from "@/types/news.type";
+import debounce from "@/utils/debounce";
 import { Calendar, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -28,7 +32,7 @@ const OperationClient = () => {
 
   // Read filters directly from searchParams
   const category = searchParams.get("category") || "";
-  const sort = searchParams.get("sort") || "-published_at";
+  const sort = searchParams.get("sort") || "";
   const search = searchParams.get("search") || "";
   const published_at_gte = searchParams.get("published_at_gte") || "";
   const published_at_lte = searchParams.get("published_at_lte") || "";
@@ -53,7 +57,7 @@ const OperationClient = () => {
   const selectedCategory =
     categories.find((cat) => cat._id === category) || null;
 
-  const hasMore = meta?.total && meta.total > data.length;
+  const hasMore = !!meta?.total && !!(meta.total > data.length);
 
   // Update URL params helper
   const updateSearchParams = (newParams: { [key: string]: string | null }) => {
@@ -149,10 +153,10 @@ const OperationClient = () => {
           page,
           limit: 12,
           ...(category && { category: category }),
-          ...(sort && { sort }),
+          ...(sort ? { sort } : { sort: "-published_at" }),
           ...(search && { search }),
-          ...(published_at_gte && { published_at: published_at_gte }),
-          ...(published_at_lte && { published_at: published_at_lte }),
+          ...(published_at_gte && { published_at_gte: published_at_gte }),
+          ...(published_at_lte && { published_at_lte: published_at_lte }),
         });
 
         if (page === 1) setData(newsData || []);
@@ -169,138 +173,106 @@ const OperationClient = () => {
     fetchData();
   }, [page, category, sort, search, published_at_gte, published_at_lte]);
 
+  const ref = useClickOutside<HTMLDivElement>(() => setIsDatePickerOpen(false));
+
+  const debouncedSearchUpdate = debounce((value: string | null) => {
+    updateSearchParams({ search: value });
+  }, 500);
+
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto flex min-h-[calc(100vh-4rem)] flex-col p-4 md:min-h-[calc(100vh-8rem)]">
       <h1 className="mb-4 text-2xl font-bold">অনুসন্ধান</h1>
 
       <div className="mb-6 flex flex-wrap gap-4">
-        {/* Category */}
-        <select
-          className="rounded border px-3 py-2"
-          value={category}
-          onChange={(e) =>
-            updateSearchParams({ category: e.target.value || null })
-          }
-        >
-          <option value="">All Categories</option>
-          {categories.map((cat) => (
-            <option key={cat._id} value={cat._id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-
-        {/* Sort */}
-        <select
-          className="rounded border px-3 py-2"
-          value={sort}
-          onChange={(e) => updateSearchParams({ sort: e.target.value || null })}
-        >
-          <option value="-published_at">Newest First</option>
-          <option value="published_at">Oldest First</option>
-          <option value="-sequence">Highest Sequence</option>
-          <option value="sequence">Lowest Sequence</option>
-        </select>
-
         {/* Date Range Picker */}
-        <div className="relative">
-          <button
-            onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-            className="flex min-w-[200px] items-center gap-2 rounded border bg-white px-3 py-2 transition-colors hover:bg-gray-50"
-          >
-            <Calendar size={16} />
-            <span className="text-sm">{formatDateRange()}</span>
-            {selectedRange?.from && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  clearDateRange();
-                }}
-                className="ml-auto text-gray-400 hover:text-gray-600"
-              >
-                <X size={14} />
-              </button>
-            )}
-          </button>
-
-          {isDatePickerOpen && (
-            <div className="absolute top-full left-0 z-50 mt-2 rounded-lg border bg-white p-4 shadow-lg">
-              {/* Quick Presets */}
-              <div className="mb-4 flex flex-wrap gap-2 border-b pb-4">
+        <div className="grid w-full gap-4 md:grid-cols-2">
+          <div ref={ref} className="relative h-10">
+            <div
+              onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+              className="flex h-full w-full min-w-[200px] items-center gap-2 rounded-md border px-3 py-2 transition-colors"
+            >
+              <Calendar size={16} />
+              <span className="text-sm">{formatDateRange()}</span>
+              {selectedRange?.from && (
                 <button
-                  onClick={() => setPresetRange(7)}
-                  className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 transition-colors hover:bg-blue-200"
-                >
-                  গত ৭ দিন
-                </button>
-                <button
-                  onClick={() => setPresetRange(30)}
-                  className="rounded bg-green-100 px-2 py-1 text-xs text-green-700 transition-colors hover:bg-green-200"
-                >
-                  গত ৩০ দিন
-                </button>
-                <button
-                  onClick={() => setPresetRange(90)}
-                  className="rounded bg-purple-100 px-2 py-1 text-xs text-purple-700 transition-colors hover:bg-purple-200"
-                >
-                  গত ৯০ দিন
-                </button>
-                <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     clearDateRange();
-                    setIsDatePickerOpen(false);
                   }}
-                  className="rounded bg-red-100 px-2 py-1 text-xs text-red-700 transition-colors hover:bg-red-200"
+                  className="ml-auto text-gray-400 hover:text-gray-600"
                 >
-                  পরিষ্কার
+                  <X size={14} />
                 </button>
-              </div>
-
-              {/* Calendar */}
-              <DayPicker
-                mode="range"
-                selected={selectedRange}
-                onSelect={handleDateRangeSelect}
-                numberOfMonths={2}
-                disabled={{ after: new Date() }} // Prevent future dates
-                className="rdp"
-                classNames={{
-                  day_selected: "bg-blue-500 text-white",
-                  day_range_start: "bg-blue-500 text-white rounded-l-full",
-                  day_range_end: "bg-blue-500 text-white rounded-r-full",
-                  day_range_middle: "bg-blue-100 text-blue-900",
-                  day_disabled: "text-gray-300 cursor-not-allowed",
-                }}
-                footer={
-                  selectedRange?.from && (
-                    <div className="mt-4 rounded bg-gray-50 p-2 text-sm">
-                      <strong>নির্বাচিত:</strong> {formatDateRange()}
-                    </div>
-                  )
-                }
-              />
-
-              <div className="mt-4 flex justify-end gap-2 border-t pt-4">
-                <button
-                  onClick={() => setIsDatePickerOpen(false)}
-                  className="rounded bg-gray-100 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-200"
-                >
-                  বন্ধ
-                </button>
-              </div>
+              )}
             </div>
-          )}
+
+            {isDatePickerOpen && (
+              <div className="bg-card text-card-foreground absolute top-full left-0 z-50 mt-2 rounded-lg border p-4 py-5 shadow-md">
+                {/* Quick Presets */}
+                <div className="mb-4 flex flex-wrap gap-2 border-b pb-4">
+                  <button
+                    onClick={() => setPresetRange(7)}
+                    className="bg-foreground/10 text-foreground hover:bg-foreground/5 flex-1 cursor-pointer rounded py-1 text-xs transition-colors"
+                  >
+                    গত ৭ দিন
+                  </button>
+                  <button
+                    onClick={() => setPresetRange(30)}
+                    className="bg-foreground/10 text-foreground hover:bg-foreground/5 flex-1 cursor-pointer rounded py-1 text-xs transition-colors"
+                  >
+                    গত ৩০ দিন
+                  </button>
+                  <button
+                    onClick={() => setPresetRange(90)}
+                    className="bg-foreground/10 text-foreground hover:bg-foreground/5 flex-1 cursor-pointer rounded py-1 text-xs transition-colors"
+                  >
+                    গত ৯০ দিন
+                  </button>
+                </div>
+
+                {/* Calendar */}
+                <DayPicker
+                  mode="range"
+                  selected={selectedRange}
+                  onSelect={handleDateRangeSelect}
+                  disabled={{ after: new Date() }}
+                  className="w-full"
+                  footer={
+                    selectedRange?.from && (
+                      <div className="bg-muted mt-4 rounded p-2 text-sm">
+                        <strong>নির্বাচিত:</strong> {formatDateRange()}
+                      </div>
+                    )
+                  }
+                />
+              </div>
+            )}
+          </div>
+          {/* Category */}
+          <FormControl
+            as="select"
+            value={category}
+            onChange={(e) =>
+              updateSearchParams({ category: e.target.value || null })
+            }
+          >
+            <option value="">সব বিভাগ</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
+          </FormControl>
         </div>
 
         {/* Search */}
-        <input
-          type="text"
+        <FormControl
+          as="input"
+          type="search"
           className="min-w-[200px] flex-grow rounded border px-3 py-2"
           placeholder="খবর খুঁজুন..."
-          value={search}
-          onChange={(e) =>
-            updateSearchParams({ search: e.target.value || null })
-          }
+          defaultValue={search}
+          onChange={(e) => debouncedSearchUpdate(e.target.value || null)}
         />
       </div>
 
@@ -344,41 +316,62 @@ const OperationClient = () => {
         </div>
       )}
 
-      {/* News List */}
-      {isLoading && page === 1 ? (
-        <p>Loading news...</p>
-      ) : data.length === 0 ? (
-        <p>No news found.</p>
-      ) : (
-        <ul className="space-y-4">
-          {data.map((newsItem) => (
-            <li
-              key={newsItem._id}
-              className="rounded border p-4 transition hover:shadow-md"
-            >
-              <h2 className="text-lg font-semibold">{newsItem.title}</h2>
-              <p className="text-sm text-gray-500">Published on: </p>
-              {newsItem.category && (
-                <p className="text-xs text-gray-400">
-                  Category: {newsItem.category.name}
-                </p>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* Load More */}
-      {hasMore && (
-        <div className="mt-6 flex justify-center">
-          <Button
-            onClick={() => setPage((prev) => prev + 1)}
-            isLoading={isLoading}
-          >
-            {isLoading ? "লোড হচ্ছে..." : "আরও দেখুন"}
-          </Button>
+      <div className="mb-4 flex items-center justify-between border-y py-2">
+        <div className="flex items-center">
+          <span>প্রাপ্ত ফলাফল:</span>
+          <span className="ml-2 font-semibold">
+            {meta?.total || data?.length || 0}
+          </span>
         </div>
-      )}
+        <div className="flex items-center gap-2">
+          <span>সাজানো:</span>
+          <FormControl
+            as="select"
+            className="h-8"
+            value={sort}
+            onChange={(e) =>
+              updateSearchParams({ sort: e.target.value || null })
+            }
+          >
+            <option value="">প্রাসঙ্গিক</option>
+            <option value="-published_at">নতুন থেকে পুরোনো</option>
+            <option value="published_at">পুরোনো থেকে নতুন</option>
+          </FormControl>
+        </div>
+      </div>
+
+      <div className="flex flex-1 flex-col">
+        {/* News List */}
+        {isLoading && data.length === 0 ? (
+          <div className="h-full flex-1">
+            <p className="text-center">Loading News...</p>
+          </div>
+        ) : data.length === 0 ? (
+          <div className="flex h-full flex-1 items-center justify-center">
+            <p className="text-center">No News Found</p>
+          </div>
+        ) : (
+          <ul className="space-y-4">
+            {data.map((newsItem) => (
+              <li key={newsItem._id} className="border-b pb-4">
+                <NewsCard news={newsItem} type="list" />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* Load More */}
+        {hasMore && (
+          <div className="mt-6 flex justify-center">
+            <Button
+              onClick={() => setPage((prev) => prev + 1)}
+              isLoading={isLoading}
+            >
+              {isLoading ? "লোড হচ্ছে..." : "আরও দেখুন"}
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
