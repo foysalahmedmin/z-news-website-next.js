@@ -7,7 +7,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { X } from "lucide-react";
 import type { ComponentProps } from "react";
-import React, { createContext, Fragment, useContext } from "react";
+import { createContext, Fragment, useContext } from "react";
 import PortalWrapper from "../wrappers/PortalWrapper";
 import type { ButtonProps } from "./Button";
 import { Button } from "./Button";
@@ -28,7 +28,7 @@ const modalVariants = cva(
 );
 
 const modalBackdropVariants = cva(
-  "fixed inset-0 z-[100] transition-all duration-200 ease-in-out",
+  "fixed inset-0 z-[100] flex flex-col transition-all duration-200 ease-in-out",
   {
     variants: {
       variant: {
@@ -53,7 +53,7 @@ const modalContentVariants = cva(
     variants: {
       variant: {
         default:
-          "border border-gray-200 max-h-full overflow-y-auto bg-white rounded-lg shadow-xl",
+          "border border-gray-200 max-h-full overflow-y-auto bg-card rounded-lg shadow-xl",
         none: "",
       },
       size: {
@@ -122,8 +122,8 @@ const ModalRoot: React.FC<ModalProps> = ({
   ...props
 }) => {
   const overlayState = useOverlayState(isOpenProp, setIsOpenProp);
-  const Comp = asPortal ? PortalWrapper : Fragment;
 
+  const Comp = asPortal ? PortalWrapper : Fragment;
   return (
     <ModalContext.Provider value={{ ...overlayState, variant, size, side }}>
       <Comp>
@@ -199,7 +199,10 @@ const ModalHeader: React.FC<ComponentProps<"div">> = ({
   ...props
 }) => (
   <div
-    className={cn("flex items-center justify-between border-b p-6", className)}
+    className={cn(
+      "flex items-center justify-between border-b px-6 py-4",
+      className,
+    )}
     {...props}
   >
     {children}
@@ -236,7 +239,7 @@ const ModalFooter: React.FC<ComponentProps<"div">> = ({
 }) => (
   <div
     className={cn(
-      "flex items-center justify-end gap-3 border-t p-6",
+      "flex items-center justify-end gap-3 border-t px-6 py-4",
       className,
     )}
     {...props}
@@ -293,6 +296,7 @@ const ModalCloseTrigger: React.FC<ButtonProps> = ({
 
 // Modal Compound Component
 const Modal = Object.assign(ModalRoot, {
+  Root: ModalRoot,
   Backdrop: ModalBackdrop,
   Content: ModalContent,
   Header: ModalHeader,
@@ -311,6 +315,5 @@ export {
   useModal,
   type ModalBackdropProps,
   type ModalContentProps,
-  type ModalProps
+  type ModalProps,
 };
-

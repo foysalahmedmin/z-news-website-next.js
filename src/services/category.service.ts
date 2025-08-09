@@ -9,7 +9,7 @@ export async function fetchCategory(
     ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
     : "";
 
-  const url = `${ENV.base_url}/api/category/${slug}/public${queryString}`;
+  const url = `${ENV.api_url}/api/category/${slug}/public${queryString}`;
 
   const response = await fetch(url, {
     method: "GET",
@@ -30,7 +30,7 @@ export async function fetchCategories(
     ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
     : "";
 
-  const url = `${ENV.base_url}/api/category/public${queryString}`;
+  const url = `${ENV.api_url}/api/category/public${queryString}`;
 
   const response = await fetch(url, {
     method: "GET",
@@ -51,7 +51,7 @@ export async function fetchCategoriesTree(
     ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
     : "";
 
-  const url = `${ENV.base_url}/api/category/tree/public${queryString}`;
+  const url = `${ENV.api_url}/api/category/tree/public${queryString}`;
 
   const response = await fetch(url, {
     method: "GET",

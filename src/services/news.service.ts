@@ -9,7 +9,7 @@ export async function fetchNews(
     ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
     : "";
 
-  const url = `${ENV.base_url}/api/news/${slug}/public${queryString}`;
+  const url = `${ENV.api_url}/api/news/${slug}/public${queryString}`;
 
   const response = await fetch(url, {
     method: "GET",
@@ -17,7 +17,7 @@ export async function fetchNews(
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch categories");
+    throw new Error("Failed to fetch news");
   }
 
   return response.json() as Promise<TNewsResponse>;
@@ -30,7 +30,7 @@ export async function fetchBulkNews(
     ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
     : "";
 
-  const url = `${ENV.base_url}/api/news/public${queryString}`;
+  const url = `${ENV.api_url}/api/news/public${queryString}`;
 
   const response = await fetch(url, {
     method: "GET",
@@ -38,7 +38,7 @@ export async function fetchBulkNews(
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch categories");
+    throw new Error("Failed to fetch all news");
   }
 
   return response.json() as Promise<TBulkNewsResponse>;
