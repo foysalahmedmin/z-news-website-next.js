@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import {
   createReaction,
   deleteReaction,
-  fetchSelfNewsReactions,
+  fetchNewsReaction,
   updateReaction,
 } from "@/services/reaction.service";
 import { TNews } from "@/types/news.type";
@@ -67,9 +67,9 @@ const Reaction: React.FC<ReactionProps> = ({ news }) => {
   useEffect(() => {
     const getReaction = async () => {
       try {
-        const { data } = await fetchSelfNewsReactions({ news: news?._id });
+        const { data } = await fetchNewsReaction(news?._id);
         console.log(data);
-        setReaction(data?.[0] || {});
+        setReaction(data || {});
       } catch (error) {
         console.error(error);
       } finally {

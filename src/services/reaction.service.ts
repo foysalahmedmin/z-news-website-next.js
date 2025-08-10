@@ -1,9 +1,9 @@
 import { ENV } from "@/config";
 import { TReactionResponse, TReactionsResponse } from "@/types/reaction.type";
 
-export async function fetchSelfNewsReactions(
+export const fetchReactions = async (
   query?: Record<string, any>,
-): Promise<TReactionsResponse> {
+): Promise<TReactionsResponse> => {
   const queryString = query
     ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
     : "";
@@ -15,14 +15,46 @@ export async function fetchSelfNewsReactions(
   const response = await fetch(url, {
     method: "GET",
     cache: "no-cache",
+    credentials: "include", // <--- add this
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch news");
+    throw new Error("Failed to fetch reactions");
   }
 
   return response.json() as Promise<TReactionsResponse>;
-}
+};
+
+export const fetchNewsReaction = async (
+  news_id?: string,
+  query?: Record<string, any>,
+): Promise<TReactionResponse> => {
+  if (!news_id) {
+    console.error("news_id is required");
+  }
+
+  const queryString = query
+    ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
+    : "";
+
+  const url = `${ENV.api_url}/api/reaction/news/${news_id}/self${queryString}`;
+
+  console.log(url);
+
+  const response = await fetch(url, {
+    method: "GET",
+    cache: "no-cache",
+    credentials: "include", // <--- add this
+  });
+
+  console.log(response);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch news reaction");
+  }
+
+  return response.json() as Promise<TReactionResponse>;
+};
 
 export const createReaction = async (payload: any) => {
   const url = `${ENV.api_url}/api/reaction`;
@@ -31,6 +63,7 @@ export const createReaction = async (payload: any) => {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include", // <--- add this
     body: JSON.stringify(payload),
   });
   return response.json() as Promise<TReactionResponse>;
@@ -43,6 +76,7 @@ export const updateReaction = async (_id: string, payload: any) => {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include", // <--- add this
     body: JSON.stringify(payload),
   });
   return response.json() as Promise<TReactionResponse>;
@@ -52,6 +86,7 @@ export const deleteReaction = async (_id: string) => {
   const url = `${ENV.api_url}/api/reaction/${_id}/self`;
   const response = await fetch(url, {
     method: "DELETE",
+    credentials: "include", // <--- add this
   });
   return response.json() as Promise<TReactionResponse>;
 };
