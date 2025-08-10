@@ -1,7 +1,7 @@
 import { ENV } from "@/config";
-import { TReactionsResponse } from "@/types/reaction.type";
+import { TReactionResponse, TReactionsResponse } from "@/types/reaction.type";
 
-export async function fetchNewsReactions(
+export async function fetchSelfNewsReactions(
   query?: Record<string, any>,
 ): Promise<TReactionsResponse> {
   const queryString = query
@@ -10,9 +10,11 @@ export async function fetchNewsReactions(
 
   const url = `${ENV.api_url}/api/reaction/self${queryString}`;
 
+  console.log(url);
+
   const response = await fetch(url, {
     method: "GET",
-    cache: "force-cache",
+    cache: "no-cache",
   });
 
   if (!response.ok) {
@@ -21,3 +23,35 @@ export async function fetchNewsReactions(
 
   return response.json() as Promise<TReactionsResponse>;
 }
+
+export const createReaction = async (payload: any) => {
+  const url = `${ENV.api_url}/api/reaction`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  return response.json() as Promise<TReactionResponse>;
+};
+
+export const updateReaction = async (_id: string, payload: any) => {
+  const url = `${ENV.api_url}/api/reaction/${_id}/self`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  return response.json() as Promise<TReactionResponse>;
+};
+
+export const deleteReaction = async (_id: string) => {
+  const url = `${ENV.api_url}/api/reaction/${_id}/self`;
+  const response = await fetch(url, {
+    method: "DELETE",
+  });
+  return response.json() as Promise<TReactionResponse>;
+};
