@@ -8,14 +8,12 @@ export const fetchComments = async (
     ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
     : "";
 
-  const url = `${ENV.api_url}/api/comment/self${queryString}`;
-
-  console.log(url);
+  const url = `${ENV.api_url}/api/comment/public${queryString}`;
 
   const response = await fetch(url, {
     method: "GET",
     cache: "no-cache",
-    credentials: "include", // <--- add this
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -32,7 +30,7 @@ export const createComment = async (payload: any) => {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include", // <--- add this
+    credentials: "include",
     body: JSON.stringify(payload),
   });
   return response.json() as Promise<TCommentResponse>;
@@ -45,7 +43,7 @@ export const updateComment = async (_id: string, payload: any) => {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include", // <--- add this
+    credentials: "include",
     body: JSON.stringify(payload),
   });
   return response.json() as Promise<TCommentResponse>;
@@ -55,7 +53,7 @@ export const deleteComment = async (_id: string) => {
   const url = `${ENV.api_url}/api/comment/${_id}/self`;
   const response = await fetch(url, {
     method: "DELETE",
-    credentials: "include", // <--- add this
+    credentials: "include",
   });
   return response.json() as Promise<TCommentResponse>;
 };

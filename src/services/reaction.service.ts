@@ -15,7 +15,7 @@ export const fetchReactions = async (
   const response = await fetch(url, {
     method: "GET",
     cache: "no-cache",
-    credentials: "include", // <--- add this
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -39,15 +39,11 @@ export const fetchNewsReaction = async (
 
   const url = `${ENV.api_url}/api/reaction/news/${news_id}/self${queryString}`;
 
-  console.log(url);
-
   const response = await fetch(url, {
     method: "GET",
     cache: "no-cache",
-    credentials: "include", // <--- add this
+    credentials: "include",
   });
-
-  console.log(response);
 
   if (!response.ok) {
     throw new Error("Failed to fetch news reaction");
@@ -63,7 +59,7 @@ export const createReaction = async (payload: any) => {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include", // <--- add this
+    credentials: "include",
     body: JSON.stringify(payload),
   });
   return response.json() as Promise<TReactionResponse>;
@@ -76,7 +72,7 @@ export const updateReaction = async (_id: string, payload: any) => {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include", // <--- add this
+    credentials: "include",
     body: JSON.stringify(payload),
   });
   return response.json() as Promise<TReactionResponse>;
@@ -86,7 +82,7 @@ export const deleteReaction = async (_id: string) => {
   const url = `${ENV.api_url}/api/reaction/${_id}/self`;
   const response = await fetch(url, {
     method: "DELETE",
-    credentials: "include", // <--- add this
+    credentials: "include",
   });
   return response.json() as Promise<TReactionResponse>;
 };

@@ -16,16 +16,38 @@ import { TNews } from "@/types/news.type";
 import { formatCount } from "@/utils/formatCount";
 import { formatDate } from "@/utils/formatDate";
 import Cookies from "js-cookie";
-import { ChevronRight, MessageCircle, Send } from "lucide-react";
+import {
+  Check,
+  ChevronRight,
+  Edit2,
+  MessageCircle,
+  Send,
+  Trash2,
+  X,
+} from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const CommentItem = ({ comment }: { comment: TComment }) => {
+const CommentItem = ({
+  comment,
+  onUpdate,
+  onDelete,
+}: {
+  comment: TComment;
+  onUpdate: (id: string, updatedComment: TComment) => void;
+  onDelete: (id: string) => void;
+}) => {
   const { _id, name, email, content, is_edited, created_at, user, guest } =
     comment || {};
   const image = user?.image ? URLS.user + "/" + user?.image : "";
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: name || "",
+    email: email || "",
+    content: content || "",
+  });
 
   const token = Cookies.get("guest_token");
   const isOwner = token === guest;
@@ -34,19 +56,25 @@ const CommentItem = ({ comment }: { comment: TComment }) => {
     e.preventDefault();
     if (isLoading || !isOwner) return;
 
-    const name = e.currentTarget.name.value;
-    const email = e.currentTarget.email.value;
-    const content = e.currentTarget.content.value;
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const updatedName = formData.get("name") as string;
+    const updatedEmail = formData.get("email") as string;
+    const updatedContent = formData.get("content") as string;
 
-    if (!name || !email || !content) return;
+    if (!updatedName || !updatedEmail || !updatedContent) return;
 
     setIsLoading(true);
     try {
       const { data } = await updateComment(_id, {
-        name,
-        email,
-        content,
+        name: updatedName,
+        email: updatedEmail,
+        content: updatedContent,
       });
+
+      if (data) {
+        onUpdate(_id, data);
+        setIsEditing(false);
+      }
     } catch (error) {
       console.error("Error updating comment:", error);
     } finally {
@@ -54,13 +82,17 @@ const CommentItem = ({ comment }: { comment: TComment }) => {
     }
   };
 
-  const handleDeleteComment = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleDeleteComment = async () => {
     if (isLoading || !isOwner) return;
+
+    if (!window.confirm("আপনি কি নিশ্চিত যে এই মন্তব্যটি মুছে ফেলতে চান?")) {
+      return;
+    }
 
     setIsLoading(true);
     try {
       await deleteComment(_id);
+      onDelete(_id);
     } catch (error) {
       console.error("Error deleting comment:", error);
     } finally {
@@ -68,8 +100,19 @@ const CommentItem = ({ comment }: { comment: TComment }) => {
     }
   };
 
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditForm({
+      name: name || "",
+      email: email || "",
+      content: content || "",
+    });
+  };
+
   return (
-    <div className={`mb-6 rounded-md p-4`}>
+    <div
+      className={`mb-6 rounded-md p-4 ${isEditing ? "border border-blue-200 bg-blue-50/30" : ""}`}
+    >
       <div className="flex items-start gap-3">
         {/* Avatar */}
         <div className="flex-shrink-0">
@@ -91,29 +134,113 @@ const CommentItem = ({ comment }: { comment: TComment }) => {
         </div>
 
         <div className="flex-1 space-y-2">
-          {/* Header */}
-          <div className="flex items-center gap-2">
-            <div>
-              <span className="font-medium">
-                {name} {isOwner && "(আপনি)"}
-              </span>
-              {email && (
-                <span className="text-muted-foreground text-sm">
-                  {" "}
-                  - {email}
-                </span>
-              )}
-            </div>
-            <span className="text-muted-foreground text-sm">
-              {formatDate(new Date(created_at), "relative")}
-            </span>
-            {is_edited && (
-              <span className="text-muted-foreground text-xs">(সম্পাদিত)</span>
-            )}
-          </div>
+          {!isEditing ? (
+            <>
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div>
+                    <span className="font-medium">
+                      {name} {isOwner && "(আপনি)"}
+                    </span>
+                    {email && (
+                      <span className="text-muted-foreground text-sm">
+                        {" "}
+                        - {email}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-muted-foreground text-sm">
+                    {formatDate(new Date(created_at), "relative")}
+                  </span>
+                  {is_edited && (
+                    <span className="text-muted-foreground text-xs">
+                      (সম্পাদিত)
+                    </span>
+                  )}
+                </div>
 
-          {/* Content */}
-          <p className="whitespace-pre-wrap">{content}</p>
+                {/* Action Buttons */}
+                {isOwner && (
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsEditing(true)}
+                      disabled={isLoading}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Edit2 size={14} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleDeleteComment}
+                      disabled={isLoading}
+                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 size={14} />
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Content */}
+              <p className="whitespace-pre-wrap">{content}</p>
+            </>
+          ) : (
+            /* Edit Form */
+            <form onSubmit={handleUpdateComment} className="space-y-3">
+              <div className="space-y-2">
+                <FormControl
+                  type="text"
+                  name="name"
+                  placeholder="আপনার নাম"
+                  defaultValue={editForm.name}
+                />
+                <FormControl
+                  type="email"
+                  name="email"
+                  placeholder="আপনার ইমেইল"
+                  defaultValue={editForm.email}
+                />
+                <textarea
+                  name="content"
+                  placeholder="আপনার মন্তব্য লিখুন..."
+                  className={cn(
+                    formControlVariants({
+                      variant: "default",
+                      size: "default",
+                    }),
+                    "h-auto py-2",
+                  )}
+                  rows={4}
+                  defaultValue={editForm.content}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCancelEdit}
+                  disabled={isLoading}
+                >
+                  <X size={14} />
+                  বাতিল
+                </Button>
+                <Button
+                  type="submit"
+                  size="sm"
+                  isLoading={isLoading}
+                  disabled={isLoading}
+                >
+                  <Check size={14} />
+                  {isLoading ? "আপডেট হচ্ছে..." : "আপডেট"}
+                </Button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>
@@ -134,13 +261,20 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [saveCredentials, setSaveCredentials] = useState(false);
+
+  // Get saved credentials from cookies
+  const [savedName, setSavedName] = useState(Cookies.get("guest_name") || "");
+  const [savedEmail, setSavedEmail] = useState(
+    Cookies.get("guest_email") || "",
+  );
 
   // Load comments
   useEffect(() => {
     const loadComments = async () => {
       setIsLoading(true);
       try {
-        const { data, meta } = await fetchComments({ news_id: news });
+        const { data, meta } = await fetchComments({ news: news?._id });
         setComments(data || []);
         setMeta(meta || {});
       } catch (error) {
@@ -150,19 +284,37 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
       }
     };
 
-    loadComments();
+    if (news) {
+      loadComments();
+    }
   }, [news]);
+
+  // Set saveCredentials checkbox if credentials exist
+  useEffect(() => {
+    if (savedName || savedEmail) {
+      setSaveCredentials(true);
+    }
+  }, [savedName, savedEmail]);
 
   // Submit new comment
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
 
-    const name = e.currentTarget.name.value;
-    const email = e.currentTarget.email.value;
-    const content = e.currentTarget.content.value;
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const content = formData.get("content") as string;
 
     if (!name || !email || !content) return;
+
+    // Save credentials to cookies if checkbox is checked
+    if (saveCredentials) {
+      Cookies.set("guest_name", name, { expires: 365 }); // Save for 1 year
+      Cookies.set("guest_email", email, { expires: 365 });
+      setSavedName(name);
+      setSavedEmail(email);
+    }
 
     setIsSubmitting(true);
     try {
@@ -175,12 +327,46 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
 
       if (data?._id) {
         setComments((prev) => [data, ...prev]);
+        setMeta((prev) => ({ ...prev, total: (prev.total || 0) + 1 }));
+        // Reset only content field, keep name and email if saved
+        const form = e.currentTarget as HTMLFormElement;
+        const contentField = form.querySelector(
+          'textarea[name="content"]',
+        ) as HTMLTextAreaElement;
+        if (contentField) {
+          contentField.value = "";
+        }
+        if (!saveCredentials) {
+          form.reset();
+        }
       }
     } catch (error) {
       console.error("Error submitting comment:", error);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Clear saved credentials
+  const handleClearCredentials = () => {
+    Cookies.remove("guest_name");
+    Cookies.remove("guest_email");
+    setSavedName("");
+    setSavedEmail("");
+    setSaveCredentials(false);
+  };
+
+  // Handle comment update
+  const handleUpdateComment = (id: string, updatedComment: TComment) => {
+    setComments((prev) =>
+      prev.map((comment) => (comment._id === id ? updatedComment : comment)),
+    );
+  };
+
+  // Handle comment delete
+  const handleDeleteComment = (id: string) => {
+    setComments((prev) => prev.filter((comment) => comment._id !== id));
+    setMeta((prev) => ({ ...prev, total: Math.max((prev.total || 1) - 1, 0) }));
   };
 
   return (
@@ -196,7 +382,12 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
               মন্তব্য ({formatCount(meta?.total || 0)})
             </h3>
           </div>
-          <ChevronRight className={isOpen ? "rotate-90" : ""} size={20} />
+          <ChevronRight
+            className={cn("transition-transform duration-200", {
+              "rotate-90": isOpen,
+            })}
+            size={20}
+          />
         </div>
 
         <div
@@ -222,13 +413,22 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
               className="mt-4 space-y-4 px-0.5"
             >
               <div className="space-y-2">
-                <FormControl type="text" name="name" placeholder="আপনার নাম" />
+                <FormControl
+                  type="text"
+                  name="name"
+                  placeholder="আপনার নাম"
+                  defaultValue={savedName}
+                  required
+                />
                 <FormControl
                   type="email"
                   name="email"
                   placeholder="আপনার ইমেইল"
+                  defaultValue={savedEmail}
+                  required
                 />
                 <textarea
+                  name="content"
                   placeholder="আপনার মন্তব্য লিখুন..."
                   className={cn(
                     formControlVariants({
@@ -238,10 +438,43 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
                     "h-auto py-2",
                   )}
                   rows={4}
+                  required
                 />
               </div>
-              <div className="flex justify-end">
-                <Button type="submit" isLoading={isSubmitting}>
+
+              {/* Save credentials option */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <label className="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={saveCredentials}
+                      onChange={(e) => setSaveCredentials(e.target.checked)}
+                      className="rounded border-gray-300"
+                    />
+                    <span className="text-muted-foreground text-sm">
+                      নাম ও ইমেইল মনে রাখুন
+                    </span>
+                  </label>
+
+                  {(savedName || savedEmail) && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleClearCredentials}
+                      className="h-auto p-1 text-xs text-red-600 hover:text-red-700"
+                    >
+                      সংরক্ষিত তথ্য মুছুন
+                    </Button>
+                  )}
+                </div>
+
+                <Button
+                  type="submit"
+                  isLoading={isSubmitting}
+                  disabled={isSubmitting}
+                >
                   <Send size={16} />
                   {isSubmitting ? "পাঠানো হচ্ছে..." : "মন্তব্য পাঠান"}
                 </Button>
@@ -269,7 +502,12 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
             ) : (
               <div>
                 {comments.map((comment) => (
-                  <CommentItem key={comment._id} comment={comment} />
+                  <CommentItem
+                    key={comment._id}
+                    comment={comment}
+                    onUpdate={handleUpdateComment}
+                    onDelete={handleDeleteComment}
+                  />
                 ))}
               </div>
             )}
