@@ -13,7 +13,7 @@ export async function fetchCategory(
 
   const response = await fetch(url, {
     method: "GET",
-    cache: "force-cache",
+    next: { revalidate: 60 * 60 * 24 },
   });
 
   if (!response.ok) {
@@ -34,7 +34,7 @@ export async function fetchCategories(
 
   const response = await fetch(url, {
     method: "GET",
-    cache: "force-cache",
+    next: { revalidate: 60 * 60 * 24 },
   });
 
   if (!response.ok) {
@@ -55,7 +55,7 @@ export async function fetchCategoriesTree(
 
   const response = await fetch(url, {
     method: "GET",
-    cache: "force-cache",
+    next: { revalidate: 60 * 60 * 24 },
   });
 
   if (!response.ok) {

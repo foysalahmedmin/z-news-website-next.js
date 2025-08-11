@@ -1,6 +1,6 @@
-import CategoryFeaturedNewsSection from "@/components/(common)/category-page/CategoryFeaturedNewsSection";
-import CategoryMoreNewsSection from "@/components/(common)/category-page/CategoryMoreNewsSection";
-import CategoryPageHeaderSection from "@/components/(common)/category-page/CategoryPageHeaderSection";
+import CategoryNewsFeaturedSection from "@/components/(common)/category-page/CategoryNewsFeaturedSection";
+import CategoryNewsMoreSection from "@/components/(common)/category-page/CategoryNewsMoreSection";
+import CategoryNewsPageHeaderSection from "@/components/(common)/category-page/CategoryNewsPageHeaderSection";
 import CategoryNewsSection from "@/components/sections/CategoryNewsSection";
 import { fetchCategory } from "@/services/category.service";
 
@@ -31,9 +31,9 @@ const CategoryNewPage = async ({ params }: Props) => {
 
   return (
     <div>
-      <CategoryPageHeaderSection category={data} />
+      <CategoryNewsPageHeaderSection category={data} />
       <div className="space-y-10 py-6 md:space-y-16 md:py-10">
-        <CategoryFeaturedNewsSection category={data} />
+        <CategoryNewsFeaturedSection category={data} />
 
         {hasSubCategory && (
           <>
@@ -47,7 +47,7 @@ const CategoryNewPage = async ({ params }: Props) => {
           <hr />
         </div>
 
-        <CategoryMoreNewsSection category={data} />
+        <CategoryNewsMoreSection category={data} />
       </div>
     </div>
   );

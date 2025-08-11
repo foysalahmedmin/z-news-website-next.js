@@ -3,12 +3,12 @@ import Icon from "@/components/ui/Icon";
 import { TCategory } from "@/types/category.type";
 import React from "react";
 
-type CategoryPageHeaderSectionProps = {
+type CategoryNewsPageHeaderSectionProps = {
   category?: Partial<TCategory>;
 };
-const CategoryPageHeaderSection: React.FC<CategoryPageHeaderSectionProps> = ({
-  category,
-}) => {
+const CategoryNewsPageHeaderSection: React.FC<
+  CategoryNewsPageHeaderSectionProps
+> = ({ category }) => {
   return (
     <section>
       <div className="bg-accent text-accent-foreground shadow">
@@ -40,4 +40,4 @@ const CategoryPageHeaderSection: React.FC<CategoryPageHeaderSectionProps> = ({
   );
 };
 
-export default CategoryPageHeaderSection;
+export default CategoryNewsPageHeaderSection;

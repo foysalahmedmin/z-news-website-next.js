@@ -1,9 +1,8 @@
 import { TNews } from "@/types/news.type";
 import React from "react";
-import NewsCardGird from "./NewsCardGird";
+import NewsCardGird from "./NewsCardGrid";
 import NewsCardList from "./NewsCardList";
 import NewsCardOverlap from "./NewsCardOverlap";
-
 export type TNewsCardProps = {
   type: "grid" | "list" | "overlap";
   news?: Partial<TNews>;

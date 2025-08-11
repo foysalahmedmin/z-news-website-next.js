@@ -5,7 +5,7 @@ import { TNews } from "@/types/news.type";
 import { Printer } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
-import NewsSection from "../../NewsSection";
+import NewsDetailsSection from "../../NewsDetailsSection";
 
 type PrintProps = {
   news: Partial<TNews>;
@@ -28,7 +28,7 @@ const Print: React.FC<PrintProps> = ({ news }) => {
       {/* Hidden NewsContent for printing */}
       <div className="hidden">
         <div ref={contentRef}>
-          <NewsSection news={news} />
+          <NewsDetailsSection news={news} />
         </div>
       </div>
     </div>

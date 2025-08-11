@@ -1,6 +1,6 @@
 import NewsActionSection from "@/components/(common)/news-page/NewsActionSection";
 import NewsCommentSection from "@/components/(common)/news-page/NewsCommentSection";
-import NewsSection from "@/components/(common)/news-page/NewsSection";
+import NewsDetailsSection from "@/components/(common)/news-page/NewsDetailsSection";
 import RelatedNewsSection from "@/components/(common)/news-page/RelatedNewsSection";
 import { URLS } from "@/config";
 import { fetchNews } from "@/services/news.service";
@@ -103,7 +103,7 @@ const NewsPage = async ({ params }: Props) => {
 
       <div className="space-y-6 py-6 md:space-y-10">
         {/* News Section - Server Component */}
-        <NewsSection news={data} />
+        <NewsDetailsSection news={data} />
 
         <div className="container max-w-4xl">
           <hr />

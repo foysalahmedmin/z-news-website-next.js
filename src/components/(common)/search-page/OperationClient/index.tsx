@@ -1,6 +1,7 @@
 "use client";
 
 import NewsCard from "@/components/cards/NewsCard";
+import NewsCardSkeleton from "@/components/skeletons/cards-skeleton/NewsCardSkeleton";
 import { Button } from "@/components/ui/Button";
 import { FormControl } from "@/components/ui/FormControl";
 import { useClickOutside } from "@/hooks/ui/useClickOutside";
@@ -270,7 +271,7 @@ const OperationClient = () => {
           as="input"
           type="search"
           className="min-w-[200px] flex-grow rounded border px-3 py-2"
-          placeholder="খবর খুঁজুন..."
+          placeholder="সংবাদ খুঁজুন..."
           defaultValue={search}
           onChange={(e) => debouncedSearchUpdate(e.target.value || null)}
         />
@@ -344,16 +345,28 @@ const OperationClient = () => {
         {/* News List */}
         {isLoading && data.length === 0 ? (
           <div className="h-full flex-1">
-            <p className="text-center">Loading News...</p>
+            <ul className="space-y-4">
+              {Array.from({ length: 12 }).map((_, index) => (
+                <li
+                  key={index}
+                  className="border-b pb-4 last:border-b-0 last:pb-0"
+                >
+                  <NewsCardSkeleton type="list" />
+                </li>
+              ))}
+            </ul>
           </div>
         ) : data.length === 0 ? (
           <div className="flex h-full flex-1 items-center justify-center">
-            <p className="text-center">No News Found</p>
+            <p className="text-center">কোন সংবাদ পাওয়া যায়নি</p>
           </div>
         ) : (
           <ul className="space-y-4">
             {data.map((newsItem) => (
-              <li key={newsItem._id} className="border-b pb-4">
+              <li
+                key={newsItem._id}
+                className="border-b pb-4 last:border-b-0 last:pb-0"
+              >
                 <NewsCard news={newsItem} type="list" />
               </li>
             ))}

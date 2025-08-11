@@ -28,7 +28,7 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const CommentItem = ({
+const NewsCommentCard = ({
   comment,
   onUpdate,
   onDelete,
@@ -110,9 +110,7 @@ const CommentItem = ({
   };
 
   return (
-    <div
-      className={`mb-6 rounded-md p-4 ${isEditing ? "border border-blue-200 bg-blue-50/30" : ""}`}
-    >
+    <div className={`rounded-md p-4 ${isEditing ? "bg-muted/50 border" : ""}`}>
       <div className="flex items-start gap-3">
         {/* Avatar */}
         <div className="flex-shrink-0">
@@ -125,8 +123,8 @@ const CommentItem = ({
               className="rounded-full"
             />
           ) : (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300">
-              <span className="text-xs font-medium text-gray-600">
+            <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
+              <span className="text-muted-foreground text-xs font-medium">
                 {name?.charAt(0).toUpperCase()}
               </span>
             </div>
@@ -450,7 +448,7 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
                       type="checkbox"
                       checked={saveCredentials}
                       onChange={(e) => setSaveCredentials(e.target.checked)}
-                      className="rounded border-gray-300"
+                      className="border-muted rounded"
                     />
                     <span className="text-muted-foreground text-sm">
                       নাম ও ইমেইল মনে রাখুন
@@ -483,11 +481,10 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
 
             {/* Comments List */}
             {isLoading ? (
-              <div className="py-8 text-center">
-                <div className="border-primary mx-auto h-8 w-8 animate-spin rounded-full border-b-2"></div>
-                <p className="text-muted-foreground mt-2">
-                  মন্তব্য লোড হচ্ছে...
-                </p>
+              <div className="space-y-4 py-8">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <NewsCommentCardSkeleton key={index} />
+                ))}
               </div>
             ) : comments.length === 0 ? (
               <div className="space-y-4 py-8 text-center">
@@ -500,9 +497,9 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
                 </p>
               </div>
             ) : (
-              <div>
+              <div className="space-y-4 py-4">
                 {comments.map((comment) => (
-                  <CommentItem
+                  <NewsCommentCard
                     key={comment._id}
                     comment={comment}
                     onUpdate={handleUpdateComment}

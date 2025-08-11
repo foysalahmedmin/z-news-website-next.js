@@ -8,7 +8,7 @@ type TNewsSectionProps = {
   news?: Partial<TNews>;
 };
 
-const NewsSection: React.FC<TNewsSectionProps> = ({ news }) => {
+const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
     return new Date(date).toLocaleString("bn-BD", {
@@ -177,4 +177,4 @@ const NewsSection: React.FC<TNewsSectionProps> = ({ news }) => {
   );
 };
 
-export default NewsSection;
+export default NewsDetailsSection;

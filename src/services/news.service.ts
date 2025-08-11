@@ -1,10 +1,10 @@
 import { ENV } from "@/config";
 import { TBulkNewsResponse, TNewsResponse } from "@/types/news.type";
 
-export async function fetchNews(
+export const fetchNews = async (
   slug: string,
   query?: Record<string, any>,
-): Promise<TNewsResponse> {
+): Promise<TNewsResponse> => {
   const queryString = query
     ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
     : "";
@@ -13,7 +13,7 @@ export async function fetchNews(
 
   const response = await fetch(url, {
     method: "GET",
-    cache: "force-cache",
+    next: { revalidate: 60 * 30 },
   });
 
   if (!response.ok) {
@@ -21,11 +21,11 @@ export async function fetchNews(
   }
 
   return response.json() as Promise<TNewsResponse>;
-}
+};
 
-export async function fetchBulkNews(
+export const fetchBulkNews = async (
   query?: Record<string, any>,
-): Promise<TBulkNewsResponse> {
+): Promise<TBulkNewsResponse> => {
   const queryString = query
     ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
     : "";
@@ -34,7 +34,7 @@ export async function fetchBulkNews(
 
   const response = await fetch(url, {
     method: "GET",
-    cache: "no-cache",
+    next: { revalidate: 60 * 5 },
   });
 
   if (!response.ok) {
@@ -42,4 +42,4 @@ export async function fetchBulkNews(
   }
 
   return response.json() as Promise<TBulkNewsResponse>;
-}
+};

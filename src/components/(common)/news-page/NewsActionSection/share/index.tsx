@@ -59,7 +59,7 @@ const Share: React.FC<ReactionProps> = ({ news }) => {
             <Modal.Body>
               <div className="space-y-6">
                 <p className="text-muted-foreground text-center">
-                  খবরটি শেয়ার করুন
+                  সংবাদটি শেয়ার করুন
                 </p>
 
                 {/* Social share buttons */}

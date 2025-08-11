@@ -1,6 +1,7 @@
 "use client";
 
 import NewsCard from "@/components/cards/NewsCard";
+import NewsCardSkeleton from "@/components/skeletons/cards-skeleton/NewsCardSkeleton";
 import { Button } from "@/components/ui/Button";
 import { fetchBulkNews } from "@/services/news.service";
 import { TNews } from "@/types/news.type";
@@ -55,21 +56,36 @@ const RelatedNewsSection: React.FC<RelatedNewsSectionProps> = ({ news }) => {
             <div>
               <div className="flex items-center gap-2">
                 <Newspaper size={20} />
-                <h3 className="text-xl font-bold">সম্পর্কিত খবর</h3>
+                <h3 className="text-xl font-bold">সম্পর্কিত সংবাদ</h3>
               </div>
             </div>
             <div>
-              <div className="space-y-6">
-                <div className="grid">
-                  {data?.map((item, index) => (
-                    <NewsCard
-                      className="border-b py-2 last:border-0"
-                      key={index}
-                      type="list"
-                      news={item}
-                    />
-                  ))}
-                </div>
+              <div>
+                {isLoading && page === 1 ? (
+                  <div>
+                    {Array.from({ length: 12 }).map((_, index) => (
+                      <div
+                        key={index}
+                        className="border-b py-2 last:border-b-0"
+                      >
+                        <NewsCardSkeleton type="list" />
+                      </div>
+                    ))}
+                  </div>
+                ) : data.length === 0 ? (
+                  <p className="py-4 text-center">কোন সংবাদ পাওয়া যায়নি</p>
+                ) : (
+                  <div className="space-y-6 md:space-y-10">
+                    {data?.map((item, index) => (
+                      <div
+                        key={index}
+                        className="border-b py-2 last:border-b-0"
+                      >
+                        <NewsCard news={item} type="list" />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               {hasMore && (
                 <div className="mt-10 flex justify-center">

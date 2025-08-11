@@ -2,7 +2,7 @@ import NewsCard from "@/components/cards/NewsCard";
 import { cn } from "@/lib/utils";
 import { fetchBulkNews } from "@/services/news.service";
 
-const FeaturedNewsSection = async () => {
+const NewsFeaturedSection = async () => {
   const { data } = await fetchBulkNews({
     page: 1,
     limit: 13,
@@ -51,4 +51,4 @@ const FeaturedNewsSection = async () => {
   );
 };
 
-export default FeaturedNewsSection;
+export default NewsFeaturedSection;

@@ -1,5 +1,5 @@
-import FeaturedNewsSection from "@/components/(common)/home-page/FeaturedNewsSection";
-import NewsHeadlinesSection from "@/components/(common)/home-page/NewsBreaksSection";
+import NewsFeaturedSection from "@/components/(common)/home-page/NewsFeaturedSection";
+import NewsHeadlinesSection from "@/components/(common)/home-page/NewsHeadlinesSection";
 import CategoryNewsSection from "@/components/sections/CategoryNewsSection";
 import { fetchCategories } from "@/services/category.service";
 import { Metadata } from "next";
@@ -20,7 +20,7 @@ const HomePage: React.FC = async () => {
     <main>
       <NewsHeadlinesSection />
       <div className="space-y-10 py-6 md:space-y-16 md:py-10">
-        <FeaturedNewsSection />
+        <NewsFeaturedSection />
         <CategoryNewsSection
           category={{ name: "সাম্প্রতিক সংবাদ", icon: "clock " }}
         />

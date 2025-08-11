@@ -4,7 +4,7 @@ import { fetchBulkNews } from "@/services/news.service";
 import { TCategory } from "@/types/category.type";
 import React from "react";
 
-const CategoryFeaturedNewsSection: React.FC<{
+const CategoryNewsFeaturedSection: React.FC<{
   category?: Partial<TCategory>;
 }> = async ({ category }) => {
   const { data } = await fetchBulkNews({
@@ -46,4 +46,4 @@ const CategoryFeaturedNewsSection: React.FC<{
   );
 };
 
-export default CategoryFeaturedNewsSection;
+export default CategoryNewsFeaturedSection;
