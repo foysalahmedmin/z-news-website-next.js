@@ -7,7 +7,7 @@ export type Response<T = unknown> = {
     total?: number;
     page?: number;
     limit?: number;
-  };
+  } & Record<string, unknown>;
 };
 
 export type ErrorSource = {

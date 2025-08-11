@@ -39,9 +39,7 @@ export type TNews = {
   edited_at?: Date;
   news_headline?: Partial<TNewsHeadline>;
   news_break?: Partial<TNewsBreak>;
-  likes_count?: number;
-  dislikes_count?: number;
-  comments_count?: number;
+  views?: number;
 };
 
 export type TNewsResponse = Response<TNews>;

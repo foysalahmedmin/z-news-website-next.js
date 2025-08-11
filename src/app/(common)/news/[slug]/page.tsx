@@ -1,13 +1,10 @@
-// app/news/[slug]/page.tsx
-import CommentSection from "@/components/(common)/news-page/CommentSection";
 import NewsActionSection from "@/components/(common)/news-page/NewsActionSection";
+import NewsCommentSection from "@/components/(common)/news-page/NewsCommentSection";
+import NewsSection from "@/components/(common)/news-page/NewsSection";
 import RelatedNewsSection from "@/components/(common)/news-page/RelatedNewsSection";
 import { URLS } from "@/config";
 import { fetchNews } from "@/services/news.service";
-import { Calendar, Clock, Tag, User } from "lucide-react";
 import { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 
 type Props = {
   params: Promise<{
@@ -68,17 +65,6 @@ const NewsPage = async ({ params }: Props) => {
 
   let { data } = await fetchNews(decodedSlug);
 
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "";
-    return new Intl.DateTimeFormat("bn-BD", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(date));
-  };
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -115,176 +101,19 @@ const NewsPage = async ({ params }: Props) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <article className="mx-auto max-w-4xl space-y-6 px-4 py-8 md:space-y-10">
-        {/* Breadcrumb */}
-        <div className="space-y-4 md:space-y-6">
-          <nav className="text-sm text-gray-600">
-            <Link
-              href="/"
-              className="underline-effect hover:underline-effect-active hover:text-blue-900"
-            >
-              হোম
-            </Link>
-            <span className="mx-2">/</span>
-            <Link
-              className="underline-effect hover:underline-effect-active hover:text-blue-900"
-              href={`/category/${data?.category.slug}`}
-            >
-              {data?.category.name}
-            </Link>
-            <span className="mx-2">/</span>
-            <span>{data?.title}</span>
-          </nav>
+      <div>
+        {/* News Section - Server Component */}
+        <NewsSection news={data} />
 
-          <div className="space-y-4">
-            {/* Title */}
-            <h1 className="text-2xl leading-tight font-bold md:text-4xl">
-              {data?.title}
-            </h1>
+        {/* Like, Dislike & Actions - Client Component */}
+        <NewsActionSection news={data} />
 
-            {/* Description */}
-            {data?.description && (
-              <p className="text-foreground leading-relaxed">
-                {data?.description}
-              </p>
-            )}
-          </div>
+        {/* Comment Section - Client Component */}
+        <NewsCommentSection news={data} />
 
-          {/* Meta Information */}
-          <div className="text-muted-foreground flex flex-wrap items-center text-sm">
-            {/* Author */}
-            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-              <User size={16} />
-              <span>লিখেছেন:</span>
-              <span className="font-medium">{data?.author.name}</span>
-              {data?.author.image && (
-                <Image
-                  src={data?.author.image}
-                  alt={data?.author.name}
-                  width={24}
-                  height={24}
-                  className="rounded-full"
-                />
-              )}
-            </div>
-
-            {/* Published Date */}
-            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-              <Calendar size={16} />
-              <span>প্রকাশিত:</span>
-              <time
-                dateTime={
-                  data?.published_at &&
-                  new Date(data?.published_at).toISOString()
-                }
-              >
-                {formatDate(data?.published_at)}
-              </time>
-            </div>
-
-            {/* Last Updated */}
-            {data?.is_edited && data?.edited_at && (
-              <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-                <Clock size={16} />
-                <span>আপডেট:</span>
-                <time
-                  dateTime={
-                    data?.edited_at && new Date(data?.edited_at).toISOString()
-                  }
-                >
-                  {formatDate(data?.edited_at)}
-                </time>
-              </div>
-            )}
-
-            {/* Category */}
-            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-              <Tag size={16} />
-              <Link
-                href={`/category/${data?.category.slug}`}
-                className="underline-effect hover:underline-effect-active font-medium hover:text-blue-900"
-              >
-                {data?.category.name}
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <hr />
-
-        <div className="space-y-6 md:space-y-10">
-          {/* Thumbnail */}
-          {data?.thumbnail && (
-            <div>
-              <Image
-                src={
-                  data?.thumbnail
-                    ? URLS.news.thumbnail + "/" + data?.thumbnail
-                    : "/thumbnail.png"
-                }
-                alt={data?.title}
-                width={800}
-                height={450}
-                className="aspect-video h-auto w-full rounded-md object-cover shadow"
-                priority
-              />
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="prose prose-lg max-w-none">
-            <div
-              dangerouslySetInnerHTML={{ __html: data?.content || "" }}
-              className="text-foreground leading-relaxed"
-            />
-          </div>
-
-          {/* Additional Images */}
-          {data?.images && data?.images.length > 0 && (
-            <div>
-              <h3 className="mb-4 text-xl font-semibold">আরো ছবি</h3>
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                {data?.images.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={image}
-                    alt={`${data?.title} - ছবি ${index + 1}`}
-                    width={300}
-                    height={200}
-                    className="h-48 w-full rounded-md object-cover shadow-md transition-shadow hover:shadow"
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Tags */}
-          {data?.tags && data?.tags.length > 0 && (
-            <div>
-              <div className="flex flex-wrap gap-2">
-                {data?.tags.map((tag, index) => (
-                  <div
-                    key={index}
-                    // href={`/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-200"
-                  >
-                    #{tag}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </article>
-
-      {/* Like, Dislike & Actions - Client Component */}
-      <NewsActionSection news={data} />
-
-      {/* Comment Section - Client Component */}
-      <CommentSection newsId={data?._id} />
-
-      {/* Related News - Server Component */}
-      <RelatedNewsSection category={data?.category} />
+        {/* Related News - Server Component */}
+        <RelatedNewsSection category={data?.category} />
+      </div>
     </>
   );
 };

@@ -9,6 +9,7 @@ import {
 } from "@/services/reaction.service";
 import { TNews } from "@/types/news.type";
 import { TReaction } from "@/types/reaction.type";
+import { formatCount } from "@/utils/formatCount";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -18,8 +19,8 @@ type ReactionProps = {
 
 const Reaction: React.FC<ReactionProps> = ({ news }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [likesCount, setLikesCount] = useState(news?.likes_count || 0);
-  const [dislikesCount, setDislikesCount] = useState(news?.dislikes_count || 0);
+  const [likesCount, setLikesCount] = useState(0);
+  const [dislikesCount, setDislikesCount] = useState(0);
 
   const [reaction, setReaction] = useState<Partial<TReaction>>({});
   const is_liked = reaction?.type === "like";
@@ -31,17 +32,14 @@ const Reaction: React.FC<ReactionProps> = ({ news }) => {
 
     try {
       if (reaction?._id) {
-        // SAME reaction → remove
         if (reaction.type === type) {
-          await deleteReaction(reaction._id); // server update
+          await deleteReaction(reaction._id);
           setReaction({});
           if (type === "like") setLikesCount((c) => c - 1);
           else setDislikesCount((c) => c - 1);
           return;
         }
-
-        // SWITCH reaction
-        await updateReaction(reaction._id, { type }); // server update
+        await updateReaction(reaction._id, { type });
         if (type === "like") {
           setLikesCount((c) => c + 1);
           setDislikesCount((c) => c - 1);
@@ -51,8 +49,7 @@ const Reaction: React.FC<ReactionProps> = ({ news }) => {
         }
         setReaction((prev) => ({ ...prev, type }));
       } else {
-        // NEW reaction
-        const { data } = await createReaction({ news: news._id, type }); // server update
+        const { data } = await createReaction({ news: news._id, type });
         if (type === "like") setLikesCount((c) => c + 1);
         else setDislikesCount((c) => c + 1);
         setReaction(data || {});
@@ -65,10 +62,13 @@ const Reaction: React.FC<ReactionProps> = ({ news }) => {
   };
 
   useEffect(() => {
+    if (!news?._id) return;
     const getReaction = async () => {
       try {
-        const { data } = await fetchNewsReaction(news?._id);
-        console.log(data);
+        const { data, meta } = await fetchNewsReaction(news?._id);
+        const { likes = 0, dislikes = 0 } = meta || {};
+        setLikesCount((likes as number) || 0);
+        setDislikesCount((dislikes as number) || 0);
         setReaction(data || {});
       } catch (error) {
         console.error(error);
@@ -92,7 +92,7 @@ const Reaction: React.FC<ReactionProps> = ({ news }) => {
             "fill-current": is_liked,
           })}
         />
-        <span className="text-lg">{likesCount}</span>
+        <span className="text-lg leading-0">{formatCount(likesCount)}</span>
       </button>
       <button
         disabled={isLoading}
@@ -104,6 +104,7 @@ const Reaction: React.FC<ReactionProps> = ({ news }) => {
             "fill-current": is_disliked,
           })}
         />
+        <span className="text-lg leading-0">{formatCount(dislikesCount)}</span>
       </button>
     </div>
   );
