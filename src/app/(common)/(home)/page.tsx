@@ -13,6 +13,7 @@ const HomePage: React.FC = async () => {
   const { data } = await fetchCategories({
     page: 1,
     limit: 15,
+    sort: "sequence",
     is_featured: true,
   });
   return (

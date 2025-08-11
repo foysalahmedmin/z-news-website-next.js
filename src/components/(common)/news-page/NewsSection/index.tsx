@@ -22,7 +22,7 @@ const NewsSection: React.FC<TNewsSectionProps> = ({ news }) => {
   return (
     <article
       id={`news-${news?._id}`}
-      className="mx-auto max-w-4xl space-y-6 px-4 py-8 md:space-y-10"
+      className="container mx-auto max-w-4xl space-y-6 md:space-y-10"
     >
       {/* Breadcrumb */}
       <div className="space-y-4 md:space-y-6">
@@ -65,19 +65,6 @@ const NewsSection: React.FC<TNewsSectionProps> = ({ news }) => {
             <User size={16} />
             <span>লিখেছেন:</span>
             <span className="font-medium">{news?.author?.name}</span>
-            {news?.author?.image && (
-              <Image
-                src={
-                  news?.author?.image
-                    ? URLS.user + "/" + news?.author?.image
-                    : "/user.png"
-                }
-                alt={news?.author?.name}
-                width={24}
-                height={24}
-                className="rounded-full"
-              />
-            )}
           </div>
 
           {/* Published Date */}

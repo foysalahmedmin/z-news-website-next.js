@@ -3,7 +3,11 @@ import Navigation from "./Navigation";
 import TopHeader from "./TopHeader";
 
 const Header = async () => {
-  const { data } = await fetchCategoriesTree({ page: 1, limit: 15 });
+  const { data } = await fetchCategoriesTree({
+    page: 1,
+    limit: 15,
+    sort: "sequence",
+  });
   return (
     <>
       <TopHeader categories={data!} />
