@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 import type { ReactNode } from "react";
-import { Link } from "react-router";
 import Icon from "./Icon";
 
 export type TBreadcrumbs = {
@@ -29,7 +29,7 @@ const BreadcrumbItem = ({
 }: TBreadcrumbItemProps) => {
   if (path) {
     return (
-      <Link to={path} className={cn("hover:text-accent", className)}>
+      <Link href={path} className={cn("hover:text-accent", className)}>
         {children}
       </Link>
     );
