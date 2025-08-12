@@ -24,17 +24,23 @@ const NewsHeadlinesSection = async () => {
                 <div className="via-card from-card absolute -start-1 top-0 bottom-0 z-20 w-10 bg-gradient-to-r to-transparent" />
                 <Marquee speed={50} pauseOnHover gradient={false}>
                   <ul className="flex whitespace-nowrap">
-                    {data?.map((newsBreak) => (
+                    {data?.map((headline) => (
                       <li
                         className="border-primary border-r px-4"
-                        key={newsBreak._id}
+                        key={headline._id}
                       >
-                        <Link
-                          href={`/news/${newsBreak.news}`}
-                          className="underline-effect foreground hover:underline-effect-active text-sm whitespace-nowrap uppercase transition-colors duration-200"
-                        >
-                          {newsBreak.title}
-                        </Link>
+                        {headline?.news?.slug ? (
+                          <Link
+                            href={`/news/${headline?.news?.slug}`}
+                            className="underline-effect foreground hover:underline-effect-active text-sm whitespace-nowrap uppercase transition-colors duration-200"
+                          >
+                            {headline?.title}
+                          </Link>
+                        ) : (
+                          <span className="underline-effect foreground hover:underline-effect-active text-sm whitespace-nowrap uppercase transition-colors duration-200">
+                            {headline?.title}
+                          </span>
+                        )}
                       </li>
                     ))}
                   </ul>

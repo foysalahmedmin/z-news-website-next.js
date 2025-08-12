@@ -10,7 +10,7 @@ export type TNewsHeadline = {
   tags?: string[];
   category: string;
   author: string;
-  news?: string;
+  news?: { _id: string; title: string; slug: string };
   status: TStatus;
   published_at?: Date;
   expired_at?: Date;
