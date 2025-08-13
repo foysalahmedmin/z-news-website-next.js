@@ -1,4 +1,3 @@
-import type { TNewsBreak } from "./news-break.type";
 import type { TNewsHeadline } from "./news-headline.type";
 import type { Response } from "./response.type";
 
@@ -38,7 +37,6 @@ export type TNews = {
   is_edited?: boolean;
   edited_at?: Date;
   news_headline?: Partial<TNewsHeadline>;
-  news_break?: Partial<TNewsBreak>;
   views?: number;
 };
 

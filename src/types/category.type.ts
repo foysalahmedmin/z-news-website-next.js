@@ -16,15 +16,6 @@ export type TCategory = {
   children?: TCategory[];
 };
 
-export type TCategoryCreatePayload = {
-  category?: string;
-  icon?: string;
-  name: string;
-  slug: string;
-  sequence: number;
-  status: TStatus;
-};
-
 export type TCategoryUpdatePayload = {
   category?: string;
   icon?: string;
