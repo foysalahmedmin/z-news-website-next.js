@@ -11,6 +11,7 @@ export type TCategory = {
   slug: string;
   description?: string;
   sequence: number;
+  is_featured?: boolean;
   status: TStatus;
   layout?: string;
   children?: TCategory[];
