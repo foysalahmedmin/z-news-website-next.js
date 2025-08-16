@@ -58,7 +58,7 @@ const OperationClient = () => {
   const selectedCategory =
     categories.find((cat) => cat._id === category) || null;
 
-  const hasMore = !!meta?.total && !!(meta.total > data.length);
+  const hasMore = !!(meta?.total && meta?.total > data?.length);
 
   // Update URL params helper
   const updateSearchParams = (newParams: { [key: string]: string | null }) => {

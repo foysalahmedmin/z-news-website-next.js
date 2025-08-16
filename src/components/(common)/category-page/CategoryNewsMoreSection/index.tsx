@@ -24,7 +24,7 @@ const CategoryNewsMoreSection: React.FC<CategoryNewsMoreSectionProps> = ({
   }>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const hasMore = meta?.total && meta?.total > data?.length;
+  const hasMore = !!(meta?.total && meta?.total > data?.length);
 
   useEffect(() => {
     if (!category?._id) return;

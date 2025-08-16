@@ -22,7 +22,7 @@ const RelatedNewsSection: React.FC<RelatedNewsSectionProps> = ({ news }) => {
   }>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const hasMore = meta?.total && meta?.total > data?.length;
+  const hasMore = !!(meta?.total && meta?.total > data?.length);
 
   useEffect(() => {
     if (!news?.category?._id) return;
