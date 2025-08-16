@@ -27,3 +27,5 @@ const NewsCommentCardSkeleton: React.FC = () => {
     </div>
   );
 };
+
+export default NewsCommentCardSkeleton;

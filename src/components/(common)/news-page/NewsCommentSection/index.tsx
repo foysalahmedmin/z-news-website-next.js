@@ -1,6 +1,7 @@
 // components/CommentSection.tsx
 "use client";
 
+import NewsCommentCardSkeleton from "@/components/skeletons/cards-skeleton/NewsCommentCardSkeleton";
 import { Button } from "@/components/ui/Button";
 import { FormControl, formControlVariants } from "@/components/ui/FormControl";
 import { URLS } from "@/config";

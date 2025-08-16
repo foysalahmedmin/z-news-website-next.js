@@ -55,7 +55,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <hr />
+          <hr className="my-6 md:my-10" />
 
           {/* Bottom Section */}
           <div className="text-muted-foreground flex flex-col items-center justify-center text-sm sm:flex-row">

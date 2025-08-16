@@ -75,7 +75,7 @@ const RelatedNewsSection: React.FC<RelatedNewsSectionProps> = ({ news }) => {
                 ) : data.length === 0 ? (
                   <p className="py-4 text-center">কোন সংবাদ পাওয়া যায়নি</p>
                 ) : (
-                  <div className="space-y-6 md:space-y-10">
+                  <div>
                     {data?.map((item, index) => (
                       <div
                         key={index}

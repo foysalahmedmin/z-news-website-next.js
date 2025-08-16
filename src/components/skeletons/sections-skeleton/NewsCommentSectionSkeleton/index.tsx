@@ -1,3 +1,5 @@
+import NewsCommentCardSkeleton from "../../cards-skeleton/NewsCommentCardSkeleton";
+
 const NewsCommentSectionSkeleton: React.FC = () => {
   const skeletonCommentsCount = 3;
 
