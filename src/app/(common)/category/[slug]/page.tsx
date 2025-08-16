@@ -30,7 +30,7 @@ const CategoryNewPage = async ({ params }: Props) => {
   const hasSubCategory = data?.children && data?.children.length > 0;
 
   return (
-    <div>
+    <div className="min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)]">
       <CategoryNewsPageHeaderSection category={data} />
       <div className="space-y-10 py-6 md:space-y-16 md:py-10">
         <CategoryNewsFeaturedSection category={data} />

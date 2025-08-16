@@ -17,7 +17,7 @@ const HomePage: React.FC = async () => {
     is_featured: true,
   });
   return (
-    <main>
+    <main className="min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)]">
       <NewsHeadlinesSection />
       <div className="space-y-10 py-6 md:space-y-16 md:py-10">
         <NewsFeaturedSection />
