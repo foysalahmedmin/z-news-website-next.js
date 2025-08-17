@@ -76,16 +76,24 @@ const OperationClient = () => {
     setPage(1);
   };
 
+  function formatYMD(date?: Date) {
+    if (!date) return "";
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+
   // Handle date range selection
   const handleDateRangeSelect = (range: DateRange | undefined) => {
     if (range?.from && range?.to) {
       updateSearchParams({
-        published_at_gte: range.from.toISOString().split("T")[0],
-        published_at_lte: range.to.toISOString().split("T")[0],
+        published_at_gte: formatYMD(range.from),
+        published_at_lte: formatYMD(range.to),
       });
     } else if (range?.from) {
       updateSearchParams({
-        published_at_gte: range.from.toISOString().split("T")[0],
+        published_at_gte: formatYMD(range.from),
         published_at_lte: null,
       });
     } else {
