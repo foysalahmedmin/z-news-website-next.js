@@ -4,6 +4,7 @@ import NewsDetailsSection from "@/components/(common)/news-page/NewsDetailsSecti
 import RelatedNewsSection from "@/components/(common)/news-page/RelatedNewsSection";
 import { URLS } from "@/config";
 import { fetchNews } from "@/services/news.service";
+import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
 import { Metadata } from "next";
 
 type Props = {
@@ -31,6 +32,16 @@ export const generateMetadata = async ({
       data?.description ||
       data?.content.replace(/<[^>]*>/g, "").substring(0, 160);
 
+    const { thumbnails } = data?.youtube
+      ? parseYouTubeUrl(data?.youtube || "")
+      : {};
+
+    const thumbnail = data?.seo?.image
+      ? URLS.news.seo.image + "/" + data?.seo?.image
+      : data?.thumbnail
+        ? URLS.news.thumbnail + "/" + data?.thumbnail
+        : thumbnails?.default || "/thumbnail.png";
+
     return {
       title: seoTitle,
       description: seoDescription,
@@ -38,9 +49,7 @@ export const generateMetadata = async ({
       openGraph: {
         title: seoTitle,
         description: seoDescription,
-        images: data?.thumbnail
-          ? [{ url: URLS.news.thumbnail + "/" + data?.thumbnail }]
-          : [{ url: "/thumbnail.png" }],
+        images: thumbnail,
         type: "article",
         publishedTime:
           data?.published_at && new Date(data?.published_at).toISOString(),
@@ -49,9 +58,11 @@ export const generateMetadata = async ({
         card: "summary_large_image",
         title: seoTitle,
         description: seoDescription,
-        images: data?.thumbnail
-          ? [URLS.news.thumbnail + "/" + data?.thumbnail]
-          : [{ url: "/thumbnail.png" }],
+        images: data?.seo?.image
+          ? [{ url: URLS.news.seo.image + "/" + data?.seo?.image }]
+          : data?.thumbnail
+            ? [{ url: URLS.news.thumbnail + "/" + data?.thumbnail }]
+            : [{ url: "/thumbnail.png" }],
       },
     };
   } catch (error) {
@@ -65,14 +76,22 @@ const NewsPage = async ({ params }: Props) => {
 
   let { data } = await fetchNews(decodedSlug);
 
+  const { thumbnails } = data?.youtube
+    ? parseYouTubeUrl(data?.youtube || "")
+    : {};
+
+  const thumbnail = data?.seo?.image
+    ? URLS.news.seo.image + "/" + data?.seo?.image
+    : data?.thumbnail
+      ? URLS.news.thumbnail + "/" + data?.thumbnail
+      : thumbnails?.default || "/thumbnail.png";
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     headline: data?.title,
     description: data?.description,
-    image: data?.thumbnail
-      ? URLS.news.thumbnail + "/" + data?.thumbnail
-      : "/thumbnail.png",
+    image: thumbnail,
     datePublished:
       data?.published_at && new Date(data?.published_at).toISOString(),
     dateModified:

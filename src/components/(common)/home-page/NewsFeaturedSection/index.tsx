@@ -1,47 +1,35 @@
 import NewsCard from "@/components/cards/NewsCard";
 import { cn } from "@/lib/utils";
-import { fetchBulkNews } from "@/services/news.service";
+import { fetchFeaturedBulkNews } from "@/services/news.service";
 
 const NewsFeaturedSection = async () => {
-  const { data } = await fetchBulkNews({
-    page: 1,
-    limit: 13,
-    is_top_featured: true,
-    sort: "-published_at,sequence",
-  });
+  const { data } = await fetchFeaturedBulkNews();
 
-  const hasAd = false;
-  const endPoint = hasAd ? 5 : 9;
-
-  const topData = data?.slice(0, endPoint);
-  const bottomData = data?.slice(endPoint, endPoint + 4);
+  const top = data?.slice(0, 3).filter(Boolean) || [];
+  const bottom = data?.slice(3, 7).filter(Boolean) || [];
 
   return (
     <section>
       <div className="container">
         <div className="space-y-6 md:space-y-10">
-          <div className="grid gap-4 md:grid-flow-col md:grid-cols-2 md:grid-rows-6 lg:grid-cols-3 lg:grid-rows-4">
-            {topData?.map((item, index) => (
+          <div className="gird gap-4 md:grid-cols-2">
+            {top?.map((item, index) => (
               <NewsCard
                 className={cn("", {
-                  "md:col-span-1 md:row-span-4 md:text-3xl": index === 0,
+                  "border-primary border-s-4 md:col-span-2 md:text-3xl":
+                    index === 0,
                 })}
-                type={index === 0 ? "grid" : "list"}
+                type={"list"}
                 news={item}
                 key={index}
               />
             ))}
-            {hasAd && (
-              <div className="md:row-span-4 md:text-xl">
-                <div>{/* <Ad /> */}</div>
-              </div>
-            )}
           </div>
 
           <hr />
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {bottomData?.map((item, index) => (
+            {bottom?.map((item, index) => (
               <NewsCard type="grid" news={item} key={index} />
             ))}
           </div>

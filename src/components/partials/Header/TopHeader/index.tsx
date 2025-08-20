@@ -1,7 +1,6 @@
 "use client";
 
 import { ButtonMenu } from "@/components/buttons/ButtonMenu";
-import { Button } from "@/components/ui/Button";
 import { Drawer } from "@/components/ui/Drawer";
 import { TCategory } from "@/types/category.type";
 import { Search } from "lucide-react";
@@ -53,7 +52,7 @@ const TopHeader: React.FC<HeaderProps> = ({ className, categories }) => {
               </Link>
             </div>
             <div className="flex items-center justify-end gap-4">
-              <Link
+              {/* <Link
                 className="hidden md:block"
                 href={`/search?published_at_gte=${new Date().toISOString().split("T")[0]}&published_at_lte=${new Date().toISOString().split("T")[0]}`}
               >
@@ -65,8 +64,8 @@ const TopHeader: React.FC<HeaderProps> = ({ className, categories }) => {
                 >
                   <span>আজকের সংবাদ</span>
                 </Button>
-              </Link>
-              <Link href="/search" className="hover:underline md:hidden">
+              </Link> */}
+              <Link href="/search">
                 <Search />
               </Link>
             </div>

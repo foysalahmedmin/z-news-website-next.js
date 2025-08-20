@@ -1,6 +1,7 @@
 import { URLS } from "@/config";
 import { TNews } from "@/types/news.type";
-import { Calendar, Clock, Tag, User } from "lucide-react";
+import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
+import { Calendar, Edit2, Tag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,6 +10,16 @@ type TNewsSectionProps = {
 };
 
 const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
+  if (!news) return null;
+
+  const { thumbnails, url } = news?.youtube
+    ? parseYouTubeUrl(news?.youtube || "")
+    : {};
+
+  const thumbnail = news?.thumbnail
+    ? URLS.news.thumbnail + "/" + news?.thumbnail
+    : thumbnails?.default || "/thumbnail.png";
+
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
     return new Date(date).toLocaleString("bn-BD", {
@@ -26,12 +37,18 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
     >
       {/* Breadcrumb */}
       <div className="space-y-4 md:space-y-6">
-        <nav className="text-sm text-gray-600">
+        <nav className="flex items-center text-sm text-gray-600">
           <Link
             href="/"
-            className="underline-effect hover:underline-effect-active hover:text-blue-900"
+            className="underline-effect hover:underline-effect-active inline-block hover:text-blue-900"
           >
-            হোম
+            <Image
+              className="inline-block h-12 object-contain object-center"
+              src="/logo.png"
+              alt="Logo"
+              width={52}
+              height={32}
+            />
           </Link>
           <span className="mx-2">/</span>
           <Link
@@ -61,11 +78,18 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
         {/* Meta Information */}
         <div className="text-muted-foreground flex flex-wrap items-center text-sm">
           {/* Author */}
-          <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-            <User size={16} />
-            <span>লিখেছেন:</span>
+          {/* <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+            <Edit2 size={16} />
             <span className="font-medium">{news?.author?.name}</span>
-          </div>
+          </div> */}
+
+          {/* Writer */}
+          {news?.writer && (
+            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+              <Edit2 size={16} />
+              <span className="font-medium">{news?.writer}</span>
+            </div>
+          )}
 
           {/* Published Date */}
           <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
@@ -81,7 +105,7 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
           </div>
 
           {/* Last Updated */}
-          {news?.is_edited && news?.edited_at && (
+          {/* {news?.is_edited && news?.edited_at && (
             <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
               <Clock size={16} />
               <span>আপডেট:</span>
@@ -93,7 +117,7 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
                 {formatDate(news?.edited_at)}
               </time>
             </div>
-          )}
+          )} */}
 
           {/* Category */}
           <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
@@ -114,18 +138,35 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
         {/* Thumbnail */}
         {news?.thumbnail && (
           <div>
-            <Image
-              src={
-                news?.thumbnail
-                  ? URLS.news.thumbnail + "/" + news?.thumbnail
-                  : "/thumbnail.png"
-              }
-              alt={news?.title || "Thumbnail"}
-              width={800}
-              height={450}
-              className="aspect-video h-auto w-full rounded-md object-cover shadow"
-              priority
-            />
+            <>
+              {news?.youtube ? (
+                <>
+                  <iframe
+                    width="100%"
+                    height="450"
+                    src={url}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  ></iframe>
+                </>
+              ) : (
+                <Image
+                  src={thumbnail}
+                  alt={news?.caption || news?.title || "Thumbnail"}
+                  width={800}
+                  height={450}
+                  className="aspect-video h-auto w-full rounded-md object-cover shadow"
+                  priority
+                />
+              )}
+            </>
+            {news.caption && (
+              <p className="text-muted-foreground mt-2 text-center text-sm italic">
+                {news.caption}
+              </p>
+            )}
           </div>
         )}
 
@@ -164,7 +205,7 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
                 <div
                   key={index}
                   // href={`/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-200"
+                  className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-sm transition-colors"
                 >
                   #{tag}
                 </div>

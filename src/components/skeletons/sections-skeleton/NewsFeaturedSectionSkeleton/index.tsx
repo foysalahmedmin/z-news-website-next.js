@@ -1,10 +1,8 @@
 import { cn } from "@/lib/utils";
 import NewsCardSkeleton from "../../cards-skeleton/NewsCardSkeleton";
 
-const NewsFeaturedSectionSkeleton: React.FC<{ hasAd?: boolean }> = ({
-  hasAd = false,
-}) => {
-  const topCount = hasAd ? 5 : 9;
+const NewsFeaturedSectionSkeleton: React.FC = () => {
+  const topCount = 3;
   const bottomCount = 4;
 
   return (
@@ -12,22 +10,17 @@ const NewsFeaturedSectionSkeleton: React.FC<{ hasAd?: boolean }> = ({
       <div className="container">
         <div className="space-y-6 md:space-y-10">
           {/* Top grid */}
-          <div className="grid gap-4 md:grid-flow-col md:grid-cols-2 md:grid-rows-6 lg:grid-cols-3 lg:grid-rows-4">
+          <div className="gird gap-4 md:grid-cols-2">
             {Array.from({ length: topCount }).map((_, index) => (
               <NewsCardSkeleton
-                key={index}
-                type={index === 0 ? "grid" : "list"}
                 className={cn("", {
-                  "md:col-span-1 md:row-span-4 md:text-3xl": index === 0,
+                  "border-primary border-s-4 md:col-span-2 md:text-3xl":
+                    index === 0,
                 })}
+                type={"list"}
+                key={index}
               />
             ))}
-
-            {hasAd && (
-              <div className="md:row-span-4 md:text-xl">
-                <div className="bg-muted h-full w-full animate-pulse rounded" />
-              </div>
-            )}
           </div>
 
           <hr />

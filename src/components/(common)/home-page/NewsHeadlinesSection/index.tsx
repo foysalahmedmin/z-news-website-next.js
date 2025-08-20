@@ -3,7 +3,7 @@ import Link from "next/link";
 import Marquee from "react-fast-marquee";
 
 const NewsHeadlinesSection = async () => {
-  const { data } = await fetchNewsHeadlines();
+  const { data } = await fetchNewsHeadlines({ page: 1, limit: 10 });
   return (
     <>
       {data && data?.length > 0 && (

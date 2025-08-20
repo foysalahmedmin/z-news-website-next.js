@@ -29,7 +29,7 @@ const NewsDetailsSectionSkeleton: React.FC = () => {
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="border-muted-foreground flex items-center gap-2 border-l px-2"
+              className="border-muted flex items-center gap-2 border-l px-2"
             >
               <div className="bg-muted h-4 w-4 rounded-full" />
               <div className="bg-muted h-4 w-20 rounded" />

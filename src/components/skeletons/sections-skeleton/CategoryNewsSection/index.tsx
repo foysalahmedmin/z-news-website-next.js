@@ -28,7 +28,7 @@ const CategoryNewsSectionSkeleton: React.FC<{
                 <Icon className="text-muted size-14 md:size-16" name="circle" />
               </div>
             </div>
-            <div className="border-muted-foreground flex-1 border-y py-1" />
+            <div className="border-muted flex-1 border-y py-1" />
           </div>
         </div>
 
