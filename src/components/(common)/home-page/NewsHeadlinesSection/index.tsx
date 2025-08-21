@@ -1,9 +1,14 @@
-import { fetchNewsHeadlines } from "@/services/news-headline.service";
+import { fetchBulkNews } from "@/services/news.service";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";
 
 const NewsHeadlinesSection = async () => {
-  const { data } = await fetchNewsHeadlines({ page: 1, limit: 10 });
+  const { data } = await fetchBulkNews({
+    page: 1,
+    limit: 10,
+    is_news_headline: true,
+    sort: "-published_at",
+  });
   return (
     <>
       {data && data?.length > 0 && (
@@ -29,9 +34,9 @@ const NewsHeadlinesSection = async () => {
                         className="border-primary border-r px-4"
                         key={headline._id}
                       >
-                        {headline?.news?.slug ? (
+                        {headline?.slug ? (
                           <Link
-                            href={`/news/${headline?.news?.slug}`}
+                            href={`/news/${headline?.slug}`}
                             className="underline-effect foreground hover:underline-effect-active text-sm whitespace-nowrap uppercase transition-colors duration-200"
                           >
                             {headline?.title}

@@ -16,6 +16,23 @@ import { useEffect, useState } from "react";
 import { DateRange, DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 
+const renderCategoryOptions = (
+  category?: TCategory,
+  prefix = "",
+): React.ReactNode => {
+  if (!category) return null;
+  return (
+    <>
+      <option key={category._id} value={category._id}>
+        {prefix + category.name}
+      </option>
+      {category.children?.map((child) =>
+        renderCategoryOptions(child, prefix + "-- "),
+      )}
+    </>
+  );
+};
+
 const OperationClient = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -266,11 +283,7 @@ const OperationClient = () => {
             }
           >
             <option value="">সব বিভাগ</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
+            {categories?.map((cat) => renderCategoryOptions(cat))}
           </FormControl>
         </div>
 
