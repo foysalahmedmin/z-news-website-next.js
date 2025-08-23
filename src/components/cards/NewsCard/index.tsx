@@ -9,6 +9,7 @@ export type TNewsCardProps = {
   className?: string;
   classNameContent?: string;
   classNameThumbnail?: string;
+  classNameDescription?: string;
 };
 
 const NewsCard: React.FC<TNewsCardProps> = ({ type, ...props }) => {

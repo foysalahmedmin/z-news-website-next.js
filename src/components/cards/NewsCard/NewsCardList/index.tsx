@@ -11,6 +11,7 @@ export type TNewsCardListProps = {
   className?: string;
   classNameContent?: string;
   classNameThumbnail?: string;
+  classNameDescription?: string;
 };
 
 const NewsCardList: React.FC<TNewsCardListProps> = ({
@@ -18,6 +19,7 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
   className,
   classNameContent,
   classNameThumbnail,
+  classNameDescription,
 }) => {
   const { published_at, slug, title, description, category } = news || {};
   const { thumbnails } = news?.youtube
@@ -38,9 +40,17 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
   return (
     <Link
       href={`/news/${slug}`}
-      className={cn("group relative flex items-center gap-4", className)}
+      className={cn(
+        "group relative flex flex-col gap-4 md:flex-row md:items-center",
+        className,
+      )}
     >
-      <div className={cn("overflow-hidden", classNameThumbnail)}>
+      <div
+        className={cn(
+          "overflow-hidden md:w-1/2 md:max-w-56",
+          classNameThumbnail,
+        )}
+      >
         <div className="relative aspect-video w-full">
           <Image
             className="size-full object-cover object-center transition-all duration-300 group-hover:scale-105"
@@ -69,7 +79,12 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
             </p>
           </div>
         </div>
-        <p className="text-muted-foreground mt-2 line-clamp-3 text-xs md:line-clamp-2">
+        <p
+          className={cn(
+            "text-muted-foreground mt-2 line-clamp-3 text-xs",
+            classNameDescription,
+          )}
+        >
           {description}
         </p>
       </div>
