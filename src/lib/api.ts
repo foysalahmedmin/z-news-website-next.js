@@ -1,4 +1,4 @@
-import { BASE_URL } from "@/config";
+import { ENV } from "@/config";
 
 // types.ts (separate file for interfaces)
 export interface FetchConfig {
@@ -247,6 +247,6 @@ export class Fetch {
   }
 }
 
-const api = new Fetch({ baseURL: BASE_URL });
+const api = new Fetch({ baseURL: ENV.api_url });
 
 export default api;
