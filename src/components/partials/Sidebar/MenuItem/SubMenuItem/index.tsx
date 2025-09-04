@@ -81,7 +81,7 @@ const SubMenuItem: React.FC<Props> = ({
     <div>
       {/* Menu Item */}
       <Comp
-        path={`categories/${slug}`}
+        path={`/category/${slug}`}
         onClick={handler}
         className={cn("relative flex items-center px-2 lg:px-3", {
           "text-accent": isActive || isOpen,

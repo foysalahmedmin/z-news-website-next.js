@@ -45,6 +45,9 @@ const NewsCardOverlap: React.FC<TNewsCardOverlapProps> = ({
           alt={title || "Thumbnail"}
           width={500}
           height={280}
+          onError={(e) => {
+            e.currentTarget.src = "/thumbnail.png";
+          }}
         />
       </div>
       <div

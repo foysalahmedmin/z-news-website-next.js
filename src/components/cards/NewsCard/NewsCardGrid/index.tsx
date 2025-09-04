@@ -46,6 +46,9 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
             alt={title || "Thumbnail"}
             width={500}
             height={280}
+            onError={(e) => {
+              e.currentTarget.src = "/thumbnail.png";
+            }}
           />
           {(news?.youtube || news?.video) && (
             <div className="bg-card/25 absolute inset-0 flex items-center justify-center">
