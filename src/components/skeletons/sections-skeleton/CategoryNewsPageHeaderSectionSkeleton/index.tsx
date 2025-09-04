@@ -11,6 +11,10 @@ const CategoryNewsPageHeaderSectionSkeleton: React.FC = () => {
             <div className="bg-muted h-6 w-32 animate-pulse rounded md:h-8 md:w-48" />
           </div>
 
+          <div className="container">
+            <hr className="border-muted" />
+          </div>
+
           {/* Children categories */}
           <div className="container flex flex-wrap items-center gap-4">
             {Array.from({ length: 5 }).map((_, index) => (

@@ -20,6 +20,11 @@ const CategoryNewsPageHeaderSection: React.FC<
             <h1 className="text-xl font-bold md:text-3xl">{category?.name}</h1>
           </div>
           {category?.children && category?.children.length > 0 && (
+            <div className="container">
+              <hr />
+            </div>
+          )}
+          {category?.children && category?.children.length > 0 && (
             <div className="container flex flex-wrap items-center gap-4">
               {category?.children?.map((category) => (
                 <div key={category._id}>

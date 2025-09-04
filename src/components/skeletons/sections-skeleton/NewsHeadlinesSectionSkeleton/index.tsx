@@ -24,7 +24,7 @@ const NewsHeadlinesSectionSkeleton: React.FC = () => {
               {Array.from({ length: 6 }).map((_, index) => (
                 <div
                   key={index}
-                  className="border-primary flex items-center border-r px-4"
+                  className="border-muted flex items-center border-r px-4"
                 >
                   <div className="bg-muted h-4 w-32 rounded" />
                 </div>
