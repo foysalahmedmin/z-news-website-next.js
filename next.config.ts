@@ -8,7 +8,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "http",
         hostname: "localhost",
-        port: "3000",
+        port: "5000",
+      },
+      {
+        protocol: "https",
+        hostname: "api.dainikeidin.com",
       },
       {
         protocol: "https",
