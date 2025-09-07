@@ -141,10 +141,10 @@ const MenuItem: React.FC<Props> = ({
         >
           <div
             className={cn(
-              "my-2 min-h-0 space-y-2 overflow-hidden border-s",
+              "min-h-0 space-y-2 overflow-hidden border-s",
               "origin-top transition-all duration-300 ease-in-out",
               isOpen
-                ? "visible min-h-fit scale-y-100 opacity-100 delay-100"
+                ? "visible my-2 min-h-fit scale-y-100 opacity-100 delay-100"
                 : "invisible scale-y-0 opacity-0",
             )}
           >
