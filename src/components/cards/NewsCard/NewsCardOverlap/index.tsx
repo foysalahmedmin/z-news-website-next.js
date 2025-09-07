@@ -37,6 +37,7 @@ const NewsCardOverlap: React.FC<TNewsCardOverlapProps> = ({
     <Link
       href={`/news/${news?.slug}`}
       className={cn("group relative", className)}
+      title={title}
     >
       <div className={cn("overflow-hidden", classNameThumbnail)}>
         <Image
@@ -58,7 +59,7 @@ const NewsCardOverlap: React.FC<TNewsCardOverlapProps> = ({
       >
         <div className="border-s-2 ps-2">
           <h3
-            className="mb-[0.25em] text-[1.125em] leading-[1.5] font-semibold group-hover:text-blue-900"
+            className="mb-[0.25em] line-clamp-2 text-[1.125em] leading-[1.5] font-semibold group-hover:text-blue-900"
             dangerouslySetInnerHTML={{ __html: title || "" }}
           />
           <div className="flex flex-wrap items-center gap-1">

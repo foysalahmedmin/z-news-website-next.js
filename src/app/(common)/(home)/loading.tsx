@@ -1,5 +1,3 @@
-import FooterSkeleton from "@/components/skeletons/partials-skeleton/FooterSkeleton";
-import HeaderSkeleton from "@/components/skeletons/partials-skeleton/HeaderSkeleton";
 import CategoryNewsSectionSkeleton from "@/components/skeletons/sections-skeleton/CategoryNewsSection";
 import NewsFeaturedSectionSkeleton from "@/components/skeletons/sections-skeleton/NewsFeaturedSectionSkeleton";
 import NewsHeadlinesSectionSkeleton from "@/components/skeletons/sections-skeleton/NewsHeadlinesSectionSkeleton";
@@ -7,19 +5,15 @@ import NewsHeadlinesSectionSkeleton from "@/components/skeletons/sections-skelet
 const HomePageLoading: React.FC = () => {
   return (
     <div>
-      <HeaderSkeleton />
-      <div>
-        <NewsHeadlinesSectionSkeleton />
-        <div className="space-y-10 py-6 md:space-y-16 md:py-10">
-          <NewsFeaturedSectionSkeleton />
-          <>
-            {Array.from({ length: 3 })?.map((_, i) => (
-              <CategoryNewsSectionSkeleton key={i} />
-            ))}
-          </>
-        </div>
+      <NewsHeadlinesSectionSkeleton />
+      <div className="space-y-10 py-6 md:space-y-16 md:py-10">
+        <NewsFeaturedSectionSkeleton />
+        <>
+          {Array.from({ length: 3 })?.map((_, i) => (
+            <CategoryNewsSectionSkeleton key={i} />
+          ))}
+        </>
       </div>
-      <FooterSkeleton />
     </div>
   );
 };

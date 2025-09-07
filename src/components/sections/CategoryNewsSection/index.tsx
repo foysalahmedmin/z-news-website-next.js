@@ -22,6 +22,8 @@ const CategoryNewsSection: React.FC<{
 
   const topData = data?.slice(0, endPoint);
 
+  if (!data?.length || data?.length < 10) return null;
+
   return (
     <section
       className={cn("", { "bg-muted py-10 md:py-16": layout === "highlight" })}

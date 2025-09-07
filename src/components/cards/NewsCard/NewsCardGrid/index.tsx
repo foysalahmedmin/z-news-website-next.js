@@ -1,6 +1,7 @@
 import { URLS } from "@/config";
 import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
+import { getDescription } from "@/utils/parseContentToDescription";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
 import { Video } from "lucide-react";
 import Image from "next/image";
@@ -9,15 +10,19 @@ import Link from "next/link";
 export type TNewsCardGirdProps = {
   news?: Partial<TNews>;
   className?: string;
-  classNameContent?: string;
   classNameThumbnail?: string;
+  classNameContent?: string;
+  classNameTitle?: string;
+  classNameDescription?: string;
 };
 
 const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
   news,
   className,
-  classNameContent,
   classNameThumbnail,
+  classNameContent,
+  classNameTitle,
+  classNameDescription,
 }) => {
   const { published_at, slug, title, description, category } = news || {};
 
@@ -37,7 +42,11 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
       year: "numeric",
     });
   return (
-    <Link href={`/news/${slug}`} className={cn("group relative", className)}>
+    <Link
+      href={`/news/${slug}`}
+      className={cn("group relative", className)}
+      title={title}
+    >
       <div className={cn("overflow-hidden", classNameThumbnail)}>
         <div className="relative aspect-video w-full">
           <Image
@@ -60,7 +69,10 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
       <div className={cn("py-4", classNameContent)}>
         <div className="border-s-2 ps-2">
           <h3
-            className="mb-[0.25em] text-[1.125em] leading-[1.5] font-semibold group-hover:text-blue-900"
+            className={cn(
+              "mb-[0.25em] line-clamp-2 text-[1.125em] leading-[1.5] font-semibold group-hover:text-blue-900",
+              classNameTitle,
+            )}
             dangerouslySetInnerHTML={{ __html: title || "" }}
           />
           <div className="flex flex-wrap items-center gap-1">
@@ -70,8 +82,13 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
             </p>
           </div>
         </div>
-        <p className="text-muted-foreground mt-2 line-clamp-3 text-sm">
-          {description}
+        <p
+          className={cn(
+            "text-muted-foreground mt-2 line-clamp-3 text-sm",
+            classNameDescription,
+          )}
+        >
+          {description || getDescription(news?.content || "")}
         </p>
       </div>
     </Link>

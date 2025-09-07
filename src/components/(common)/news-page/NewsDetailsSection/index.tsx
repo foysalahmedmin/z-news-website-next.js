@@ -174,7 +174,7 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
         <div className="prose prose-lg max-w-none">
           <div
             dangerouslySetInnerHTML={{ __html: news?.content || "" }}
-            className="text-foreground leading-relaxed"
+            className="text-foreground leading-relaxed whitespace-pre-line"
           />
         </div>
 
