@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "api.dainikeidin.com",
+        hostname: "admin.dainikeidin.com",
       },
       {
         protocol: "https",

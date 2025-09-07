@@ -46,6 +46,8 @@ const Categories = ({ data }: { data?: TCategory[] }) => {
   const [itemWidths, setItemWidths] = useState<number[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  console.log(data);
+
   // Measure all items first
   useEffect(() => {
     if (!data || !measureRef.current) return;
