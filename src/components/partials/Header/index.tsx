@@ -5,7 +5,7 @@ import TopHeader from "./TopHeader";
 const Header = async () => {
   const { data } = await fetchCategoriesTree({
     page: 1,
-    limit: 15,
+    limit: 20,
     sort: "sequence",
   });
   return (
