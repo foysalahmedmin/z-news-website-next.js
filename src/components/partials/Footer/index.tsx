@@ -38,7 +38,10 @@ const Footer = () => {
             <div>
               <h3 className="mb-4 text-lg font-semibold">যোগাযোগ</h3>
               <p className="text-muted-foreground mb-4 text-sm">
-                ইমেইল: contact@doinikeidin.com
+                ইমেইল: news@dainikeidin.com
+              </p>
+              <p className="text-muted-foreground mb-4 text-sm">
+                মোবাইল: + ০১৭১৫৭৭৮৬৯৬
               </p>
               <div className="flex flex-wrap space-x-4">
                 {SOCIALS.map((social) => (
