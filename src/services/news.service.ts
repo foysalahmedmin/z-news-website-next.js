@@ -13,7 +13,7 @@ export const fetchNews = async (
 
   const response = await fetch(url, {
     method: "GET",
-    next: { revalidate: 60 * 30 },
+    next: { revalidate: 60 * 1 },
   });
 
   if (!response.ok) {
@@ -34,7 +34,7 @@ export const fetchBulkNews = async (
 
   const response = await fetch(url, {
     method: "GET",
-    next: { revalidate: 60 * 1 },
+    next: { revalidate: 60 * 0.5 },
   });
 
   if (!response.ok) {
@@ -55,7 +55,7 @@ export const fetchFeaturedBulkNews = async (
 
   const response = await fetch(url, {
     method: "GET",
-    next: { revalidate: 60 * 1 },
+    next: { revalidate: 60 * 0.5 },
   });
 
   if (!response.ok) {
