@@ -1,4 +1,4 @@
-# Z News Website (Next.js)
+# Z-NEWS WEBSITE (<a href="https://admin.dainikeidin.com/">LIVE</a>)
 
 A modern, high-performance news website built with Next.js 15, React 19, TypeScript, and Tailwind CSS 4. The project features dynamic routing for news, categories, and search; modular UI components; SEO-friendly architecture; and a clean state management setup with Redux Toolkit.
 
