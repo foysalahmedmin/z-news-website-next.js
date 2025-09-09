@@ -77,7 +77,7 @@ const ContactPage: React.FC = () => {
               as="textarea"
               id="message"
               name="message"
-              rows={5}
+              className="h-40 py-2"
               placeholder="আপনার বার্তা লিখুন"
             />
           </div>
