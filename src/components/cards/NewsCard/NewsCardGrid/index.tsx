@@ -70,7 +70,7 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
         <div className="border-s-2 ps-2">
           <h3
             className={cn(
-              "mb-[0.25em] line-clamp-2 text-[1.125em] leading-[1.5] font-semibold group-hover:text-blue-900",
+              "mb-[0.25em] line-clamp-2 text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900",
               classNameTitle,
             )}
             dangerouslySetInnerHTML={{ __html: title || "" }}
@@ -84,7 +84,7 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
         </div>
         <p
           className={cn(
-            "text-muted-foreground mt-2 line-clamp-3 text-sm",
+            "text-muted-foreground mt-2 line-clamp-3 text-[0.875em] leading-[1.25]",
             classNameDescription,
           )}
         >

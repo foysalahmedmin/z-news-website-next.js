@@ -65,6 +65,10 @@ const CategoryNewsSection: React.FC<{
                 className={cn("", {
                   "md:row-span-3 md:text-xl": index === 0,
                 })}
+                classNameDescription={cn("", {
+                  "md:line-clamp-2 lg:line-clamp-1 xl:line-clamp-2 2xl:line-clamp-3":
+                    index !== 0,
+                })}
                 type={index === 0 ? "grid" : "list"}
                 news={item}
                 key={index}

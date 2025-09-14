@@ -16,10 +16,10 @@ export const getDescription = (content: string): string => {
 
   for (const sentence of sentences) {
     const trimmed = sentence.trim();
-    if ((description + trimmed).length <= 250) {
+    if ((description + trimmed).length <= 300) {
       description += trimmed + " ";
     } else break;
   }
 
-  return description.trim() || text.slice(0, 250).trim();
+  return description.trim() || text.slice(0, 300).trim();
 };

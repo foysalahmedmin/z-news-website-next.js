@@ -10,11 +10,11 @@ const NewsFeaturedSectionSkeleton: React.FC = () => {
       <div className="container">
         <div className="space-y-6 md:space-y-10">
           {/* Top grid */}
-          <div className="gird gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2">
             {Array.from({ length: topCount }).map((_, index) => (
               <NewsCardSkeleton
-                className={cn("", {
-                  "border-muted border-s-4 md:col-span-2 md:text-3xl":
+                className={cn("md:text-2xl", {
+                  "border-muted border-s-4 md:col-span-2 lg:items-start lg:text-5xl":
                     index === 0,
                 })}
                 type={"list"}

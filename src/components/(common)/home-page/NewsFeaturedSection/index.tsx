@@ -16,13 +16,14 @@ const NewsFeaturedSection = async () => {
             {top?.map((item, index) => (
               <NewsCard
                 className={cn("md:text-2xl", {
-                  "border-primary lg:col-span-2 lg:text-5xl": index === 0,
+                  "border-primary lg:col-span-2 lg:items-start lg:text-5xl":
+                    index === 0,
                 })}
                 classNameThumbnail={cn("md:max-w-sm", {
                   "md:max-w-sm lg:max-w-xl": index === 0,
                 })}
-                classNameDescription={cn("", {
-                  "line-clamp-3 md:line-clamp-5": index === 0,
+                classNameDescription={cn("md:line-clamp-4", {
+                  "line-clamp-3 lg:text-[0.5em] lg:line-clamp-5": index === 0,
                 })}
                 type={"list"}
                 news={item}
