@@ -1,8 +1,13 @@
 import AnimationApplier from "@/components/appliers/AnimationApplier";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Serif_Bengali } from "next/font/google";
 import React from "react";
 import "./globals.css";
+
+const noto = Noto_Serif_Bengali({
+  variable: "--font-noto-serif-bengali",
+  subsets: ["bengali", "latin"],
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +30,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="bn">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${noto.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
 
