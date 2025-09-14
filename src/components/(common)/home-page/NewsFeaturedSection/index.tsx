@@ -24,6 +24,8 @@ const NewsFeaturedSection = async () => {
                 })}
                 classNameDescription={cn("md:line-clamp-4", {
                   "line-clamp-3 lg:text-[0.5em] lg:line-clamp-5": index === 0,
+                  "lg:text-[0.75em] lg:line-clamp-2 xl:line-clamp-3 2xl:line-clamp-4":
+                    index !== 0,
                 })}
                 type={"list"}
                 news={item}
