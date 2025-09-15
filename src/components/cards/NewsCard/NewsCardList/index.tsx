@@ -68,7 +68,7 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
             // }}
           />
           {(news?.youtube || news?.video) && (
-            <div className="absolute inset-0 m-auto flex aspect-square h-2/5 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs">
+            <div className="absolute inset-0 m-auto flex aspect-square h-1/3 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs md:h-2/5">
               <Play className="size-1/2" strokeWidth={2} />
             </div>
           )}
