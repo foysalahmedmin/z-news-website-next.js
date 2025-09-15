@@ -1,7 +1,7 @@
 import { URLS } from "@/config";
 import { TNews } from "@/types/news.type";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
-import { Calendar, Edit2, Tag } from "lucide-react";
+import { Calendar, Edit2, Play, Tag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -139,39 +139,30 @@ const NewsDetailsPrintSection: React.FC<TNewsSectionProps> = ({ news }) => {
 
       <div className="space-y-6 md:space-y-10">
         {/* Thumbnail */}
-        {news?.thumbnail && (
+        {
           <div>
-            <>
-              {news?.youtube ? (
-                <>
-                  <iframe
-                    width="100%"
-                    height="450"
-                    src={url}
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
-                </>
-              ) : (
-                <Image
-                  src={thumbnail}
-                  alt={news?.caption || news?.title || "Thumbnail"}
-                  width={800}
-                  height={450}
-                  className="aspect-video h-auto w-full rounded-md object-cover shadow"
-                  priority
-                />
+            <div className="relative">
+              <Image
+                src={thumbnail}
+                alt={news?.caption || news?.title || "Thumbnail"}
+                width={800}
+                height={450}
+                className="aspect-video h-auto w-full rounded-md object-cover shadow"
+                priority
+              />
+              {(news?.youtube || news?.video) && (
+                <div className="absolute inset-0 m-auto flex aspect-square h-1/3 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs">
+                  <Play className="size-1/2" strokeWidth={2} />
+                </div>
               )}
-            </>
+            </div>
             {news.caption && (
-              <p className="text-muted-foreground mt-2 text-center text-sm italic">
+              <p className="text-muted-foreground mt-2 text-sm italic">
                 {news.caption}
               </p>
             )}
           </div>
-        )}
+        }
 
         {/* Content */}
         <div className="prose prose-lg max-w-none">

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
 import { getDescription } from "@/utils/parseContentToDescription";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
-import { Dot, Video } from "lucide-react";
+import { Dot, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -68,8 +68,8 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
             // }}
           />
           {(news?.youtube || news?.video) && (
-            <div className="bg-card/25 absolute inset-0 flex items-center justify-center">
-              <Video className="h-1/3" />
+            <div className="absolute inset-0 m-auto flex aspect-square h-2/5 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs">
+              <Play className="size-1/2" strokeWidth={2} />
             </div>
           )}
         </div>

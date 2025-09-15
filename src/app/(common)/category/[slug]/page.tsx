@@ -2,13 +2,17 @@ import CategoryNewsFeaturedSection from "@/components/(common)/category-page/Cat
 import CategoryNewsMoreSection from "@/components/(common)/category-page/CategoryNewsMoreSection";
 import CategoryNewsPageHeaderSection from "@/components/(common)/category-page/CategoryNewsPageHeaderSection";
 import CategoryNewsSection from "@/components/sections/CategoryNewsSection";
+import CategoryNewsSectionSkeleton from "@/components/skeletons/sections-skeleton/CategoryNewsSection";
 import { fetchCategory } from "@/services/category.service";
+import { Suspense } from "react";
 
 type Props = {
   params: Promise<{
     slug: string;
   }>;
 };
+
+export const revalidate = 30;
 
 export const generateMetadata = async ({ params }: Props) => {
   const { slug } = await params;
@@ -38,7 +42,16 @@ const CategoryNewPage = async ({ params }: Props) => {
         {hasSubCategory && (
           <>
             {data?.children?.map((category) => (
-              <CategoryNewsSection key={category?._id} category={category} />
+              <Suspense
+                key={category._id}
+                fallback={
+                  <div>
+                    <CategoryNewsSectionSkeleton />
+                  </div>
+                }
+              >
+                <CategoryNewsSection category={category} />
+              </Suspense>
             ))}
           </>
         )}

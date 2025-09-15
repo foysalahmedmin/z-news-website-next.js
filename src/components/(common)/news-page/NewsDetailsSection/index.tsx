@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
 import { formatCount } from "@/utils/formatCount";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
-import { Calendar, Edit2, Eye, Tag } from "lucide-react";
+import { Calendar, Edit2, Eye, Play, Tag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Print from "../NewsActionSection/print";
@@ -11,6 +11,7 @@ import Reaction from "../NewsActionSection/reaction";
 import Share from "../NewsActionSection/share";
 import RecentNewsSection from "../RecentNewsSection";
 import SuggestionNews from "../SuggestionNewsSection";
+import VideoThumbnailPlayer from "./VideoThumbnailPlayer";
 
 type TNewsSectionProps = {
   news?: Partial<TNews>;
@@ -40,7 +41,7 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
   return (
     <div className="container grid grid-cols-1 gap-6 xl:grid-cols-12">
       <div className="hidden space-y-6 xl:col-span-3 xl:block 2xl:col-span-3">
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div>
             <Link
               className="text-lg underline hover:text-blue-900"
@@ -92,17 +93,6 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
               </time>
             </div>
           )} */}
-
-            {/* Category */}
-            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-              <Tag size={16} />
-              <Link
-                href={`/category/${news?.category?.slug}`}
-                className="underline-effect hover:underline-effect-active font-medium hover:text-blue-900"
-              >
-                {news?.category?.name}
-              </Link>
-            </div>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -161,7 +151,7 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
           <div className="space-y-4">
             {/* Sub Title */}
             {news?.sub_title && (
-              <p className="text-red-700">{news?.sub_title}</p>
+              <p className="text-lg text-red-700">{news?.sub_title}</p>
             )}
 
             {/* Title */}
@@ -239,39 +229,44 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
 
         <div className="space-y-6 md:space-y-10">
           {/* Thumbnail */}
-          {news?.thumbnail && (
+          {
             <div>
-              <>
+              <div>
                 {news?.youtube ? (
                   <>
-                    <iframe
-                      width="100%"
-                      height="450"
-                      src={url}
-                      title="YouTube video player"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                    ></iframe>
+                    <VideoThumbnailPlayer
+                      url={url!}
+                      thumbnail={thumbnail}
+                      alt="News Video"
+                      width={800}
+                      height={450}
+                    />
                   </>
                 ) : (
-                  <Image
-                    src={thumbnail}
-                    alt={news?.caption || news?.title || "Thumbnail"}
-                    width={800}
-                    height={450}
-                    className="aspect-video h-auto w-full rounded-md object-cover shadow"
-                    priority
-                  />
+                  <div className="relative">
+                    <Image
+                      src={thumbnail}
+                      alt={news?.caption || news?.title || "Thumbnail"}
+                      width={800}
+                      height={450}
+                      className="aspect-video h-auto w-full rounded-md object-cover shadow"
+                      priority
+                    />
+                    {(news?.youtube || news?.video) && (
+                      <div className="absolute inset-0 m-auto flex aspect-square h-1/3 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs">
+                        <Play className="size-1/2" strokeWidth={2} />
+                      </div>
+                    )}
+                  </div>
                 )}
-              </>
+              </div>
               {news.caption && (
-                <p className="text-muted-foreground mt-2 text-center text-sm italic">
+                <p className="text-muted-foreground mt-2 text-sm italic">
                   {news.caption}
                 </p>
               )}
             </div>
-          )}
+          }
 
           {/* Content */}
           <div className="prose prose-lg max-w-none">
