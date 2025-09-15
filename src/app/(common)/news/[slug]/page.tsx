@@ -120,22 +120,30 @@ const NewsPage = async ({ params }: Props) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main className="min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)]">
-        <div className="space-y-6 py-6 md:space-y-10">
+        <div className="space-y-6 py-6">
           {/* News Section - Server Component */}
           <NewsDetailsSection news={data} />
 
-          <div className="container max-w-4xl">
+          <div className="container mx-auto">
             <hr />
           </div>
 
           {/* Like, Dislike & Actions - Client Component */}
-          <NewsActionSection news={data} />
+          <div className="xl:hidden">
+            <NewsActionSection news={data} />
+          </div>
 
           {/* Comment Section - Client Component */}
           <NewsCommentSection news={data} />
 
           {/* Related News - Server Component */}
-          <RelatedNewsSection news={data} />
+          <div className="hidden xl:block">
+            <RelatedNewsSection news={data} initialPage={2} />
+          </div>
+
+          <div className="xl:hidden">
+            <RelatedNewsSection news={data} initialPage={1} />
+          </div>
         </div>
       </main>
     </>

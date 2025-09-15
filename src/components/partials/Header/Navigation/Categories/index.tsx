@@ -137,7 +137,7 @@ const Categories = ({ data }: { data?: TCategory[] }) => {
                 className="underline-effect foreground hover:underline-effect-active flex w-full items-center justify-center gap-1 text-sm whitespace-nowrap uppercase transition-colors duration-200"
               >
                 <MoreHorizontal size={16} />
-                আরও ({hiddenItems.length})
+                আরও
               </button>
             </div>
             <div className="absolute end-0 top-full z-10 hidden min-w-40 px-2 pt-1 group-hover:block">

@@ -71,7 +71,7 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
         <div className="border-s-2 ps-2">
           <h3
             className={cn(
-              "mb-[0.25em] line-clamp-2 flex items-center gap-[0.5em] text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900",
+              "mb-[0.25em] line-clamp-3 space-x-[0.5em] text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900",
               classNameTitle,
             )}
           >

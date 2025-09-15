@@ -1,9 +1,16 @@
 import { URLS } from "@/config";
+import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
+import { formatCount } from "@/utils/formatCount";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
-import { Calendar, Edit2, Tag } from "lucide-react";
+import { Calendar, Edit2, Eye, Tag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import Print from "../NewsActionSection/print";
+import Reaction from "../NewsActionSection/reaction";
+import Share from "../NewsActionSection/share";
+import RecentNewsSection from "../RecentNewsSection";
+import SuggestionNews from "../SuggestionNewsSection";
 
 type TNewsSectionProps = {
   news?: Partial<TNews>;
@@ -31,84 +38,48 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
     });
   };
   return (
-    <article
-      id={`news-${news?._id}`}
-      className="container mx-auto max-w-4xl space-y-6 md:space-y-10"
-    >
-      {/* Breadcrumb */}
-      <div className="space-y-4 md:space-y-6">
-        <nav className="flex items-center text-sm text-gray-600">
-          <Link
-            href="/"
-            className="underline-effect hover:underline-effect-active inline-block hover:text-blue-900"
-          >
-            <Image
-              className="inline-block h-12 object-contain object-center"
-              src="/logo.png"
-              alt="Logo"
-              width={52}
-              height={32}
-            />
-          </Link>
-          <span className="mx-2">/</span>
-          <Link
-            className="underline-effect hover:underline-effect-active hover:text-blue-900"
-            href={`/category/${news?.category?.slug}`}
-          >
-            {news?.category?.name}
-          </Link>
-          <span className="mx-2">/</span>
-          <span>{news?.title}</span>
-        </nav>
-
+    <div className="container grid grid-cols-1 gap-6 xl:grid-cols-12">
+      <div className="hidden space-y-6 xl:col-span-3 xl:block 2xl:col-span-3">
         <div className="space-y-4">
-          {/* Sub Title */}
-          {news?.sub_title && <p className="text-red-700">{news?.sub_title}</p>}
-
-          {/* Title */}
-          <h1 className="text-2xl leading-tight font-bold md:text-4xl">
-            {news?.title}
-          </h1>
-
-          {/* Description */}
-          {news?.description && (
-            <p className="text-foreground leading-relaxed">
-              {news?.description}
-            </p>
-          )}
-        </div>
-
-        {/* Meta Information */}
-        <div className="text-muted-foreground flex flex-wrap items-center text-sm">
-          {/* Author */}
-          {/* <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+          <div>
+            <Link
+              className="text-lg underline hover:text-blue-900"
+              href={`/category/${news?.category?.slug}`}
+            >
+              {news?.category?.name}
+            </Link>
+          </div>
+          <div className="text-muted-foreground flex flex-wrap items-center text-sm">
+            {/* Author */}
+            {/* <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
             <Edit2 size={16} />
             <span className="font-medium">{news?.author?.name}</span>
           </div> */}
 
-          {/* Writer */}
-          {news?.writer && (
+            {/* Writer */}
+            {news?.writer && (
+              <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+                <Edit2 size={16} />
+                <span className="font-medium">{news?.writer}</span>
+              </div>
+            )}
+
+            {/* Published Date */}
             <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-              <Edit2 size={16} />
-              <span className="font-medium">{news?.writer}</span>
+              <Calendar size={16} />
+              <span>প্রকাশিত:</span>
+              <time
+                dateTime={
+                  news?.published_at &&
+                  new Date(news?.published_at).toISOString()
+                }
+              >
+                {formatDate(news?.published_at)}
+              </time>
             </div>
-          )}
 
-          {/* Published Date */}
-          <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-            <Calendar size={16} />
-            <span>প্রকাশিত:</span>
-            <time
-              dateTime={
-                news?.published_at && new Date(news?.published_at).toISOString()
-              }
-            >
-              {formatDate(news?.published_at)}
-            </time>
-          </div>
-
-          {/* Last Updated */}
-          {/* {news?.is_edited && news?.edited_at && (
+            {/* Last Updated */}
+            {/* {news?.is_edited && news?.edited_at && (
             <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
               <Clock size={16} />
               <span>আপডেট:</span>
@@ -122,102 +93,235 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
             </div>
           )} */}
 
-          {/* Category */}
-          <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-            <Tag size={16} />
+            {/* Category */}
+            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+              <Tag size={16} />
+              <Link
+                href={`/category/${news?.category?.slug}`}
+                className="underline-effect hover:underline-effect-active font-medium hover:text-blue-900"
+              >
+                {news?.category?.name}
+              </Link>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Reaction news={news!} />
+              {/* <Save news={news!} /> */}
+              <Print news={news!} />
+              <Share news={news!} />
+            </div>
+
+            {/* View Count */}
+            <div className="divide-muted-foreground flex h-10 items-center divide-x rounded-md">
+              <div className="flex items-center gap-1 px-2">
+                <Eye className={cn("size-5")} />
+                <span className="mb-0.5 text-lg leading-1">
+                  {formatCount(news?.views || 0)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div>
+          <SuggestionNews news={news} />
+        </div>
+      </div>
+      <article
+        id={`news-${news?._id}`}
+        className="container mx-auto max-w-4xl space-y-6 xl:col-span-6"
+      >
+        {/* Breadcrumb */}
+        <div className="space-y-4 md:space-y-6">
+          <nav className="flex items-center text-sm text-gray-600 xl:hidden">
             <Link
+              href="/"
+              className="underline-effect hover:underline-effect-active inline-block hover:text-blue-900"
+            >
+              <Image
+                className="inline-block h-12 object-contain object-center"
+                src="/logo.png"
+                alt="Logo"
+                width={52}
+                height={32}
+              />
+            </Link>
+            <span className="mx-2">/</span>
+            <Link
+              className="underline-effect hover:underline-effect-active hover:text-blue-900"
               href={`/category/${news?.category?.slug}`}
-              className="underline-effect hover:underline-effect-active font-medium hover:text-blue-900"
             >
               {news?.category?.name}
             </Link>
-          </div>
-        </div>
-      </div>
+            <span className="mx-2">/</span>
+            <span>{news?.title}</span>
+          </nav>
 
-      <hr />
+          <div className="space-y-4">
+            {/* Sub Title */}
+            {news?.sub_title && (
+              <p className="text-red-700">{news?.sub_title}</p>
+            )}
 
-      <div className="space-y-6 md:space-y-10">
-        {/* Thumbnail */}
-        {news?.thumbnail && (
-          <div>
-            <>
-              {news?.youtube ? (
-                <>
-                  <iframe
-                    width="100%"
-                    height="450"
-                    src={url}
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
-                </>
-              ) : (
-                <Image
-                  src={thumbnail}
-                  alt={news?.caption || news?.title || "Thumbnail"}
-                  width={800}
-                  height={450}
-                  className="aspect-video h-auto w-full rounded-md object-cover shadow"
-                  priority
-                />
-              )}
-            </>
-            {news.caption && (
-              <p className="text-muted-foreground mt-2 text-center text-sm italic">
-                {news.caption}
+            {/* Title */}
+            <h1 className="text-2xl leading-tight font-bold md:text-4xl">
+              {news?.title}
+            </h1>
+
+            {/* Description */}
+            {news?.description && (
+              <p className="text-foreground leading-relaxed">
+                {news?.description}
               </p>
             )}
           </div>
-        )}
 
-        {/* Content */}
-        <div className="prose prose-lg max-w-none">
-          <div
-            dangerouslySetInnerHTML={{ __html: news?.content || "" }}
-            className="text-foreground leading-relaxed whitespace-pre-line"
-          />
+          {/* Meta Information */}
+          <div className="text-muted-foreground flex flex-wrap items-center text-sm xl:hidden">
+            {/* Author */}
+            {/* <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+            <Edit2 size={16} />
+            <span className="font-medium">{news?.author?.name}</span>
+          </div> */}
+
+            {/* Writer */}
+            {news?.writer && (
+              <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+                <Edit2 size={16} />
+                <span className="font-medium">{news?.writer}</span>
+              </div>
+            )}
+
+            {/* Published Date */}
+            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+              <Calendar size={16} />
+              <span>প্রকাশিত:</span>
+              <time
+                dateTime={
+                  news?.published_at &&
+                  new Date(news?.published_at).toISOString()
+                }
+              >
+                {formatDate(news?.published_at)}
+              </time>
+            </div>
+
+            {/* Last Updated */}
+            {/* {news?.is_edited && news?.edited_at && (
+            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+              <Clock size={16} />
+              <span>আপডেট:</span>
+              <time
+                dateTime={
+                  news?.edited_at && new Date(news?.edited_at).toISOString()
+                }
+              >
+                {formatDate(news?.edited_at)}
+              </time>
+            </div>
+          )} */}
+
+            {/* Category */}
+            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+              <Tag size={16} />
+              <Link
+                href={`/category/${news?.category?.slug}`}
+                className="underline-effect hover:underline-effect-active font-medium hover:text-blue-900"
+              >
+                {news?.category?.name}
+              </Link>
+            </div>
+          </div>
         </div>
 
-        {/* Additional Images */}
-        {news?.images && news?.images.length > 0 && (
-          <div>
-            <h3 className="mb-4 text-xl font-semibold">আরো ছবি</h3>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-              {news?.images.map((image, index) => (
-                <Image
-                  key={index}
-                  src={image}
-                  alt={`${news?.title} - ছবি ${index + 1}`}
-                  width={300}
-                  height={200}
-                  className="h-48 w-full rounded-md object-cover shadow-md transition-shadow hover:shadow"
-                />
-              ))}
-            </div>
-          </div>
-        )}
+        <hr className="xl:hidden" />
 
-        {/* Tags */}
-        {news?.tags && news?.tags.length > 0 && (
-          <div>
-            <div className="flex flex-wrap gap-2">
-              {news?.tags.map((tag, index) => (
-                <div
-                  key={index}
-                  // href={`/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-sm transition-colors"
-                >
-                  #{tag}
-                </div>
-              ))}
+        <div className="space-y-6 md:space-y-10">
+          {/* Thumbnail */}
+          {news?.thumbnail && (
+            <div>
+              <>
+                {news?.youtube ? (
+                  <>
+                    <iframe
+                      width="100%"
+                      height="450"
+                      src={url}
+                      title="YouTube video player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    ></iframe>
+                  </>
+                ) : (
+                  <Image
+                    src={thumbnail}
+                    alt={news?.caption || news?.title || "Thumbnail"}
+                    width={800}
+                    height={450}
+                    className="aspect-video h-auto w-full rounded-md object-cover shadow"
+                    priority
+                  />
+                )}
+              </>
+              {news.caption && (
+                <p className="text-muted-foreground mt-2 text-center text-sm italic">
+                  {news.caption}
+                </p>
+              )}
             </div>
+          )}
+
+          {/* Content */}
+          <div className="prose prose-lg max-w-none">
+            <div
+              dangerouslySetInnerHTML={{ __html: news?.content || "" }}
+              className="text-foreground leading-relaxed whitespace-pre-line"
+            />
           </div>
-        )}
+
+          {/* Additional Images */}
+          {news?.images && news?.images.length > 0 && (
+            <div>
+              <h3 className="mb-4 text-xl font-semibold">আরো ছবি</h3>
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+                {news?.images.map((image, index) => (
+                  <Image
+                    key={index}
+                    src={image}
+                    alt={`${news?.title} - ছবি ${index + 1}`}
+                    width={300}
+                    height={200}
+                    className="h-48 w-full rounded-md object-cover shadow-md transition-shadow hover:shadow"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Tags */}
+          {news?.tags && news?.tags.length > 0 && (
+            <div>
+              <div className="flex flex-wrap gap-2">
+                {news?.tags.map((tag, index) => (
+                  <div
+                    key={index}
+                    // href={`/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}
+                    className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-sm transition-colors"
+                  >
+                    #{tag}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </article>
+      <div className="hidden xl:col-span-3 xl:block 2xl:col-span-3">
+        <RecentNewsSection />
       </div>
-    </article>
+    </div>
   );
 };
 

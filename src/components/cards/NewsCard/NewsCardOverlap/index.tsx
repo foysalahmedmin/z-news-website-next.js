@@ -59,7 +59,7 @@ const NewsCardOverlap: React.FC<TNewsCardOverlapProps> = ({
         )}
       >
         <div className="border-s-2 ps-2">
-          <h3 className="mb-[0.25em] line-clamp-2 flex items-center gap-[0.5em] text-[1.125em] leading-[1.5] font-semibold group-hover:text-blue-900">
+          <h3 className="mb-[0.25em] line-clamp-2 space-x-[0.5em] text-[1.125em] leading-[1.5] font-semibold group-hover:text-blue-900">
             {sub_title && (
               <>
                 <span className="text-red-700">{sub_title}</span>{" "}

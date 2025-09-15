@@ -15,9 +15,10 @@ import React, { useEffect, useState } from "react";
 
 type ReactionProps = {
   news: Partial<TNews>;
+  className?: string;
 };
 
-const Reaction: React.FC<ReactionProps> = ({ news }) => {
+const Reaction: React.FC<ReactionProps> = ({ news, className }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [dislikesCount, setDislikesCount] = useState(0);
@@ -81,7 +82,12 @@ const Reaction: React.FC<ReactionProps> = ({ news }) => {
   }, [news]);
 
   return (
-    <div className="divide-muted-foreground/25 bg-muted flex h-10 items-center divide-x rounded-md p-1">
+    <div
+      className={cn(
+        "divide-muted-foreground/25 bg-muted flex h-10 items-center divide-x rounded-md p-1",
+        className,
+      )}
+    >
       <button
         disabled={isLoading}
         onClick={() => handleReaction("like")}

@@ -56,7 +56,7 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
           classNameThumbnail,
         )}
       >
-        <div className="relative aspect-video w-full md:aspect-auto md:h-full">
+        <div className="relative aspect-video w-full">
           <Image
             className="size-full object-cover object-center transition-all duration-300 group-hover:scale-105"
             src={thumbnail}

@@ -22,7 +22,7 @@ const HomePage: React.FC = async () => {
       <div className="space-y-10 py-6 md:space-y-16 md:py-10">
         <NewsFeaturedSection />
         <CategoryNewsSection
-          category={{ name: "সাম্প্রতিক সংবাদ", icon: "clock " }}
+          category={{ name: "সাম্প্রতিক সংবাদ", icon: "clock" }}
         />
         <>
           {data?.map((category) => (

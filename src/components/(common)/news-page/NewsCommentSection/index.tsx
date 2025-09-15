@@ -369,7 +369,7 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl">
+    <div className="container mx-auto">
       <div className="bg-card rounded-md border p-6 shadow">
         <div
           onClick={() => setIsOpen(!isOpen)}

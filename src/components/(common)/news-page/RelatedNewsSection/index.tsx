@@ -3,6 +3,7 @@
 import NewsCard from "@/components/cards/NewsCard";
 import NewsCardSkeleton from "@/components/skeletons/cards-skeleton/NewsCardSkeleton";
 import { Button } from "@/components/ui/Button";
+import useScreenSize from "@/hooks/ui/useScreenSize";
 import { fetchBulkNews } from "@/services/news.service";
 import { TNews } from "@/types/news.type";
 import { Newspaper } from "lucide-react";
@@ -10,10 +11,16 @@ import React, { useEffect, useState } from "react";
 
 type RelatedNewsSectionProps = {
   news?: Partial<TNews>;
+  initialPage?: number;
 };
 
-const RelatedNewsSection: React.FC<RelatedNewsSectionProps> = ({ news }) => {
-  const [page, setPage] = useState<number>(1);
+const RelatedNewsSection: React.FC<RelatedNewsSectionProps> = ({
+  news,
+  initialPage,
+}) => {
+  const { width } = useScreenSize();
+
+  const [page, setPage] = useState<number>(initialPage || 1);
   const [data, setData] = useState<TNews[]>([]);
   const [meta, setMeta] = useState<{
     total?: number;
@@ -31,7 +38,8 @@ const RelatedNewsSection: React.FC<RelatedNewsSectionProps> = ({ news }) => {
         setIsLoading(true);
         const { data, meta } = await fetchBulkNews({
           page,
-          limit: 6,
+          limit: 8,
+          news_ne: news?._id,
           category: news?.category?._id,
           sort: "-published_at",
         });
@@ -51,7 +59,7 @@ const RelatedNewsSection: React.FC<RelatedNewsSectionProps> = ({ news }) => {
   return (
     <>
       {data?.length > 0 && (
-        <section className="container mx-auto max-w-4xl">
+        <section className="container mx-auto">
           <div className="bg-card space-y-6 rounded-md border p-6 shadow-sm">
             <div>
               <div className="flex items-center gap-2">
@@ -75,13 +83,16 @@ const RelatedNewsSection: React.FC<RelatedNewsSectionProps> = ({ news }) => {
                 ) : data.length === 0 ? (
                   <p className="py-4 text-center">কোন সংবাদ পাওয়া যায়নি</p>
                 ) : (
-                  <div>
+                  <div className="grid gap-x-4 xl:grid-cols-4">
                     {data?.map((item, index) => (
                       <div
                         key={index}
-                        className="border-b py-2 last:border-b-0"
+                        className="border-b py-2 last:border-b-0 xl:border-b-0"
                       >
-                        <NewsCard news={item} type="list" />
+                        <NewsCard
+                          news={item}
+                          type={width >= 1280 ? "grid" : "list"}
+                        />
                       </div>
                     ))}
                   </div>

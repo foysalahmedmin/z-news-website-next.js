@@ -19,9 +19,10 @@ import {
 
 type ReactionProps = {
   news: Partial<TNews>;
+  className?: string;
 };
 
-const Share: React.FC<ReactionProps> = ({ news }) => {
+const Share: React.FC<ReactionProps> = ({ news, className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -39,7 +40,12 @@ const Share: React.FC<ReactionProps> = ({ news }) => {
   };
 
   return (
-    <div className="bg-muted flex h-10 items-center rounded-md p-1">
+    <div
+      className={cn(
+        "bg-muted flex h-10 items-center rounded-md p-1",
+        className,
+      )}
+    >
       {/* Share Button */}
       <button
         onClick={() => setIsOpen(true)}
