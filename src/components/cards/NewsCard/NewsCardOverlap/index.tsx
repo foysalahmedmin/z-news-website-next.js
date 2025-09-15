@@ -2,6 +2,7 @@ import { URLS } from "@/config";
 import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
+import { Dot } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -18,7 +19,7 @@ const NewsCardOverlap: React.FC<TNewsCardOverlapProps> = ({
   classNameContent,
   classNameThumbnail,
 }) => {
-  const { title, published_at, category } = news || {};
+  const { slug, title, sub_title, published_at, category } = news || {};
   const { thumbnails } = news?.youtube
     ? parseYouTubeUrl(news?.youtube || "")
     : {};
@@ -35,7 +36,7 @@ const NewsCardOverlap: React.FC<TNewsCardOverlapProps> = ({
     });
   return (
     <Link
-      href={`/news/${news?.slug}`}
+      href={`/news/${slug}`}
       className={cn("group relative", className)}
       title={title}
     >
@@ -58,10 +59,15 @@ const NewsCardOverlap: React.FC<TNewsCardOverlapProps> = ({
         )}
       >
         <div className="border-s-2 ps-2">
-          <h3
-            className="mb-[0.25em] line-clamp-2 text-[1.125em] leading-[1.5] font-semibold group-hover:text-blue-900"
-            dangerouslySetInnerHTML={{ __html: title || "" }}
-          />
+          <h3 className="mb-[0.25em] line-clamp-2 flex items-center gap-[0.5em] text-[1.125em] leading-[1.5] font-semibold group-hover:text-blue-900">
+            {sub_title && (
+              <>
+                <span className="text-red-700">{sub_title}</span>{" "}
+                <Dot className="text-muted-foreground size-[1em]" />
+              </>
+            )}
+            <span>{title}</span>
+          </h3>
           <div className="flex flex-wrap items-center gap-1">
             <p className="text-muted-foreground text-xs">{date}</p>
             <p className="text-muted-foreground border-muted-foreground border-s ps-1 text-xs">

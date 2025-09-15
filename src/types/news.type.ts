@@ -6,6 +6,7 @@ export type TNews = {
   _id: string;
   sequence?: number;
   title: string;
+  sub_title?: string;
   slug: string;
   description?: string;
   caption?: string;

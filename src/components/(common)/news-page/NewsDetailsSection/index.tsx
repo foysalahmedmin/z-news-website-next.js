@@ -62,6 +62,9 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
         </nav>
 
         <div className="space-y-4">
+          {/* Sub Title */}
+          {news?.sub_title && <p className="text-red-700">{news?.sub_title}</p>}
+
           {/* Title */}
           <h1 className="text-2xl leading-tight font-bold md:text-4xl">
             {news?.title}

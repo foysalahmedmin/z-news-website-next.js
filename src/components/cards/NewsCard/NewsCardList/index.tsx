@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
 import { getDescription } from "@/utils/parseContentToDescription";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
-import { Video } from "lucide-react";
+import { Dot, Video } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,7 +24,8 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
   classNameTitle,
   classNameDescription,
 }) => {
-  const { published_at, slug, title, description, category } = news || {};
+  const { published_at, slug, title, sub_title, description, category } =
+    news || {};
   const { thumbnails } = news?.youtube
     ? parseYouTubeUrl(news?.youtube || "")
     : {};
@@ -77,11 +78,18 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
         <div className="border-s-2 ps-2">
           <h3
             className={cn(
-              "mb-[0.25em] line-clamp-2 text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900",
+              "mb-[0.25em] line-clamp-2 flex items-center gap-[0.5em] text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900",
               classNameTitle,
             )}
-            dangerouslySetInnerHTML={{ __html: title || "" }}
-          />
+          >
+            {sub_title && (
+              <>
+                <span className="text-red-700">{sub_title}</span>{" "}
+                <Dot className="text-muted-foreground size-[1em]" />
+              </>
+            )}
+            <span>{title}</span>
+          </h3>
           <div className="flex flex-wrap items-center gap-1">
             <p className="text-muted-foreground text-xs">{date}</p>
             <p className="text-muted-foreground border-muted-foreground border-s ps-1 text-xs">
