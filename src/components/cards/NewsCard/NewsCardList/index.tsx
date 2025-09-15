@@ -45,18 +45,18 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
     <Link
       href={`/news/${slug}`}
       className={cn(
-        "group relative flex flex-col gap-4 md:flex-row md:items-center",
+        "group relative flex flex-col gap-4 md:flex-row",
         className,
       )}
       title={title}
     >
       <div
         className={cn(
-          "overflow-hidden md:w-1/2 md:max-w-56",
+          "self-stretch overflow-hidden md:w-1/2 md:max-w-56",
           classNameThumbnail,
         )}
       >
-        <div className="relative aspect-video w-full">
+        <div className="relative aspect-video w-full md:aspect-auto md:h-full">
           <Image
             className="size-full object-cover object-center transition-all duration-300 group-hover:scale-105"
             src={thumbnail}
@@ -74,11 +74,11 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
           )}
         </div>
       </div>
-      <div className={cn("flex-1", classNameContent)}>
+      <div className={cn("flex-1 self-stretch", classNameContent)}>
         <div className="border-s-2 ps-2">
           <h3
             className={cn(
-              "mb-[0.25em] line-clamp-2 flex items-center gap-[0.5em] text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900",
+              "mb-[0.25em] line-clamp-3 space-x-[0.5em] text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900",
               classNameTitle,
             )}
           >
