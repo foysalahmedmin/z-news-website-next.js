@@ -1,8 +1,10 @@
 import NewsFeaturedSection from "@/components/(common)/home-page/NewsFeaturedSection";
 import NewsHeadlinesSection from "@/components/(common)/home-page/NewsHeadlinesSection";
 import CategoryNewsSection from "@/components/sections/CategoryNewsSection";
-import CategoryNewsSectionSkeleton from "@/components/skeletons/sections-skeleton/CategoryNewsSection";
+import EventNewsSection from "@/components/sections/EventNewsSection";
+import CategoryNewsSectionSkeleton from "@/components/skeletons/sections-skeleton/CategoryNewsSectionSkeleton";
 import { fetchCategories } from "@/services/category.service";
+import { fetchEvents } from "@/services/event.service";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -21,12 +23,32 @@ const HomePage: React.FC = async () => {
     is_featured: true,
   });
 
+  const { data: events } = await fetchEvents({
+    page: 1,
+    limit: 3,
+    sort: "-published_at",
+    is_featured: true,
+  });
+
   return (
     <main className="min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)]">
       <NewsHeadlinesSection />
 
       <div className="space-y-10 py-6 md:space-y-16 md:py-10">
         <NewsFeaturedSection />
+
+        {events?.map((event) => (
+          <Suspense
+            key={event._id}
+            fallback={
+              <div>
+                <CategoryNewsSectionSkeleton />
+              </div>
+            }
+          >
+            <EventNewsSection event={event} />
+          </Suspense>
+        ))}
 
         <CategoryNewsSection
           category={{ name: "সাম্প্রতিক সংবাদ", icon: "clock" }}

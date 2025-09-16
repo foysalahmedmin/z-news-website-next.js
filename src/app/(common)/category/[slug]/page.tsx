@@ -2,7 +2,7 @@ import CategoryNewsFeaturedSection from "@/components/(common)/category-page/Cat
 import CategoryNewsMoreSection from "@/components/(common)/category-page/CategoryNewsMoreSection";
 import CategoryNewsPageHeaderSection from "@/components/(common)/category-page/CategoryNewsPageHeaderSection";
 import CategoryNewsSection from "@/components/sections/CategoryNewsSection";
-import CategoryNewsSectionSkeleton from "@/components/skeletons/sections-skeleton/CategoryNewsSection";
+import CategoryNewsSectionSkeleton from "@/components/skeletons/sections-skeleton/CategoryNewsSectionSkeleton";
 import { fetchCategory } from "@/services/category.service";
 import { Suspense } from "react";
 

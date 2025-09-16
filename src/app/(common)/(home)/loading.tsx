@@ -1,4 +1,4 @@
-import CategoryNewsSectionSkeleton from "@/components/skeletons/sections-skeleton/CategoryNewsSection";
+import CategoryNewsSectionSkeleton from "@/components/skeletons/sections-skeleton/CategoryNewsSectionSkeleton";
 import NewsFeaturedSectionSkeleton from "@/components/skeletons/sections-skeleton/NewsFeaturedSectionSkeleton";
 import NewsHeadlinesSectionSkeleton from "@/components/skeletons/sections-skeleton/NewsHeadlinesSectionSkeleton";
 
