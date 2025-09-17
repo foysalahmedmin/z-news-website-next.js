@@ -14,18 +14,20 @@ const EventNewsSection: React.FC<{
     page: 1,
     limit: 5,
     ...(_id && { event: _id }),
-    sort: "-published_at",
+    sort: "-published_at,-is_featured",
   });
 
   const lead = data?.[0];
 
   const topData = data?.slice(1, 5);
 
+  if (!data?.length || data?.length < 5) return null;
+
   return (
     <section
-      className={cn("bg-amber-500/15 py-10", {
-        "bg-muted/30 py-16": layout === "highlight",
-        "bg-background": layout !== "highlight",
+      className={cn("bg-amber-500/5 py-10 md:py-16", {
+        "bg-amber-500/5": layout === "default",
+        "bg-muted": layout === "standard",
       })}
     >
       <div className="container mx-auto px-4">
@@ -56,21 +58,36 @@ const EventNewsSection: React.FC<{
         </div>
 
         {/* News Grid */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:grid-rows-2">
+          {/* Left Column */}
+          <div className="flex flex-col gap-6 lg:col-span-3 lg:row-span-2">
+            {topData?.slice(0, 2).map((item, index) => (
+              <NewsCard
+                key={index}
+                className="border-foreground/25 rounded border border-dashed bg-transparent p-4 lg:h-full"
+                type="grid"
+                news={item}
+              />
+            ))}
+          </div>
+
+          {/* Lead News - Middle */}
+          <div className="lg:col-span-6 lg:row-span-2">
             <NewsCard
-              className="border-dashed bg-transparent p-4 lg:text-3xl"
+              className="border-foreground/25 border border-dashed bg-transparent p-4 lg:h-full lg:text-3xl"
               type="grid"
               news={lead || {}}
             />
           </div>
-          <div className="lg:col-span-2 lg:grid-cols-2">
-            {topData?.map((item, index) => (
+
+          {/* Right Column */}
+          <div className="flex flex-col gap-6 lg:col-span-3 lg:row-span-2">
+            {topData?.slice(2, 4).map((item, index) => (
               <NewsCard
-                className="rounded border-dashed bg-transparent p-4"
+                key={index}
+                className="border-foreground/25 rounded border border-dashed bg-transparent p-4 lg:h-full"
                 type="grid"
                 news={item}
-                key={index}
               />
             ))}
           </div>

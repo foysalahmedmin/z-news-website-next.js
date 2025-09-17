@@ -16,6 +16,13 @@ export const metadata: Metadata = {
 export const revalidate = 30;
 
 const HomePage: React.FC = async () => {
+  const { data: events } = await fetchEvents({
+    page: 1,
+    limit: 1,
+    sort: "-published_at",
+    is_featured: true,
+  });
+
   const { data: categories } = await fetchCategories({
     page: 1,
     limit: 15,
@@ -23,32 +30,24 @@ const HomePage: React.FC = async () => {
     is_featured: true,
   });
 
-  const { data: events } = await fetchEvents({
-    page: 1,
-    limit: 3,
-    sort: "-published_at",
-    is_featured: true,
-  });
-
   return (
     <main className="min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)]">
       <NewsHeadlinesSection />
+      {events?.map((event) => (
+        <Suspense
+          key={event._id}
+          fallback={
+            <div>
+              <CategoryNewsSectionSkeleton />
+            </div>
+          }
+        >
+          <EventNewsSection event={event} />
+        </Suspense>
+      ))}
 
       <div className="space-y-10 py-6 md:space-y-16 md:py-10">
         <NewsFeaturedSection />
-
-        {events?.map((event) => (
-          <Suspense
-            key={event._id}
-            fallback={
-              <div>
-                <CategoryNewsSectionSkeleton />
-              </div>
-            }
-          >
-            <EventNewsSection event={event} />
-          </Suspense>
-        ))}
 
         <CategoryNewsSection
           category={{ name: "সাম্প্রতিক সংবাদ", icon: "clock" }}

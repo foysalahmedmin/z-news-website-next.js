@@ -9,6 +9,8 @@ export type TNewsCardProps = {
   className?: string;
   classNameContent?: string;
   classNameThumbnail?: string;
+  classNameThumbnailImage?: string;
+  classNameTitle?: string;
   classNameDescription?: string;
 };
 

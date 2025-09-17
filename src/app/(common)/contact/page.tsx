@@ -44,11 +44,29 @@ const ContactPage: React.FC = () => {
             </p>
           </header>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             <p>
               ইমেইল:{" "}
-              <a className="underline" href="mailto:support@binduui.com">
-                support@binduui.com
+              <a className="text-foreground" href="news@dainikeidin.com">
+                news@dainikeidin.com
+              </a>
+            </p>
+            <p>
+              মোবাইল:{" "}
+              <a className="text-foreground" href="tel:+8801893044041">
+                +880 1893-044041
+              </a>
+            </p>
+            <p className="text-muted-foreground text-sm">
+              ঠিকানা:{" "}
+              <a
+                className="text-foreground"
+                href="https://www.google.com/maps?q=ভিশন+২০২১+টাওয়ার,+সফটওয়্যার+টেকনোলজি+পার্ক,১০ম+তলা,+কারওয়ান+বাজার,+ঢাকা-১২১৫"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ভিশন ২০২১ টাওয়ার, সফটওয়্যার টেকনোলজি পার্ক, ১০ম তলা, কারওয়ান
+                বাজার, ঢাকা-১২১৫
               </a>
             </p>
             <p>সময়: প্রতিদিন সকাল ৯টা — রাত ৯টা</p>

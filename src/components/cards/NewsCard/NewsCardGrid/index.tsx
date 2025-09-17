@@ -45,11 +45,16 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
   return (
     <Link
       href={`/news/${slug}`}
-      className={cn("group relative", className)}
+      className={cn("group relative flex flex-col self-stretch", className)}
       title={title}
     >
-      <div className={cn("overflow-hidden", classNameThumbnail)}>
-        <div className="relative aspect-video w-full">
+      <div
+        className={cn(
+          "aspect-video w-full overflow-hidden",
+          classNameThumbnail,
+        )}
+      >
+        <div className="relative size-full">
           <Image
             className="size-full object-cover object-center transition-all duration-300 group-hover:scale-105"
             src={thumbnail}
@@ -67,11 +72,11 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
           )}
         </div>
       </div>
-      <div className={cn("py-4", classNameContent)}>
-        <div className="border-s-2 ps-2">
+      <div className={cn("flex flex-1 flex-col py-4", classNameContent)}>
+        <div className="mb-[0.5em] border-s-2 ps-2">
           <h3
             className={cn(
-              "mb-[0.25em] line-clamp-3 text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900",
+              "mb-[0.25em] text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900 md:line-clamp-3",
               classNameTitle,
             )}
           >
@@ -92,7 +97,7 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
         </div>
         <p
           className={cn(
-            "text-muted-foreground mt-2 line-clamp-3 text-[0.875em] leading-[1.25]",
+            "text-muted-foreground line-clamp-3 text-[0.875em] leading-[1.25]",
             classNameDescription,
           )}
         >

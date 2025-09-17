@@ -26,7 +26,10 @@ const CategoryNewsSection: React.FC<{
 
   return (
     <section
-      className={cn("", { "bg-muted py-10 md:py-16": layout === "highlight" })}
+      className={cn("", {
+        "": layout === "default",
+        "bg-muted py-10 md:py-16": layout === "standard",
+      })}
     >
       <div className="container space-y-6 md:space-y-10">
         <div>

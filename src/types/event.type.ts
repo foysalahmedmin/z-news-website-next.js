@@ -13,7 +13,7 @@ export type TEvent = {
   sequence: number;
   is_featured?: boolean;
   status: TStatus;
-  layout?: string;
+  layout?: "default" | "standard" | "featured" | "minimal";
 };
 
 export type TEventUpdatePayload = {

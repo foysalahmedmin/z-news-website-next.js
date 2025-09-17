@@ -11,6 +11,7 @@ export type TNewsCardListProps = {
   news?: Partial<TNews>;
   className?: string;
   classNameThumbnail?: string;
+  classNameThumbnailImage?: string;
   classNameContent?: string;
   classNameTitle?: string;
   classNameDescription?: string;
@@ -20,6 +21,7 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
   news,
   className,
   classNameThumbnail,
+  classNameThumbnailImage,
   classNameContent,
   classNameTitle,
   classNameDescription,
@@ -52,11 +54,11 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
     >
       <div
         className={cn(
-          "self-stretch overflow-hidden md:w-1/2 md:max-w-56",
+          "relative self-stretch overflow-hidden md:w-1/2",
           classNameThumbnail,
         )}
       >
-        <div className="relative aspect-video w-full">
+        <div className={cn("aspect-video w-full", classNameThumbnailImage)}>
           <Image
             className="size-full object-cover object-center transition-all duration-300 group-hover:scale-105"
             src={thumbnail}
@@ -68,17 +70,19 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
             // }}
           />
           {(news?.youtube || news?.video) && (
-            <div className="absolute inset-0 m-auto flex aspect-square h-1/3 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs md:h-2/5">
+            <div className="absolute inset-0 z-10 m-auto flex aspect-square h-1/3 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs md:h-2/5">
               <Play className="size-1/2" strokeWidth={2} />
             </div>
           )}
         </div>
       </div>
-      <div className={cn("flex-1 self-stretch", classNameContent)}>
-        <div className="border-s-2 ps-2">
+      <div
+        className={cn("flex flex-1 flex-col self-stretch", classNameContent)}
+      >
+        <div className="mb-[0.5em] border-s-2 ps-2">
           <h3
             className={cn(
-              "mb-[0.25em] line-clamp-3 text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900",
+              "mb-[0.25em] text-[1.125em] leading-[1.25] font-semibold group-hover:text-blue-900 md:line-clamp-3",
               classNameTitle,
             )}
           >
@@ -99,7 +103,7 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
         </div>
         <p
           className={cn(
-            "text-muted-foreground mt-2 line-clamp-3 text-[0.875em] leading-[1.25]",
+            "text-muted-foreground line-clamp-3 text-[0.875em] leading-[1.25]",
             classNameDescription,
           )}
         >
