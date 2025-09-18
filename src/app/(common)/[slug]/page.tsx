@@ -129,7 +129,7 @@ const NewsPage = async ({ params }: Props) => {
           </div>
 
           {/* Like, Dislike & Actions - Client Component */}
-          <div className="xl:hidden">
+          <div className="hidden">
             <NewsActionSection news={data} />
           </div>
 

@@ -93,21 +93,19 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
             </div>
           )} */}
           </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Reaction news={news!} />
-              {/* <Save news={news!} /> */}
-              <Print news={news!} />
-              <Share news={news!} />
-            </div>
+        </div>
+        <div className="flex items-center justify-between border-y py-2">
+          <div className="flex items-center gap-4">
+            <Reaction news={news!} />
+            <Print news={news!} />
+            <Share news={news!} />
+          </div>
 
-            {/* View Count */}
-            <div className="flex items-center gap-4">
-              <View news={news!} />
-            </div>
+          {/* View Count */}
+          <div className="flex items-center gap-4">
+            <View news={news!} />
           </div>
         </div>
-        <hr />
         <div>
           <SuggestionNews news={news} />
         </div>
@@ -195,7 +193,18 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
           </div>
         </div>
 
-        <hr className="xl:hidden" />
+        <div className="flex items-center justify-between border-y py-2 xl:hidden">
+          <div className="flex items-center gap-4">
+            <Reaction news={news!} />
+            <Print news={news!} />
+            <Share news={news!} />
+          </div>
+
+          {/* View Count */}
+          <div className="flex items-center gap-4">
+            <View news={news!} />
+          </div>
+        </div>
 
         <div className="space-y-6 md:space-y-10">
           {/* Thumbnail */}
