@@ -388,7 +388,12 @@ const OperationClient = () => {
                 key={newsItem._id}
                 className="border-b pb-4 last:border-b-0 last:pb-0"
               >
-                <NewsCard news={newsItem} type="list" />
+                <NewsCard
+                  className="lg:text-lg"
+                  classNameThumbnail="md:w-1/3 md:max-w-40"
+                  news={newsItem}
+                  type="list"
+                />
               </li>
             ))}
           </ul>
