@@ -1,13 +1,11 @@
 // components/NewsActions.tsx
 "use client";
 
-import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
-import { formatCount } from "@/utils/formatCount";
-import { Eye } from "lucide-react";
 import Print from "./print";
 import Reaction from "./reaction";
 import Share from "./share";
+import View from "./view";
 
 type NewsActionSectionProps = {
   news?: Partial<TNews>;
@@ -26,13 +24,8 @@ const NewsActionSection: React.FC<NewsActionSectionProps> = ({ news }) => {
           </div>
 
           {/* View Count */}
-          <div className="divide-muted-foreground flex h-10 items-center divide-x rounded-md">
-            <div className="flex items-center gap-1 px-2">
-              <Eye className={cn("size-5")} />
-              <span className="mb-0.5 text-lg leading-1">
-                {formatCount(news?.views || 0)}
-              </span>
-            </div>
+          <div className="flex items-center gap-4">
+            <View news={news!} />
           </div>
         </div>
       </div>

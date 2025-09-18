@@ -59,7 +59,7 @@ const Share: React.FC<ReactionProps> = ({ news, className }) => {
         <Modal.Backdrop>
           <Modal.Content size={"sm"} className="my-auto">
             <Modal.Header>
-              <Modal.Title>SHARE</Modal.Title>
+              <Modal.Title>শেয়ার</Modal.Title>
               <Modal.Close size={"sm"} />
             </Modal.Header>
             <Modal.Body>

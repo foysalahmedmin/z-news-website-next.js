@@ -1,14 +1,13 @@
 import { URLS } from "@/config";
-import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
-import { formatCount } from "@/utils/formatCount";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
-import { Calendar, Edit2, Eye, Play, Tag } from "lucide-react";
+import { Calendar, Edit2, Play, Tag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Print from "../NewsActionSection/print";
 import Reaction from "../NewsActionSection/reaction";
 import Share from "../NewsActionSection/share";
+import View from "../NewsActionSection/view";
 import RecentNewsSection from "../RecentNewsSection";
 import SuggestionNews from "../SuggestionNewsSection";
 import VideoThumbnailPlayer from "./VideoThumbnailPlayer";
@@ -103,13 +102,8 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
             </div>
 
             {/* View Count */}
-            <div className="divide-muted-foreground flex h-10 items-center divide-x rounded-md">
-              <div className="flex items-center gap-1 px-2">
-                <Eye className={cn("size-5")} />
-                <span className="mb-0.5 text-lg leading-1">
-                  {formatCount(news?.views || 0)}
-                </span>
-              </div>
+            <div className="flex items-center gap-4">
+              <View news={news!} />
             </div>
           </div>
         </div>
@@ -124,30 +118,6 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
       >
         {/* Breadcrumb */}
         <div className="space-y-4 md:space-y-6">
-          <nav className="flex items-center text-sm text-gray-600 xl:hidden">
-            <Link
-              href="/"
-              className="underline-effect hover:underline-effect-active inline-block hover:text-blue-900"
-            >
-              <Image
-                className="inline-block h-12 object-contain object-center"
-                src="/logo.png"
-                alt="Logo"
-                width={52}
-                height={32}
-              />
-            </Link>
-            <span className="mx-2">/</span>
-            <Link
-              className="underline-effect hover:underline-effect-active hover:text-blue-900"
-              href={`/category/${news?.category?.slug}`}
-            >
-              {news?.category?.name}
-            </Link>
-            <span className="mx-2">/</span>
-            <span>{news?.title}</span>
-          </nav>
-
           <div className="space-y-4">
             {/* Sub Title */}
             {news?.sub_title && (

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: "দৈনিক এইদিন",
 };
 
-export const revalidate = 30;
+export const revalidate = 15;
 
 const HomePage: React.FC = async () => {
   const { data: events } = await fetchEvents({

@@ -58,7 +58,7 @@ const modalContentVariants = cva(
       },
       size: {
         default: "w-full md:w-[32rem] lg:w-[40rem] text-base",
-        sm: "w-full md:w-[32rem]",
+        sm: "w-[95%] md:w-[32rem]",
         base: "w-full md:w-[32rem] lg:w-[40rem]",
         lg: "w-full lg:w-[40rem] xl:w-[48rem]",
         xl: "w-full xl:w-[48rem] 2xl:w-[52rem]",

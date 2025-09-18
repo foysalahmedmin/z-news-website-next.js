@@ -37,12 +37,12 @@ const NewsHeadlinesSection = async () => {
                         {headline?.slug ? (
                           <Link
                             href={`/news/${headline?.slug}`}
-                            className="underline-effect foreground hover:underline-effect-active text-sm whitespace-nowrap uppercase transition-colors duration-200"
+                            className="underline-effect foreground hover:underline-effect-active whitespace-nowrap uppercase transition-colors duration-200"
                           >
                             {headline?.title}
                           </Link>
                         ) : (
-                          <span className="underline-effect foreground hover:underline-effect-active text-sm whitespace-nowrap uppercase transition-colors duration-200">
+                          <span className="underline-effect foreground hover:underline-effect-active whitespace-nowrap uppercase transition-colors duration-200">
                             {headline?.title}
                           </span>
                         )}

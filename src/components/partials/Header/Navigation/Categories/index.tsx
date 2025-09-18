@@ -15,7 +15,7 @@ const CategoryItem = ({
   return (
     <div className="px-2">
       <ActiveLink
-        className="underline-effect foreground hover:underline-effect-active text-sm whitespace-nowrap uppercase transition-colors duration-200"
+        className="underline-effect foreground hover:underline-effect-active text-base font-semibold whitespace-nowrap uppercase transition-colors duration-200"
         activeClassName="underline-effect-active"
         href={`/category/${category.slug}`}
       >
@@ -29,7 +29,7 @@ const CategoryDropdownItem = ({ category }: { category: TCategory }) => {
   return (
     <div className="px-2">
       <ActiveLink
-        className="underline-effect foreground hover:underline-effect-active text-sm whitespace-nowrap uppercase transition-colors duration-200"
+        className="underline-effect foreground hover:underline-effect-active text-base font-semibold whitespace-nowrap uppercase transition-colors duration-200"
         activeClassName="underline-effect-active"
         href={`/category/${category.slug}`}
       >
@@ -134,7 +134,7 @@ const Categories = ({ data }: { data?: TCategory[] }) => {
             <div className="w-24 px-2">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="underline-effect foreground hover:underline-effect-active flex w-full items-center justify-center gap-1 text-sm whitespace-nowrap uppercase transition-colors duration-200"
+                className="underline-effect foreground hover:underline-effect-active flex w-full items-center justify-center gap-1 font-semibold whitespace-nowrap uppercase transition-colors duration-200"
               >
                 <MoreHorizontal size={16} />
                 আরও

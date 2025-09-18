@@ -66,6 +66,9 @@ const Reaction: React.FC<ReactionProps> = ({ news, className }) => {
     if (!news?._id) return;
     const getReaction = async () => {
       try {
+        if (!news?._id) return;
+        setIsLoading(true);
+
         const { data, meta } = await fetchNewsReaction(news?._id);
         const { likes = 0, dislikes = 0 } = meta || {};
         setLikesCount((likes as number) || 0);

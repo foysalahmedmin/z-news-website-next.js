@@ -13,8 +13,7 @@ export async function fetchEvent(
 
   const response = await fetch(url, {
     method: "GET",
-    // next: { revalidate: 60 * 60 * 24 },
-    next: { revalidate: 60 * 0.5 },
+    next: { revalidate: 60 * 0.25 },
   });
 
   if (!response.ok) {
@@ -35,8 +34,7 @@ export async function fetchEvents(
 
   const response = await fetch(url, {
     method: "GET",
-    // next: { revalidate: 60 * 60 * 24 },
-    next: { revalidate: 60 * 0.5 },
+    next: { revalidate: 60 * 0.25 },
   });
 
   if (!response.ok) {

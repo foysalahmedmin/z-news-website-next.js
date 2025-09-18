@@ -27,7 +27,7 @@ const Navigation: React.FC<NavigationProps> = async ({
             <Logo />
           </div>
           <div className="flex flex-1 items-center justify-center">
-            <div className="mx-auto w-11/12">
+            <div className="mx-auto w-19/20">
               <Categories data={categories} />
             </div>
           </div>

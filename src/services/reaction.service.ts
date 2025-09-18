@@ -10,8 +10,6 @@ export const fetchReactions = async (
 
   const url = `${ENV.api_url}/api/reaction/self${queryString}`;
 
-  console.log(url);
-
   const response = await fetch(url, {
     method: "GET",
     cache: "no-cache",
