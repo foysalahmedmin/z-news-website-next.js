@@ -27,13 +27,15 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const NewsCommentCard = ({
+  guest_token,
   comment,
   onUpdate,
   onDelete,
 }: {
+  guest_token?: string;
   comment: TComment;
   onUpdate: (id: string, updatedComment: TComment) => void;
   onDelete: (id: string) => void;
@@ -50,8 +52,15 @@ const NewsCommentCard = ({
     content: content || "",
   });
 
-  const token = Cookies.get("guest_token");
-  const isOwner = token === guest;
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const isOwner = guest_token === guest;
+
+  const createdAt = new Date(comment.created_at);
+  const now = new Date();
+  const diffHours = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+
+  const isControllable = isOwner || diffHours <= 12;
 
   const handleUpdateComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,14 +169,14 @@ const NewsCommentCard = ({
                 </div>
 
                 {/* Action Buttons */}
-                {isOwner && (
+                {isOwner && isControllable && (
                   <div className="flex items-center gap-1">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setIsEditing(true)}
                       disabled={isLoading}
-                      className="h-8 w-8 p-0"
+                      className="text-foreground h-8 w-8 p-0"
                     >
                       <Edit2 size={14} />
                     </Button>
@@ -189,7 +198,11 @@ const NewsCommentCard = ({
             </>
           ) : (
             /* Edit Form */
-            <form onSubmit={handleUpdateComment} className="space-y-3">
+            <form
+              ref={formRef}
+              onSubmit={handleUpdateComment}
+              className="space-y-3"
+            >
               <div className="space-y-2">
                 <FormControl
                   type="text"
@@ -256,6 +269,7 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
     total?: number;
     limit?: number;
     page?: number;
+    guest_token?: string;
   }>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -267,6 +281,9 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
   const [savedEmail, setSavedEmail] = useState(
     Cookies.get("guest_email") || "",
   );
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const contentRef = useRef<HTMLTextAreaElement>(null);
 
   // Load comments
   useEffect(() => {
@@ -318,7 +335,7 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
     setIsSubmitting(true);
     try {
       const { data } = await createComment({
-        news_id: news,
+        news: news?._id,
         name,
         email,
         content,
@@ -328,10 +345,13 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
         setComments((prev) => [data, ...prev]);
         setMeta((prev) => ({ ...prev, total: (prev.total || 0) + 1 }));
         // Reset only content field, keep name and email if saved
-        const form = e.currentTarget as HTMLFormElement;
+        const form = formRef.current;
+        if (!form) return;
+
         const contentField = form.querySelector(
           'textarea[name="content"]',
-        ) as HTMLTextAreaElement;
+        ) as HTMLTextAreaElement | null;
+
         if (contentField) {
           contentField.value = "";
         }
@@ -347,12 +367,18 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
   };
 
   // Clear saved credentials
-  const handleClearCredentials = () => {
-    Cookies.remove("guest_name");
-    Cookies.remove("guest_email");
-    setSavedName("");
-    setSavedEmail("");
-    setSaveCredentials(false);
+  const handleToggleCredentials = (bool: boolean) => {
+    if (bool) {
+      setSaveCredentials(true);
+    } else {
+      setSaveCredentials(false);
+      if (savedEmail || savedName) {
+        Cookies.remove("guest_name");
+        Cookies.remove("guest_email");
+        setSavedName("");
+        setSavedEmail("");
+      }
+    }
   };
 
   // Handle comment update
@@ -408,6 +434,7 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
           >
             {/* Comment Form */}
             <form
+              ref={formRef}
               onSubmit={handleSubmitComment}
               className="mt-4 space-y-4 px-0.5"
             >
@@ -427,6 +454,7 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
                   required
                 />
                 <textarea
+                  ref={contentRef}
                   name="content"
                   placeholder="আপনার মন্তব্য লিখুন..."
                   className={cn(
@@ -448,25 +476,15 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
                     <input
                       type="checkbox"
                       checked={saveCredentials}
-                      onChange={(e) => setSaveCredentials(e.target.checked)}
-                      className="border-muted rounded"
+                      onChange={(e) =>
+                        handleToggleCredentials(e.target.checked)
+                      }
+                      className="border-muted accent-accent rounded"
                     />
                     <span className="text-muted-foreground text-sm">
                       নাম ও ইমেইল মনে রাখুন
                     </span>
                   </label>
-
-                  {(savedName || savedEmail) && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleClearCredentials}
-                      className="h-auto p-1 text-xs text-red-600 hover:text-red-700"
-                    >
-                      সংরক্ষিত তথ্য মুছুন
-                    </Button>
-                  )}
                 </div>
 
                 <Button
@@ -503,6 +521,7 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
                   <NewsCommentCard
                     key={comment._id}
                     comment={comment}
+                    guest_token={meta?.guest_token}
                     onUpdate={handleUpdateComment}
                     onDelete={handleDeleteComment}
                   />
