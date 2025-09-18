@@ -9,7 +9,7 @@ type Props = {
   }>;
 };
 
-export const revalidate = 30;
+export const revalidate = 15;
 
 export const generateMetadata = async ({ params }: Props) => {
   const { slug } = await params;
