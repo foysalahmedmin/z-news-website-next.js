@@ -41,7 +41,10 @@ export default function VideoThumbnailPlayer({
     <div
       className={`relative cursor-pointer ${className}`}
       style={{ width: "100%", maxWidth: width }}
-      onClick={() => setPlayVideo(true)}
+      onClick={() => {
+        if (!url) return;
+        setPlayVideo(true);
+      }}
     >
       <Image
         src={thumbnail}
