@@ -47,8 +47,8 @@ const ContactPage: React.FC = () => {
           <div className="space-y-4">
             <p>
               ইমেইল:{" "}
-              <a className="text-foreground" href="news@dainikeidin.com">
-                news@dainikeidin.com
+              <a className="text-foreground" href="news@z-news.com">
+                news@z-news.com
               </a>
             </p>
             <p>

@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "admin.dainikeidin.com",
+        hostname: "admin.z-news.com",
       },
       {
         protocol: "https",

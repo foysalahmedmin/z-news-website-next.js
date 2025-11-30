@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "দৈনিক এইদিন",
-  description: "দৈনিক এইদিন",
+  title: "Z-News",
+  description: "Z-News",
 };
 
 export default function RootLayout({

@@ -1,6 +1,6 @@
 export const PROJECT = {
-  name: "Daini keidin",
-  website: "https://dainikeidin.com",
-  description: "A new website for Daini keidin",
+  name: "Z-News",
+  website: "https://z-news.com",
+  description: "A new website for Z-News",
   version: "1.0.0",
 };

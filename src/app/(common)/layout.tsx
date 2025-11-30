@@ -3,8 +3,8 @@ import Header from "@/components/partials/Header";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "দৈনিক এইদিন",
-  description: "দৈনিক এইদিন",
+  title: "Z-News",
+  description: "Z-News",
 };
 
 const CommonLayout = ({ children }) => {

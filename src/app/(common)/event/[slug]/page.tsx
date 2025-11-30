@@ -17,7 +17,7 @@ export const generateMetadata = async ({ params }: Props) => {
 
   const { data } = await fetchEvent(decodedSlug);
   return {
-    title: `${data?.name} - দৈনিক এইদিন`,
+    title: `${data?.name} - Z-News`,
     description: data?.description,
   };
 };

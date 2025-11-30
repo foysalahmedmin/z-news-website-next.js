@@ -1,4 +1,4 @@
-# Z-NEWS WEBSITE (<a href="https://test.dainikeidin.com/">LIVE</a>)
+# Z-NEWS WEBSITE (<a href="https://test.z-news.com/">LIVE</a>)
 
 A modern, high-performance news website built with Next.js 15, React 19, TypeScript, and Tailwind CSS 4. The project features dynamic routing for news, categories, and search; modular UI components; SEO-friendly architecture; and a clean state management setup with Redux Toolkit.
 
@@ -60,8 +60,8 @@ pnpm start
 
 The app reads environment variables through `src/config/env/index.ts`.
 
-- `NEXT_PUBLIC_APP_URL` — public app URL. Defaults to `https://test.dainikeidin.com`
-- `NEXT_PUBLIC_API_URL` — API base URL. Defaults to `https://admin.dainikeidin.com`
+- `NEXT_PUBLIC_APP_URL` — public app URL. Defaults to `https://test.z-news.com`
+- `NEXT_PUBLIC_API_URL` — API base URL. Defaults to `https://admin.z-news.com`
 
 These feed into the centralized config exported by `src/config/index.ts` and are consumed by the `Fetch` API client and URL helpers.
 
@@ -146,7 +146,7 @@ Key helpers:
 `next.config.ts` whitelists remote image sources:
 
 - `http://localhost:5000`
-- `https://admin.dainikeidin.com`
+- `https://admin.z-news.com`
 - `https://images.unsplash.com`
 
 Adjust as needed for your deployment.
@@ -182,7 +182,7 @@ For Vercel, connect the repository and set environment variables in the dashboar
 
 ## Naming and Branding
 
-Config files reference the project as "Daini keidin" and Bengali titles (e.g., metadata: "দৈনিক এইদিন"). Update `src/config/project/index.ts`, `src/config/seo/index.ts`, and `public` assets to match your branding.
+Config files reference the project as "Z-News". Update `src/config/project/index.ts`, `src/config/seo/index.ts`, and `public` assets to match your branding.
 
 ## Contributing
 

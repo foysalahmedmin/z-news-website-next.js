@@ -12,7 +12,7 @@ const Footer = () => {
             {/* Logo & About */}
             <div className="space-y-4">
               <div>
-                <h2 className="text-2xl font-bold">দৈনিক এইদিন</h2>
+                <h2 className="text-2xl font-bold">Z-News</h2>
                 <p className="text-muted-foreground mt-3 text-sm">
                   আপনার বিশ্বস্ত সংবাদ মাধ্যম — সর্বশেষ সংবাদ, নিরপেক্ষ বিশ্লেষণ
                   এবং সঠিক তথ্য সরবরাহে অঙ্গীকারবদ্ধ।
@@ -54,8 +54,8 @@ const Footer = () => {
               <div className="space-y-2">
                 <p className="text-muted-foreground text-sm">
                   ইমেইল:{" "}
-                  <a className="text-foreground" href="news@dainikeidin.com">
-                    news@dainikeidin.com
+                  <a className="text-foreground" href="news@z-news.com">
+                    news@z-news.com
                   </a>
                 </p>
                 <p className="text-muted-foreground text-sm">
@@ -86,7 +86,7 @@ const Footer = () => {
           <div className="text-muted-foreground flex flex-col items-center justify-between text-sm sm:flex-row">
             <p>প্রকাশক ও সম্পাদক: তৌহিদ হোসেন</p>
             <p>
-              © {new Date().getFullYear()} দৈনিক এইদিন — সর্বস্বত্ব সংরক্ষিত
+              © {new Date().getFullYear()} Z-News — সর্বস্বত্ব সংরক্ষিত
             </p>
           </div>
         </div>
