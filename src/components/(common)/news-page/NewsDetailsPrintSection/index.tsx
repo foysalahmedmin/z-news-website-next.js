@@ -1,4 +1,3 @@
-import { URLS } from "@/config";
 import { TNews } from "@/types/news.type";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
 import { Calendar, Edit2, Play, Tag } from "lucide-react";
@@ -16,9 +15,7 @@ const NewsDetailsPrintSection: React.FC<TNewsSectionProps> = ({ news }) => {
     ? parseYouTubeUrl(news?.youtube || "")
     : {};
 
-  const thumbnail = news?.thumbnail
-    ? URLS.news.thumbnail + "/" + news?.thumbnail
-    : thumbnails?.default || "/thumbnail.png";
+  const thumbnail = news?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
 
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
@@ -144,23 +141,18 @@ const NewsDetailsPrintSection: React.FC<TNewsSectionProps> = ({ news }) => {
             <div className="relative">
               <Image
                 src={thumbnail}
-                alt={news?.caption || news?.title || "Thumbnail"}
+                alt={news?.title || "Thumbnail"}
                 width={800}
                 height={450}
                 className="aspect-video h-auto w-full rounded-md object-cover shadow"
                 priority
               />
-              {(news?.youtube || news?.video) && (
+              {(news?.youtube || news?.video?.url) && (
                 <div className="absolute inset-0 m-auto flex aspect-square h-1/3 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs">
                   <Play className="size-1/2" strokeWidth={2} />
                 </div>
               )}
             </div>
-            {news.caption && (
-              <p className="text-muted-foreground mt-2 text-sm italic">
-                {news.caption}
-              </p>
-            )}
           </div>
         }
 
@@ -172,24 +164,6 @@ const NewsDetailsPrintSection: React.FC<TNewsSectionProps> = ({ news }) => {
           />
         </div>
 
-        {/* Additional Images */}
-        {news?.images && news?.images.length > 0 && (
-          <div>
-            <h3 className="mb-4 text-xl font-semibold">আরো ছবি</h3>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-              {news?.images.map((image, index) => (
-                <Image
-                  key={index}
-                  src={image}
-                  alt={`${news?.title} - ছবি ${index + 1}`}
-                  width={300}
-                  height={200}
-                  className="h-48 w-full rounded-md object-cover shadow-md transition-shadow hover:shadow"
-                />
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Tags */}
         {news?.tags && news?.tags.length > 0 && (

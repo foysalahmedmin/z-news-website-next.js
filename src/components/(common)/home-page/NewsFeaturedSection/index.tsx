@@ -1,9 +1,9 @@
 import NewsCard from "@/components/cards/NewsCard";
 import { cn } from "@/lib/utils";
-import { fetchFeaturedBulkNews } from "@/services/news.service";
+import { fetchBulkNews } from "@/services/news.service";
 
 const NewsFeaturedSection = async () => {
-  const { data } = await fetchFeaturedBulkNews({ page: 1, limit: 5 });
+  const { data } = await fetchBulkNews({ page: 1, limit: 5, is_featured: true });
 
   const lead = data?.[0];
   const bottom = data?.slice(1, 5).filter(Boolean) || [];

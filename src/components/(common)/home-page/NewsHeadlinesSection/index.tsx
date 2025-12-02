@@ -1,12 +1,11 @@
-import { fetchBulkNews } from "@/services/news.service";
+import { fetchBulkNewsHeadlines } from "@/services/news-headline.service";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";
 
 const NewsHeadlinesSection = async () => {
-  const { data } = await fetchBulkNews({
+  const { data } = await fetchBulkNewsHeadlines({
     page: 1,
     limit: 10,
-    is_news_headline: true,
     sort: "-published_at",
   });
   return (
@@ -34,16 +33,16 @@ const NewsHeadlinesSection = async () => {
                         className="border-primary border-r px-4"
                         key={headline._id}
                       >
-                        {headline?.slug ? (
+                        {headline?.news?.slug ? (
                           <Link
-                            href={`/news/${headline?.slug}`}
+                            href={`/news/${headline?.news?.slug}`}
                             className="underline-effect foreground hover:underline-effect-active whitespace-nowrap uppercase transition-colors duration-200"
                           >
-                            {headline?.title}
+                            {headline?.news?.title}
                           </Link>
                         ) : (
                           <span className="underline-effect foreground hover:underline-effect-active whitespace-nowrap uppercase transition-colors duration-200">
-                            {headline?.title}
+                            {headline?.news?.title}
                           </span>
                         )}
                       </li>

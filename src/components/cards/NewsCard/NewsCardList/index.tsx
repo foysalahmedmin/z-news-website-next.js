@@ -1,4 +1,3 @@
-import { URLS } from "@/config";
 import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
 import { getDescription } from "@/utils/parseContentToDescription";
@@ -32,9 +31,7 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
     ? parseYouTubeUrl(news?.youtube || "")
     : {};
 
-  const thumbnail = news?.thumbnail
-    ? URLS.news.thumbnail + "/" + news?.thumbnail
-    : thumbnails?.default || "/thumbnail.png";
+  const thumbnail = news?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
 
   const date =
     published_at &&
@@ -69,7 +66,7 @@ const NewsCardList: React.FC<TNewsCardListProps> = ({
             //   e.currentTarget.src = "/thumbnail.png";
             // }}
           />
-          {(news?.youtube || news?.video) && (
+          {(news?.youtube || news?.video?.url) && (
             <div className="absolute inset-0 z-10 m-auto flex aspect-square h-1/3 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs md:h-2/5">
               <Play className="size-1/2" strokeWidth={2} />
             </div>

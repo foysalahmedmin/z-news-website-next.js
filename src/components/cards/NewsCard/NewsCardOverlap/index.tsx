@@ -1,4 +1,3 @@
-import { URLS } from "@/config";
 import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
@@ -24,9 +23,7 @@ const NewsCardOverlap: React.FC<TNewsCardOverlapProps> = ({
     ? parseYouTubeUrl(news?.youtube || "")
     : {};
 
-  const thumbnail = news?.thumbnail
-    ? URLS.news.thumbnail + "/" + news?.thumbnail
-    : thumbnails?.default || "/thumbnail.png";
+  const thumbnail = news?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
   const date =
     published_at &&
     new Date(published_at).toLocaleString("bn-BD", {

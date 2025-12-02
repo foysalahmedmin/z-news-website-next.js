@@ -1,3 +1,4 @@
+import NewsBreaksSection from "@/components/(common)/home-page/NewsBreaksSection";
 import NewsFeaturedSection from "@/components/(common)/home-page/NewsFeaturedSection";
 import NewsHeadlinesSection from "@/components/(common)/home-page/NewsHeadlinesSection";
 import CategoryNewsSection from "@/components/sections/CategoryNewsSection";
@@ -32,6 +33,7 @@ const HomePage: React.FC = async () => {
 
   return (
     <main className="min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)]">
+      <NewsBreaksSection />
       <NewsHeadlinesSection />
       {events?.map((event) => (
         <Suspense
