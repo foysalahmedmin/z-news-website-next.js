@@ -2,33 +2,75 @@
 
 import { Button } from "@/components/ui/Button";
 import { FormControl } from "@/components/ui/FormControl";
+import { submitContact } from "@/services/contact.service";
+import type { TContactPayload } from "@/types/contact.type";
 import React from "react";
 
 const ContactPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [status, setStatus] = React.useState<string | null>(null);
+  const [status, setStatus] = React.useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus(null);
     setIsSubmitting(true);
 
-    const formData = new FormData(e.currentTarget);
-    const name = String(formData.get("name") || "").trim();
-    const email = String(formData.get("email") || "").trim();
-    const message = String(formData.get("message") || "").trim();
+    try {
+      const formData = new FormData(e.currentTarget);
+      const payload: TContactPayload = {
+        name: String(formData.get("name") || "").trim(),
+        email: String(formData.get("email") || "").trim(),
+        message: String(formData.get("message") || "").trim(),
+      };
 
-    if (!name || !email || !message) {
-      setStatus("সব ঘর পূরণ করুন।");
+      // Validation
+      if (!payload.name || !payload.email || !payload.message) {
+        setStatus({
+          type: "error",
+          message: "সব ঘর পূরণ করুন।",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(payload.email)) {
+        setStatus({
+          type: "error",
+          message: "সঠিক ইমেইল ঠিকানা দিন।",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Submit to backend
+      const response = await submitContact(payload);
+
+      if (response.success) {
+        (e.target as HTMLFormElement).reset();
+        setStatus({
+          type: "success",
+          message: response.message || "বার্তা সফলভাবে পাঠানো হয়েছে!",
+        });
+      } else {
+        throw new Error(response.message || "বার্তা পাঠাতে ব্যর্থ হয়েছে");
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "বার্তা পাঠাতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।";
+      setStatus({
+        type: "error",
+        message: errorMessage,
+      });
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    // Placeholder submission logic. You can wire this to your backend later.
-    await new Promise((r) => setTimeout(r, 800));
-    (e.target as HTMLFormElement).reset();
-    setStatus("বার্তা সফলভাবে পাঠানো হয়েছে!");
-    setIsSubmitting(false);
   };
 
   return (
@@ -47,20 +89,26 @@ const ContactPage: React.FC = () => {
           <div className="space-y-4">
             <p>
               ইমেইল:{" "}
-              <a className="text-foreground" href="news@z-news.com">
+              <a
+                className="text-foreground hover:text-primary transition-colors"
+                href="mailto:news@z-news.com"
+              >
                 news@z-news.com
               </a>
             </p>
             <p>
               মোবাইল:{" "}
-              <a className="text-foreground" href="tel:+8801893044041">
+              <a
+                className="text-foreground hover:text-primary transition-colors"
+                href="tel:+8801893044041"
+              >
                 +880 1893-044041
               </a>
             </p>
             <p className="text-muted-foreground text-sm">
               ঠিকানা:{" "}
               <a
-                className="text-foreground"
+                className="text-foreground hover:text-primary transition-colors"
                 href="https://www.google.com/maps?q=ভিশন+২০২১+টাওয়ার,+সফটওয়্যার+টেকনোলজি+পার্ক,১০ম+তলা,+কারওয়ান+বাজার,+ঢাকা-১২১৫"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -76,7 +124,13 @@ const ContactPage: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <FormControl.Label htmlFor="name">নাম</FormControl.Label>
-            <FormControl id="name" name="name" placeholder="আপনার নাম" />
+            <FormControl
+              id="name"
+              name="name"
+              placeholder="আপনার নাম"
+              required
+              disabled={isSubmitting}
+            />
           </div>
 
           <div>
@@ -86,6 +140,8 @@ const ContactPage: React.FC = () => {
               name="email"
               type="email"
               placeholder="you@example.com"
+              required
+              disabled={isSubmitting}
             />
           </div>
 
@@ -97,10 +153,22 @@ const ContactPage: React.FC = () => {
               name="message"
               className="h-40 py-2"
               placeholder="আপনার বার্তা লিখুন"
+              required
+              disabled={isSubmitting}
             />
           </div>
 
-          {status && <div className="text-foreground/80 text-sm">{status}</div>}
+          {status && (
+            <div
+              className={`text-sm ${
+                status.type === "success"
+                  ? "text-green-600 dark:text-green-400"
+                  : "text-red-600 dark:text-red-400"
+              }`}
+            >
+              {status.message}
+            </div>
+          )}
 
           <Button
             type="submit"
