@@ -6,6 +6,10 @@ export type TFile = {
   _id: string;
   url: string;
   name: string;
+  path: string;
+  file_name: string;
+  type: string;
+  caption?: string;
 };
 
 export type TNews = {
