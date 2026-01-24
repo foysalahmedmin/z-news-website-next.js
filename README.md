@@ -1,196 +1,234 @@
-# Z-NEWS WEBSITE (<a href="https://test.z-news.com/">LIVE</a>)
+# Z-News Website Portal
 
-A modern, high-performance news website built with Next.js 15, React 19, TypeScript, and Tailwind CSS 4. The project features dynamic routing for news, categories, and search; modular UI components; SEO-friendly architecture; and a clean state management setup with Redux Toolkit.
+A state-of-the-art, high-performance digital news delivery ecosystem engineered with Next.js 15, React 19, and Tailwind CSS 4. This platform is meticulously optimized for server-side rendering (SSR), dynamic article hydration, and real-time user engagement, serving as the primary public-facing interface for the Z-News network.
 
-## Features
+---
 
-- **Next.js App Router** with server and client components
-- **TypeScript-first** development
-- **Tailwind CSS 4** with typography plugin
-- **Reusable UI library** (buttons, dropdowns, modals, tabs, tables, etc.)
-- **Dynamic routes** for news details, categories, and search
-- **Redux Toolkit** store provider
-- **API abstraction** via a typed `Fetch` wrapper with interceptors
-- **SEO scaffolding** and image optimization config
-- **Prettier + ESLint** preconfigured
+## Table of Contents
+
+- [Core Modules and Features](#core-modules-and-features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Project Directory Map](#project-directory-map)
+- [Page Routing Matrix](#page-routing-matrix)
+- [Engagement and Analytics](#engagement-and-analytics)
+- [Data Orchestration](#data-orchestration)
+- [Workflow Diagrams](#workflow-diagrams)
+- [Development and Deployment](#development-and-deployment)
+
+---
+
+## Core Modules and Features
+
+### Editorial Consumption Layer
+
+The primary interface for news propagation, designed for readability and speed.
+
+- **Dynamic Article Rendering**: Highly optimized news detail pages featuring rich HTML content, embedded media, and categorized metadata.
+- **Breaking News Engine**: Real-time marquee integration for high-priority news flashes.
+- **Segmented Home Architecture**: Orchestrated sections for Headlines, Featured Articles, and Chronological news feeds.
+- **Hierarchical Navigation**: Category-based and event-based filtering allowing users to explore content through deep taxonomy trees.
+
+### Engagement Ecosystem
+
+A suite of interactive features designed to foster reader participation.
+
+- **Multi-Status Reactions**: Atomic like/dislike system with real-time feedback.
+- **Hybrid Commenting**: Sophisticated comment engine supporting both registered users and guest contributors with moderation queues.
+- **Content Preservation**: Integrated bookmarking capabilities for saving articles for later consumption.
+- **Sharing and Distribution**: Native social share integrations and high-fidelity print optimization for physical archiving.
+
+### Infrastructure and Optimization
+
+Enterprise-grade performance and discoverability features.
+
+- **Next-Gen Typography**: Implementation of Noto Serif Bengali for superior readability across all device types.
+- **SEO Orchestration**: Automatic metadata generation, open-graph protocols, and structured data for maximal search engine visibility.
+- **Intelligent Media Delivery**: Lazy-loading carousel systems and responsive image optimization via Next.js Image components.
+- **Real-time Synchronization**: Live view counts and engagement updates via optimized API polling and state hydration.
+
+---
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (React 19)
-- **Language**: TypeScript
-- **Styles**: Tailwind CSS 4, custom CSS modules
-- **State**: Redux Toolkit, React Redux
-- **UI/UX**: Lucide icons, Embla carousel, custom components
-- **Utilities**: clsx, class-variance-authority, cookies-next / js-cookie
+| Category             | Technology                                        |
+| :------------------- | :------------------------------------------------ |
+| Metadata Layer       | Next.js 15 (App Router - SSR/ISR)                 |
+| Render Engine        | React 19 (Modern Concurrent Architecture)         |
+| Programming Language | TypeScript (Strict Configuration)                 |
+| Design Framework     | Tailwind CSS 4 (Utility-first with JIT)           |
+| State Management     | Redux Toolkit & React Redux                       |
+| Icons and Assets     | Lucide React & Custom SVG Primitives              |
+| Motion & Animation   | Embla Carousel & React Fast Marquee               |
+| Communication        | Axios (Typed API Abstraction)                     |
+| Persistence          | Cookies-next & Local Storage                      |
 
-## Getting Started
+---
 
-### Prerequisites
+## Architecture
 
-- Node.js 18+ (recommended LTS)
-- pnpm (preferred) or npm/yarn
+### High-Level System Architecture
 
-### Installation
+<div align="center">
 
-```bash
-pnpm install
+```mermaid
+graph TD
+    User[Reader / Public User] -->|HTTPS| Vercel[Vercel Edge Network]
+    Vercel -->|SSR / Hydrated SPA| Browser[Client Browser]
+    
+    subgraph "Client Side State"
+        Redux[Redux Store - UI State]
+        Local[Local Cache - Bookmarks]
+    end
+
+    Browser --> Redux
+    Browser --> Local
+
+    Vercel <-->|API Calls| API[Z-News Backend Engine]
+    API <-->|Persistence| DB[(MongoDB)]
+    API <-->|Search| Redis[(Redis Caching)]
 ```
 
-### Development
+</div>
 
-```bash
-pnpm dev
+### Frontend Component Hierarchy
+
+<div align="center">
+
+```mermaid
+graph LR
+    Layout[Root Layout] --> Common[Common Layout]
+    Common --> Partial[Header / Footer]
+    Common --> View[Main Route View]
+    
+    View --> Sections[Page Sections]
+    Sections --> Multi[Modular Components]
+    Multi --> Actions[User Actions: React/Share]
+    Multi --> Feed[News Feeds: Grid/List]
 ```
 
-Runs Next.js locally with Turbopack. The app is served at `http://localhost:3000` by default.
+</div>
 
-### Build
+---
 
-```bash
-pnpm build
-```
-
-### Start (production)
-
-```bash
-pnpm start
-```
-
-## Environment Variables
-
-The app reads environment variables through `src/config/env/index.ts`.
-
-- `NEXT_PUBLIC_APP_URL` — public app URL. Defaults to `https://test.z-news.com`
-- `NEXT_PUBLIC_API_URL` — API base URL. Defaults to `https://admin.z-news.com`
-
-These feed into the centralized config exported by `src/config/index.ts` and are consumed by the `Fetch` API client and URL helpers.
-
-Create a `.env.local` file in the project root for local development:
-
-```bash
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_API_URL=http://localhost:5000
-```
-
-## Project Structure
+## Project Directory Map
 
 ```text
 src/
-  app/
-    (common)/
-      (home)/
-      about/
-      category/[slug]/
-      contact/
-      news/[slug]/
-      search/
-      layout.tsx          # Shared header/footer layout
-    layout.tsx            # Root layout, fonts, globals
-    globals.css
-  assets/
-    styles/               # Base styles and utilities
-  components/             # Reusable UI and page sections
-  config/                 # ENV, endpoints, settings, SEO, URLs
-  hooks/                  # Custom hooks (state, UI, observers)
-  lib/
-    api.ts                # Typed Fetch wrapper with interceptors
-    utils.ts
-  providers/
-    ReduxProvider.tsx     # Redux store provider
-  redux/
-    store.ts
-  services/               # API layer (auth, news, comments, etc.)
-  types/                  # App-wide TypeScript types
-  utils/                  # Generic utility functions
+├── app/             # Application Router (Next.js 15 Structure)
+│   ├── (common)/   # Shared layouts for public-facing pages
+│   │   ├── (home)/ # Dashboard / Home view
+│   │   ├── news/   # Detailed article routing
+│   │   ├── search/ # Query-based discovery
+│   │   └── ...     # Category, Event, and Static pages
+│   └── layout.tsx  # Global providers and font bootstrapping
+├── components/      # UI Composition Layer
+│   ├── (common)/   # Page-specific feature components
+│   ├── cards/      # Reusable news and media cards
+│   ├── partials/   # Layout elements (Navbar, Footer, Sidebar)
+│   ├── ui/         # Atomic UI primitives (Buttons, Inputs)
+│   └── skeletons/  # Loading state management
+├── services/        # Backend Communication Layer (Auth, News, Reaction)
+├── redux/           # Global Client-side State Orchestration
+├── providers/       # Context and Redux Wrappers
+├── hooks/           # Domain-specific observer and UI hooks
+├── config/          # SEO, Endpoints, and Environment constants
+└── utils/           # Typed helpers and formatting utilities
 ```
 
-## Pages and Routes
+---
 
-- `/` — Home page
-  - File: `src/app/(common)/(home)/page.tsx`
-  - Loading UI: `src/app/(common)/(home)/loading.tsx`
-- `/about` — About page
-  - File: `src/app/(common)/about/page.tsx`
-- `/contact` — Contact page
-  - File: `src/app/(common)/contact/page.tsx`
-- `/category/[slug]` — Category listing page for a given category slug
-  - File: `src/app/(common)/category/[slug]/page.tsx`
-  - Loading UI: `src/app/(common)/category/[slug]/loading.tsx`
-- `/news/[slug]` — News details page for a given news/article slug
-  - File: `src/app/(common)/news/[slug]/page.tsx`
-  - Loading UI: `src/app/(common)/news/[slug]/loading.tsx`
-- `/search` — Search page for querying news/articles
-  - File: `src/app/(common)/search/page.tsx`
-  - Loading UI: `src/app/(common)/search/loading.tsx`
+## Page Routing Matrix
 
-Shared layouts and app-level files:
+The system maps routes to specialized components to ensure optimal performance and SEO:
 
-- Root layout: `src/app/layout.tsx` (fonts, global CSS, metadata)
-- Common layout (header/footer): `src/app/(common)/layout.tsx`
-- App-level loading: `src/app/loading.tsx`
-- Favicon: `src/app/favicon.ico`
-- Global styles: `src/app/globals.css`
+- **Home**: `/` - Aggregated view of headlines, breaking news, and featured content.
+- **Article Detail**: `/news/[slug]` - Deep hydration of single articles with engagement controls.
+- **Category Browsing**: `/category/[slug]` - Filtered feeds based on hierarchical taxonomy.
+- **Event Feeds**: `/event/[slug]` - Specialized time-sensitive content discovery.
+- **Global Search**: `/search` - Multi-parameter query interface for the editorial database.
+- **Legacy/Slug Handling**: `/[slug]` - Dynamic resolution for about, contact, and custom pages.
 
-## API Client
+---
 
-The `src/lib/api.ts` file exposes a strongly-typed `Fetch` class with request/response interceptors, timeout handling, and JSON parsing. It is instantiated with `ENV.api_url`.
+## Engagement and Analytics
 
-Key helpers:
+Standardized interaction patterns are maintained across the platform:
 
-- `ENDPOINTS` in `src/config/endpoints/index.ts`
-- `getFullEndpoint(key)` to resolve absolute paths
-- `URLS` in `src/config/urls/index.ts` for static asset bases
+- **Vocal Engagement**: Standardized comment fields with strict length validation and spam protection.
+- **Reaction Matrix**: Binary sentiment tracking (Like/Dislike) synchronized with the backend.
+- **Traffic Telemetry**: Automated view incrementing on article entry to provide real-time popularity metrics.
+- **Social Propagation**: High-performance sharing components using the web share API where available.
 
-## Images and Optimization
+---
 
-`next.config.ts` whitelists remote image sources:
+## Workflow Diagrams
 
-- `http://localhost:5000`
-- `https://admin.z-news.com`
-- `https://images.unsplash.com`
+### Article Loading and Hydration Workflow
 
-Adjust as needed for your deployment.
+<div align="center">
 
-## Linting and Formatting
-
-- ESLint config is in `eslint.config.mjs` (Next.js + TypeScript + Prettier)
-- Run checks:
-
-```bash
-pnpm lint
-pnpm lint:fix
+```mermaid
+sequenceDiagram
+    participant User
+    participant Next as Next.js Server
+    participant Cache as Redis Cache
+    participant API as Backend Service
+    
+    User->>Next: Request /news/article-slug
+    Next->>Cache: Check for Static Cache
+    alt Cache HIT
+        Cache-->>Next: Return Static HTML
+    else Cache MISS
+        Next->>API: Fetch Article Data
+        API-->>Next: JSON Payload (Hydration Data)
+        Next->>Next: Render Dynamic HTML
+    end
+    Next-->>User: Serve Initial Page
+    Note right of User: Client Hydrates for Interactions
 ```
 
-## Deployment
+</div>
 
-This project includes a `vercel.json` with defaults:
+---
 
-- Install: `pnpm install`
-- Build: `pnpm build`
-- Output: `.next`
-- Framework: Next.js
+## Development and Deployment
 
-For Vercel, connect the repository and set environment variables in the dashboard.
+### Environment Setup
 
-## Available Scripts
+1.  **Dependencies**:
+    ```bash
+    pnpm install
+    ```
 
-- `pnpm dev` — start development server (Turbopack)
-- `pnpm build` — build production assets
-- `pnpm start` — run production server
-- `pnpm lint` — run ESLint
-- `pnpm lint:fix` — fix lint issues
+2.  **Configuration**:
+    Initialize the environment profile by populating the `.env.local` file:
+    ```bash
+    NEXT_PUBLIC_APP_URL=http://localhost:3000
+    NEXT_PUBLIC_API_URL=http://localhost:5000
+    ```
 
-## Naming and Branding
+3.  **Local Execution**:
+    ```bash
+    pnpm dev
+    ```
 
-Config files reference the project as "Z-News". Update `src/config/project/index.ts`, `src/config/seo/index.ts`, and `public` assets to match your branding.
+### Production and Distribution
 
-## Contributing
+1.  **Optimization**:
+    ```bash
+    pnpm build
+    ```
 
-1. Fork and clone
-2. Create a feature branch
-3. Commit with clear messages
-4. Open a pull request
+2.  **Static/Dynamic Hosting**:
+    The project is pre-configured for Vercel deployment but compatible with any Node.js environment or static provider using the `output: standalone` configuration.
+
+---
 
 ## License
 
-This project is proprietary to its owners unless a license is added. Consider adding a suitable license file if open-sourcing.
+Proprietary and Confidential. Unauthorized distribution or modification is strictly prohibited.
+
+---
+
+**Crafted with precision for the Z-News ecosystem.**
