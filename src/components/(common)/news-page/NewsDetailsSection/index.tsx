@@ -1,6 +1,6 @@
 import { TNews } from "@/types/news.type";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
-import { Calendar, Edit2, Play, Tag } from "lucide-react";
+import { Calendar, Clock, Edit2, Tag, Trophy } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Print from "../NewsActionSection/print";
@@ -22,7 +22,8 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
     ? parseYouTubeUrl(news?.youtube || "")
     : {};
 
-  const thumbnail = news?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
+  const thumbnail =
+    news?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
 
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
@@ -48,10 +49,12 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
           </div>
           <div className="text-muted-foreground flex flex-wrap items-center text-sm">
             {/* Author */}
-            {/* <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-            <Edit2 size={16} />
-            <span className="font-medium">{news?.author?.name}</span>
-          </div> */}
+            {news?.author?.name && (
+              <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+                <Edit2 size={16} />
+                <span className="font-medium">{news?.author?.name}</span>
+              </div>
+            )}
 
             {/* Writer */}
             {news?.writer && (
@@ -76,19 +79,19 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
             </div>
 
             {/* Last Updated */}
-            {/* {news?.is_edited && news?.edited_at && (
-            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-              <Clock size={16} />
-              <span>আপডেট:</span>
-              <time
-                dateTime={
-                  news?.edited_at && new Date(news?.edited_at).toISOString()
-                }
-              >
-                {formatDate(news?.edited_at)}
-              </time>
-            </div>
-          )} */}
+            {news?.is_edited && news?.edited_at && (
+              <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+                <Clock size={16} />
+                <span>আপডেট:</span>
+                <time
+                  dateTime={
+                    news?.edited_at && new Date(news?.edited_at).toISOString()
+                  }
+                >
+                  {formatDate(news?.edited_at)}
+                </time>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex items-center justify-between border-y py-2">
@@ -103,6 +106,21 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
             <View news={news!} />
           </div>
         </div>
+        {/* Event */}
+        {news?.event && (
+          <div className="bg-muted mt-4 rounded-lg p-3">
+            <div className="text-muted-foreground flex items-center gap-2 text-sm font-semibold uppercase">
+              <Trophy size={16} />
+              <span>ইভেন্ট:</span>
+            </div>
+            <Link
+              href={`/event/${news.event.slug}`}
+              className="mt-1 text-lg font-bold hover:underline"
+            >
+              {news.event.name}
+            </Link>
+          </div>
+        )}
         <div>
           <SuggestionNews news={news} />
         </div>
@@ -135,10 +153,12 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
           {/* Meta Information */}
           <div className="text-muted-foreground flex flex-wrap items-center text-sm xl:hidden">
             {/* Author */}
-            {/* <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-            <Edit2 size={16} />
-            <span className="font-medium">{news?.author?.name}</span>
-          </div> */}
+            {news?.author?.name && (
+              <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+                <Edit2 size={16} />
+                <span className="font-medium">{news?.author?.name}</span>
+              </div>
+            )}
 
             {/* Writer */}
             {news?.writer && (
@@ -163,19 +183,19 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
             </div>
 
             {/* Last Updated */}
-            {/* {news?.is_edited && news?.edited_at && (
-            <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
-              <Clock size={16} />
-              <span>আপডেট:</span>
-              <time
-                dateTime={
-                  news?.edited_at && new Date(news?.edited_at).toISOString()
-                }
-              >
-                {formatDate(news?.edited_at)}
-              </time>
-            </div>
-          )} */}
+            {news?.is_edited && news?.edited_at && (
+              <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
+                <Clock size={16} />
+                <span>আপডেট:</span>
+                <time
+                  dateTime={
+                    news?.edited_at && new Date(news?.edited_at).toISOString()
+                  }
+                >
+                  {formatDate(news?.edited_at)}
+                </time>
+              </div>
+            )}
 
             {/* Category */}
             <div className="border-muted-foreground flex items-center gap-2 border-l px-2">
@@ -204,40 +224,40 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
         </div>
 
         <div className="space-y-6 md:space-y-10">
-          {/* Thumbnail */}
-          {
+          {/* Thumbnail / Video */}
+          <div>
             <div>
-              <div>
-                {news?.youtube ? (
-                  <>
-                    <VideoThumbnailPlayer
-                      url={url!}
-                      thumbnail={thumbnail}
-                      alt="News Video"
-                      width={800}
-                      height={450}
-                    />
-                  </>
-                ) : (
-                  <div className="relative">
-                    <Image
-                      src={thumbnail}
-                      alt={news?.title || "Thumbnail"}
-                      width={800}
-                      height={450}
-                      className="aspect-video h-auto w-full rounded-md object-cover shadow"
-                      priority
-                    />
-                    {(news?.youtube || news?.video?.url) && (
-                      <div className="absolute inset-0 m-auto flex aspect-square h-1/3 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs">
-                        <Play className="size-1/2" strokeWidth={2} />
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              {news?.youtube ? (
+                <VideoThumbnailPlayer
+                  url={url!}
+                  thumbnail={thumbnail}
+                  alt="News Video"
+                  width={800}
+                  height={450}
+                />
+              ) : news?.video?.url ? (
+                <VideoThumbnailPlayer
+                  url={news.video.url}
+                  thumbnail={thumbnail}
+                  alt="News Video"
+                  width={800}
+                  height={450}
+                  isDirectVideo={true}
+                />
+              ) : (
+                <div className="relative">
+                  <Image
+                    src={thumbnail}
+                    alt={news?.title || "Thumbnail"}
+                    width={800}
+                    height={450}
+                    className="aspect-video h-auto w-full rounded-md object-cover shadow"
+                    priority
+                  />
+                </div>
+              )}
             </div>
-          }
+          </div>
 
           {/* Content */}
           <div className="prose prose-lg max-w-none">
@@ -246,7 +266,6 @@ const NewsDetailsSection: React.FC<TNewsSectionProps> = ({ news }) => {
               className="text-foreground leading-relaxed whitespace-pre-line"
             />
           </div>
-
 
           {/* Tags */}
           {news?.tags && news?.tags.length > 0 && (

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { TCategory } from "@/types/category.type";
 import React from "react";
 import Categories from "./Categories";
-import Logo from "./Logo";
+import NavigationLogo from "./Logo";
 import Search from "./Search";
 
 type NavigationProps = {
@@ -24,7 +24,7 @@ const Navigation: React.FC<NavigationProps> = async ({
       <div className="container h-16">
         <div className="relative flex h-full items-center gap-4">
           <div className="w-16">
-            <Logo />
+            <NavigationLogo />
           </div>
           <div className="flex flex-1 items-center justify-center">
             <div className="mx-auto w-19/20">

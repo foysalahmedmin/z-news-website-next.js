@@ -5,12 +5,13 @@ import Image from "next/image";
 import { useState } from "react";
 
 interface VideoThumbnailPlayerProps {
-  url: string; // YouTube video link
+  url: string; // Video link (YouTube or direct)
   thumbnail: string; // Thumbnail image
   alt?: string; // Alt text
   width?: number;
   height?: number;
   className?: string;
+  isDirectVideo?: boolean;
 }
 
 export default function VideoThumbnailPlayer({
@@ -20,10 +21,26 @@ export default function VideoThumbnailPlayer({
   width = 800,
   height = 450,
   className = "",
+  isDirectVideo = false,
 }: VideoThumbnailPlayerProps) {
   const [playVideo, setPlayVideo] = useState(false);
 
   if (playVideo) {
+    if (isDirectVideo) {
+      return (
+        <video
+          width="100%"
+          height={height}
+          src={url}
+          controls
+          autoPlay
+          className="aspect-video h-auto w-full rounded-md shadow"
+        >
+          Your browser does not support the video tag.
+        </video>
+      );
+    }
+
     return (
       <iframe
         width="100%"
@@ -33,6 +50,7 @@ export default function VideoThumbnailPlayer({
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
+        className="aspect-video h-auto w-full rounded-md shadow"
       ></iframe>
     );
   }

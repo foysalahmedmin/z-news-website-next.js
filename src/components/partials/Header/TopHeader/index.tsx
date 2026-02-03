@@ -1,13 +1,13 @@
 "use client";
 
 import { ButtonMenu } from "@/components/buttons/ButtonMenu";
+import Logo from "@/components/partials/Logo";
+import Sidebar from "@/components/partials/Sidebar";
 import { Drawer } from "@/components/ui/Drawer";
 import { TCategory } from "@/types/category.type";
 import { Search } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import Sidebar from "../../Sidebar";
 
 type HeaderProps = {
   className?: string;
@@ -40,16 +40,7 @@ const TopHeader: React.FC<HeaderProps> = ({ className, categories }) => {
               </div>
             </div>
             <div className="">
-              <Link href="/" aria-label="Home">
-                <Image
-                  src="/logo.png"
-                  alt="Logo"
-                  width={96}
-                  height={48}
-                  className="mx-auto h-16 w-fit max-w-full rounded-full object-contain object-left"
-                  priority
-                />
-              </Link>
+              <Logo className="text-sm" />
             </div>
             <div className="flex items-center justify-end gap-4">
               {/* <Link

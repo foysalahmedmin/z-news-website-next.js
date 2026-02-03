@@ -1,3 +1,4 @@
+import NavigationLogo from "@/components/partials/Header/Navigation/Logo";
 import { TNews } from "@/types/news.type";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
 import { Calendar, Edit2, Play, Tag } from "lucide-react";
@@ -15,7 +16,8 @@ const NewsDetailsPrintSection: React.FC<TNewsSectionProps> = ({ news }) => {
     ? parseYouTubeUrl(news?.youtube || "")
     : {};
 
-  const thumbnail = news?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
+  const thumbnail =
+    news?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
 
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
@@ -35,18 +37,7 @@ const NewsDetailsPrintSection: React.FC<TNewsSectionProps> = ({ news }) => {
       {/* Breadcrumb */}
       <div className="space-y-4 md:space-y-6">
         <nav className="flex items-center text-sm text-gray-600">
-          <Link
-            href="/"
-            className="underline-effect hover:underline-effect-active inline-block hover:text-blue-900"
-          >
-            <Image
-              className="inline-block h-12 object-contain object-center"
-              src="/logo.png"
-              alt="Logo"
-              width={52}
-              height={32}
-            />
-          </Link>
+          <NavigationLogo />
           <span className="mx-2">/</span>
           <Link
             className="underline-effect hover:underline-effect-active hover:text-blue-900"
@@ -163,7 +154,6 @@ const NewsDetailsPrintSection: React.FC<TNewsSectionProps> = ({ news }) => {
             className="text-foreground leading-relaxed whitespace-pre-line"
           />
         </div>
-
 
         {/* Tags */}
         {news?.tags && news?.tags.length > 0 && (

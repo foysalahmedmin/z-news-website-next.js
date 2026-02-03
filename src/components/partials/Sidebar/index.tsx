@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { TCategory } from "@/types/category.type";
 import Link from "next/link";
 import React, { memo, useState } from "react";
+import Logo from "../Logo";
 import MenuItem from "./MenuItem";
 
 interface SidebarProps {
@@ -33,13 +34,8 @@ const Sidebar: React.FC<SidebarProps> = memo(
               "logo flex h-full min-w-0 items-center gap-4 lg:px-1",
             )}
           >
-            <div className={cn("logo-icon flex-shrink-0 pb-2")}>
-              <img
-                className="size-full h-10 rounded-md object-contain"
-                src="/logo.png"
-                alt="Z-News Logo"
-                loading="lazy"
-              />
+            <div className={cn("logo-icon shrink-0")}>
+              <Logo className="text-sm" />
             </div>
             <div className="">
               <span>

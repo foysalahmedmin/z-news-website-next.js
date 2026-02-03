@@ -26,9 +26,8 @@ export const generateMetadata = async ({
       return { title: "News Not Found" };
     }
 
-    const seoTitle = data?.seo?.title || data?.title;
+    const seoTitle = data?.title;
     const seoDescription =
-      data?.seo?.description ||
       data?.description ||
       data?.content.replace(/<[^>]*>/g, "").substring(0, 160);
 
@@ -36,16 +35,13 @@ export const generateMetadata = async ({
       ? parseYouTubeUrl(data?.youtube || "")
       : {};
 
-    const thumbnail = data?.seo?.image
-      ? URLS.news.seo.image + "/" + data?.seo?.image
-      : data?.thumbnail
-        ? URLS.news.thumbnail + "/" + data?.thumbnail
-        : thumbnails?.default || "/thumbnail.png";
+    const thumbnail =
+      data?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
 
     return {
       title: seoTitle,
       description: seoDescription,
-      keywords: data?.seo?.keywords || data?.tags,
+      keywords: data?.tags,
       openGraph: {
         title: seoTitle,
         description: seoDescription,
@@ -58,11 +54,7 @@ export const generateMetadata = async ({
         card: "summary_large_image",
         title: seoTitle,
         description: seoDescription,
-        images: data?.seo?.image
-          ? [{ url: URLS.news.seo.image + "/" + data?.seo?.image }]
-          : data?.thumbnail
-            ? [{ url: URLS.news.thumbnail + "/" + data?.thumbnail }]
-            : [{ url: "/thumbnail.png" }],
+        images: [thumbnail],
       },
     };
   } catch (error) {
@@ -80,11 +72,8 @@ const NewsPage = async ({ params }: Props) => {
     ? parseYouTubeUrl(data?.youtube || "")
     : {};
 
-  const thumbnail = data?.seo?.image
-    ? URLS.news.seo.image + "/" + data?.seo?.image
-    : data?.thumbnail
-      ? URLS.news.thumbnail + "/" + data?.thumbnail
-      : thumbnails?.default || "/thumbnail.png";
+  const thumbnail =
+    data?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
 
   const jsonLd = {
     "@context": "https://schema.org",
