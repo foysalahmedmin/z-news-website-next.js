@@ -41,9 +41,12 @@ export const fetchBulkNewsHeadlines = async (
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch news headlines");
+    return {
+      data: [],
+      message: "Failed to fetch news headlines",
+      success: false,
+    };
   }
 
   return response.json() as Promise<TBulkNewsHeadlineResponse>;
 };
-

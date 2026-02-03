@@ -17,7 +17,11 @@ export const fetchReactions = async (
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch reactions");
+    return {
+      data: [],
+      message: "Failed to fetch reactions",
+      success: false,
+    };
   }
 
   return response.json() as Promise<TReactionsResponse>;

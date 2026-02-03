@@ -10,8 +10,8 @@ const Header = async () => {
   });
   return (
     <>
-      <TopHeader categories={data!} />
-      <Navigation categories={data!} />
+      <TopHeader categories={data || []} />
+      <Navigation categories={data || []} />
     </>
   );
 };

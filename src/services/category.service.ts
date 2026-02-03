@@ -5,65 +5,90 @@ export async function fetchCategory(
   slug: string,
   query?: Record<string, any>,
 ): Promise<TCategoryResponse> {
-  const queryString = query
-    ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
-    : "";
+  try {
+    const queryString = query
+      ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
+      : "";
 
-  const url = `${ENV.api_url}/api/category/${slug}/public${queryString}`;
+    const url = `${ENV.api_url}/api/category/${slug}/public${queryString}`;
 
-  const response = await fetch(url, {
-    method: "GET",
-    // next: { revalidate: 60 * 60 * 24 },
-    next: { revalidate: 60 * 0.5 },
-  });
+    const response = await fetch(url, {
+      method: "GET",
+      next: { revalidate: 60 * 0.5 },
+    });
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch categories");
+    if (!response.ok) {
+      return {
+        data: null,
+        message: "Failed to fetch category",
+        success: false,
+      } as any;
+    }
+
+    return response.json() as Promise<TCategoryResponse>;
+  } catch (error) {
+    return {
+      data: null,
+      message: "Failed to fetch category",
+      success: false,
+    } as any;
   }
-
-  return response.json() as Promise<TCategoryResponse>;
 }
 
 export async function fetchCategories(
   query?: Record<string, any>,
 ): Promise<TCategoriesResponse> {
-  const queryString = query
-    ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
-    : "";
+  try {
+    const queryString = query
+      ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
+      : "";
 
-  const url = `${ENV.api_url}/api/category/public${queryString}`;
+    const url = `${ENV.api_url}/api/category/public${queryString}`;
 
-  const response = await fetch(url, {
-    method: "GET",
-    // next: { revalidate: 60 * 60 * 24 },
-    next: { revalidate: 60 * 0.5 },
-  });
+    const response = await fetch(url, {
+      method: "GET",
+      next: { revalidate: 60 * 0.5 },
+    });
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch categories");
+    if (!response.ok) {
+      return {
+        data: [],
+        message: "Failed to fetch categories",
+        success: false,
+      };
+    }
+
+    return response.json() as Promise<TCategoriesResponse>;
+  } catch (error) {
+    return { data: [], message: "Failed to fetch categories", success: false };
   }
-
-  return response.json() as Promise<TCategoriesResponse>;
 }
 
 export async function fetchCategoriesTree(
   query?: Record<string, any>,
 ): Promise<TCategoriesResponse> {
-  const queryString = query
-    ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
-    : "";
+  try {
+    const queryString = query
+      ? `?${new URLSearchParams(query as Record<string, string>).toString()}`
+      : "";
 
-  const url = `${ENV.api_url}/api/category/tree/public${queryString}`;
+    const url = `${ENV.api_url}/api/category/tree/public${queryString}`;
 
-  const response = await fetch(url, {
-    method: "GET",
-    // next: { revalidate: 60 * 60 * 24 },
-    next: { revalidate: 60 * 0.5 },
-  });
+    const response = await fetch(url, {
+      method: "GET",
+      next: { revalidate: 60 * 0.5 },
+    });
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch categories");
+    if (!response.ok) {
+      return {
+        data: [],
+        message: "Failed to fetch categories",
+        success: false,
+      };
+    }
+
+    return response.json() as Promise<TCategoriesResponse>;
+  } catch (error) {
+    return { data: [], message: "Failed to fetch categories", success: false };
   }
-
-  return response.json() as Promise<TCategoriesResponse>;
 }

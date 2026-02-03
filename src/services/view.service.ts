@@ -22,7 +22,11 @@ export const fetchNewsView = async (
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch news reaction");
+    return {
+      data: null,
+      message: "Failed to fetch news",
+      success: false,
+    };
   }
 
   return response.json() as Promise<Response<null>>;

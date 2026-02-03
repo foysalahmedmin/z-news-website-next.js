@@ -17,7 +17,11 @@ export const fetchComments = async (
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch reactions");
+    return {
+      data: [],
+      message: "Failed to fetch comments",
+      success: false,
+    };
   }
 
   return response.json() as Promise<TCommentsResponse>;
