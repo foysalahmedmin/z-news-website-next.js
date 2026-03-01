@@ -1,5 +1,6 @@
 import { ENV } from "@/config";
 import { TCommentResponse, TCommentsResponse } from "@/types/comment.type";
+import { TReactionType } from "@/types/reaction.type";
 
 export const fetchComments = async (
   query?: Record<string, any>,
@@ -121,7 +122,7 @@ export const createCommentReply = async (commentId: string, payload: any) => {
 
 export const addCommentReaction = async (
   commentId: string,
-  type: "like" | "dislike",
+  type: TReactionType,
 ) => {
   const url = `${ENV.api_url}/api/comment-enhanced/${commentId}/reaction`;
   const response = await fetch(url, {

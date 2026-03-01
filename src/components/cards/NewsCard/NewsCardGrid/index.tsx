@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { TNews } from "@/types/news.type";
 import { getDescription } from "@/utils/parseContentToDescription";
 import { parseYouTubeUrl } from "@/utils/youtubeUrlUtils";
-import { Dot, Play } from "lucide-react";
+import { CheckCircle, Dot, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -30,7 +30,8 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
     ? parseYouTubeUrl(news?.youtube || "")
     : {};
 
-  const thumbnail = news?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
+  const thumbnail =
+    news?.thumbnail?.url || thumbnails?.default || "/thumbnail.png";
 
   const date =
     published_at &&
@@ -65,6 +66,12 @@ const NewsCardGird: React.FC<TNewsCardGirdProps> = ({
           {(news?.youtube || news?.video?.url) && (
             <div className="absolute inset-0 m-auto flex aspect-square h-1/3 items-center justify-center rounded-full border bg-black/25 text-white backdrop-blur-xs">
               <Play className="size-1/2" strokeWidth={2} />
+            </div>
+          )}
+          {news?.fact_checked && (
+            <div className="absolute top-2 right-2 flex items-center gap-1 rounded bg-green-600 px-1.5 py-0.5 text-[10px] text-white">
+              <CheckCircle size={10} strokeWidth={3} />
+              <span>FactChecked</span>
             </div>
           )}
         </div>

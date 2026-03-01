@@ -33,6 +33,9 @@ export type TComment = {
   reaction_counts?: {
     like: number;
     dislike: number;
+    insightful: number;
+    funny: number;
+    disagree: number;
     total: number;
   };
 };

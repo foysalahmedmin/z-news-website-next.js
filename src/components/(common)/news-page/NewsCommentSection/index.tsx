@@ -16,6 +16,7 @@ import {
 } from "@/services/comment.service";
 import { TComment } from "@/types/comment.type";
 import { TNews } from "@/types/news.type";
+import { TReactionType } from "@/types/reaction.type";
 import { formatCount } from "@/utils/formatCount";
 import { formatDate } from "@/utils/formatDate";
 import Cookies from "js-cookie";
@@ -24,14 +25,17 @@ import {
   ChevronRight,
   CornerDownRight,
   Edit2,
+  Flag,
   MessageCircle,
   Pin,
   Reply,
   Send,
+  Smile,
   ThumbsDown,
   ThumbsUp,
   Trash2,
   X,
+  Zap,
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -66,6 +70,8 @@ const NewsCommentCard = ({
     replies,
     reply_count,
     reaction_counts,
+    thread_level = 0,
+    status,
   } = comment || {};
   const image = user?.image ? URLS.user + "/" + user?.image : "";
 
@@ -137,7 +143,7 @@ const NewsCommentCard = ({
     }
   };
 
-  const handleReaction = async (type: "like" | "dislike") => {
+  const handleReaction = async (type: TReactionType) => {
     if (isLoading) return;
     try {
       const { data } = await addCommentReaction(_id, type);
@@ -146,6 +152,26 @@ const NewsCommentCard = ({
       }
     } catch (error) {
       console.error("Error reacting to comment:", error);
+    }
+  };
+
+  const handleFlagComment = async () => {
+    if (isLoading) return;
+    if (!window.confirm("আপনি কি নিশ্চিত যে এই মন্তব্যটি রিপোর্ট করতে চান?"))
+      return;
+    try {
+      // Assuming addCommentFlag service exists or adding it inline
+      await fetch(`${URLS.api}/api/comment-enhanced/${_id}/flag`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ reason: "Reported by user" }),
+      });
+      alert("ধন্যবাদ, আমরা আপনার রিপোর্টটি পেয়েছি।");
+    } catch (error) {
+      console.error("Error flagging comment:", error);
     }
   };
 
@@ -164,7 +190,8 @@ const NewsCommentCard = ({
         "rounded-md p-4 transition-colors",
         isEditing ? "bg-muted/50 border" : "bg-transparent",
         is_pinned && "border-l-accent bg-accent/5 border-l-4",
-        isReply ? "border-muted/50 ml-8 border-l" : "",
+        isReply ? `border-muted/50 ml-4 border-l sm:ml-8` : "",
+        status === "flagged" && "opacity-50 grayscale",
       )}
     >
       <div className="flex items-start gap-3">
@@ -268,35 +295,96 @@ const NewsCommentCard = ({
                       </Button>
                     </>
                   )}
+                  {!isOwner && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleFlagComment}
+                      className="text-muted-foreground h-8 w-8 p-0 hover:text-red-500"
+                      title="রিপোর্ট করুন"
+                    >
+                      <Flag size={14} />
+                    </Button>
+                  )}
                 </div>
               </div>
 
               {/* Content */}
               <p
                 className={cn(
-                  "whitespace-pre-wrap",
+                  "flex flex-wrap gap-1 whitespace-pre-wrap",
                   isReply ? "text-sm" : "text-base",
                 )}
               >
-                {content}
+                {content.split(/(@\w+)/g).map((part, i) =>
+                  part.startsWith("@") ? (
+                    <span
+                      key={i}
+                      className="text-accent cursor-pointer font-bold hover:underline"
+                    >
+                      {part}
+                    </span>
+                  ) : (
+                    <span key={i}>{part}</span>
+                  ),
+                )}
               </p>
 
               {/* Reactions & Meta */}
               <div className="flex items-center gap-4 pt-1">
-                <div className="flex items-center gap-1">
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2">
                   <button
                     onClick={() => handleReaction("like")}
                     className="hover:bg-muted flex items-center gap-1 rounded-full px-2 py-1 text-xs transition-colors"
+                    title="পছন্দ করি"
                   >
-                    <ThumbsUp size={14} className="text-muted-foreground" />
-                    <span>{reaction_counts?.like || 0}</span>
+                    <ThumbsUp size={14} className="text-primary" />
+                    <span className="font-medium">
+                      {reaction_counts?.like || 0}
+                    </span>
                   </button>
                   <button
                     onClick={() => handleReaction("dislike")}
                     className="hover:bg-muted flex items-center gap-1 rounded-full px-2 py-1 text-xs transition-colors"
+                    title="অপছন্দ করি"
                   >
-                    <ThumbsDown size={14} className="text-muted-foreground" />
-                    <span>{reaction_counts?.dislike || 0}</span>
+                    <ThumbsDown size={14} className="text-red-500" />
+                    <span className="font-medium">
+                      {reaction_counts?.dislike || 0}
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => handleReaction("insightful")}
+                    className="hover:bg-muted flex items-center gap-1 rounded-full px-2 py-1 text-xs transition-colors"
+                    title="তথ্যবহুল"
+                  >
+                    <Zap size={14} className="text-amber-500" />
+                    <span className="font-medium">
+                      {reaction_counts?.insightful || 0}
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => handleReaction("funny")}
+                    className="hover:bg-muted flex items-center gap-1 rounded-full px-2 py-1 text-xs transition-colors"
+                    title="হা হা"
+                  >
+                    <Smile size={14} className="text-yellow-500" />
+                    <span className="font-medium">
+                      {reaction_counts?.funny || 0}
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => handleReaction("disagree")}
+                    className="hover:bg-muted flex items-center gap-1 rounded-full px-2 py-1 text-xs transition-colors"
+                    title="একমত নই"
+                  >
+                    <ThumbsDown
+                      size={14}
+                      className="scale-x-[-1] text-orange-500"
+                    />
+                    <span className="font-medium">
+                      {reaction_counts?.disagree || 0}
+                    </span>
                   </button>
                 </div>
 
@@ -368,9 +456,9 @@ const NewsCommentCard = ({
         </div>
       </div>
 
-      {/* Replies */}
-      {replies && replies.length > 0 && !isReply && (
-        <div className="mt-4 space-y-4">
+      {/* Replies (Recursive up to 5 levels) */}
+      {replies && replies.length > 0 && (thread_level || 0) < 5 && (
+        <div className="mt-2 space-y-4">
           {replies.map((reply) => (
             <NewsCommentCard
               key={reply._id}
@@ -378,6 +466,8 @@ const NewsCommentCard = ({
               comment={reply}
               onUpdate={onUpdate}
               onDelete={onDelete}
+              onReply={onReply}
+              onReaction={onReaction}
               isReply={true}
             />
           ))}
@@ -542,43 +632,52 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
     }
   };
 
-  // Handle comment update (works for both top-level and nested)
-  const handleUpdateComment = (id: string, updatedComment: TComment) => {
-    setComments((prev) => {
-      return prev.map((c) => {
-        if (c._id === id) return updatedComment;
-        if (c.replies) {
-          return {
-            ...c,
-            replies: c.replies.map((r) => (r._id === id ? updatedComment : r)),
-          };
-        }
-        return c;
-      });
+  // Recursive update function
+  const updateRecursive = (
+    comments: TComment[],
+    id: string,
+    updated: TComment,
+  ): TComment[] => {
+    return comments.map((c) => {
+      if (c._id === id) return updated;
+      if (c.replies && c.replies.length > 0) {
+        return {
+          ...c,
+          replies: updateRecursive(c.replies, id, updated),
+        };
+      }
+      return c;
     });
   };
 
-  // Handle comment delete
-  const handleDeleteComment = (id: string) => {
-    setComments((prev) => {
-      // Check if it's a top level comment
-      const filtered = prev.filter((c) => c._id !== id);
-      if (filtered.length !== prev.length) return filtered;
-
-      // If not, check replies
-      return prev.map((c) => {
-        if (c.replies) {
+  // Recursive delete function
+  const deleteRecursive = (comments: TComment[], id: string): TComment[] => {
+    return comments
+      .filter((c) => c._id !== id)
+      .map((c) => {
+        if (c.replies && c.replies.length > 0) {
+          const newReplies = deleteRecursive(c.replies, id);
           return {
             ...c,
-            replies: c.replies.filter((r) => r._id !== id),
-            reply_count: c.replies.some((r) => r._id === id)
-              ? Math.max(0, (c.reply_count || 1) - 1)
-              : c.reply_count,
+            replies: newReplies,
+            reply_count:
+              c.replies.length !== newReplies.length
+                ? Math.max(0, (c.reply_count || 1) - 1)
+                : c.reply_count,
           };
         }
         return c;
       });
-    });
+  };
+
+  // Handle comment update (Recursive)
+  const handleUpdateComment = (id: string, updatedComment: TComment) => {
+    setComments((prev) => updateRecursive(prev, id, updatedComment));
+  };
+
+  // Handle comment delete (Recursive)
+  const handleDeleteComment = (id: string) => {
+    setComments((prev) => deleteRecursive(prev, id));
     setMeta((prev) => ({ ...prev, total: Math.max((prev.total || 1) - 1, 0) }));
   };
 

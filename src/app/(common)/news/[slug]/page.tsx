@@ -26,8 +26,9 @@ export const generateMetadata = async ({
       return { title: "News Not Found" };
     }
 
-    const seoTitle = data?.title;
+    const seoTitle = data?.meta_title || data?.title;
     const seoDescription =
+      data?.meta_description ||
       data?.description ||
       data?.content.replace(/<[^>]*>/g, "").substring(0, 160);
 
@@ -42,11 +43,15 @@ export const generateMetadata = async ({
       title: seoTitle,
       description: seoDescription,
       keywords: data?.tags,
+      alternates: {
+        canonical: data?.canonical_url || `${URLS.app}/news/${data?.slug}`,
+      },
       openGraph: {
         title: seoTitle,
         description: seoDescription,
         images: thumbnail,
         type: "article",
+        url: `${URLS.app}/news/${data?.slug}`,
         publishedTime:
           data?.published_at && new Date(data?.published_at).toISOString(),
       },
