@@ -7,9 +7,11 @@ import { FormControl, formControlVariants } from "@/components/ui/FormControl";
 import { URLS } from "@/config";
 import { cn } from "@/lib/utils";
 import {
+  addCommentReaction,
   createComment,
+  createCommentReply,
   deleteComment,
-  fetchComments,
+  fetchThreadedComments,
   updateComment,
 } from "@/services/comment.service";
 import { TComment } from "@/types/comment.type";
@@ -20,9 +22,14 @@ import Cookies from "js-cookie";
 import {
   Check,
   ChevronRight,
+  CornerDownRight,
   Edit2,
   MessageCircle,
+  Pin,
+  Reply,
   Send,
+  ThumbsDown,
+  ThumbsUp,
   Trash2,
   X,
 } from "lucide-react";
@@ -34,18 +41,37 @@ const NewsCommentCard = ({
   comment,
   onUpdate,
   onDelete,
+  onReply,
+  onReaction,
+  isReply = false,
 }: {
   guest_token?: string;
   comment: TComment;
   onUpdate: (id: string, updatedComment: TComment) => void;
   onDelete: (id: string) => void;
+  onReply?: (parentId: string, replyToUser?: string) => void;
+  onReaction?: (commentId: string, type: "like" | "dislike") => void;
+  isReply?: boolean;
 }) => {
-  const { _id, name, email, content, is_edited, created_at, user, guest } =
-    comment || {};
+  const {
+    _id,
+    name,
+    email,
+    content,
+    is_edited,
+    is_pinned,
+    created_at,
+    user,
+    guest,
+    replies,
+    reply_count,
+    reaction_counts,
+  } = comment || {};
   const image = user?.image ? URLS.user + "/" + user?.image : "";
 
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isReplying, setIsReplying] = useState(false);
   const [editForm, setEditForm] = useState({
     name: name || "",
     email: email || "",
@@ -54,7 +80,8 @@ const NewsCommentCard = ({
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const isOwner = guest_token === guest;
+  const isOwner =
+    guest_token === guest || (user && Cookies.get("user") === user._id);
 
   const createdAt = new Date(comment.created_at);
   const now = new Date();
@@ -110,6 +137,18 @@ const NewsCommentCard = ({
     }
   };
 
+  const handleReaction = async (type: "like" | "dislike") => {
+    if (isLoading) return;
+    try {
+      const { data } = await addCommentReaction(_id, type);
+      if (data) {
+        onUpdate(_id, data);
+      }
+    } catch (error) {
+      console.error("Error reacting to comment:", error);
+    }
+  };
+
   const handleCancelEdit = () => {
     setIsEditing(false);
     setEditForm({
@@ -120,7 +159,14 @@ const NewsCommentCard = ({
   };
 
   return (
-    <div className={`rounded-md p-4 ${isEditing ? "bg-muted/50 border" : ""}`}>
+    <div
+      className={cn(
+        "rounded-md p-4 transition-colors",
+        isEditing ? "bg-muted/50 border" : "bg-transparent",
+        is_pinned && "border-l-accent bg-accent/5 border-l-4",
+        isReply ? "border-muted/50 ml-8 border-l" : "",
+      )}
+    >
       <div className="flex items-start gap-3">
         {/* Avatar */}
         <div className="flex-shrink-0">
@@ -128,13 +174,23 @@ const NewsCommentCard = ({
             <Image
               src={image}
               alt={name}
-              width={32}
-              height={32}
+              width={isReply ? 24 : 32}
+              height={isReply ? 24 : 32}
               className="rounded-full"
             />
           ) : (
-            <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
-              <span className="text-muted-foreground text-xs font-medium">
+            <div
+              className={cn(
+                "bg-muted flex items-center justify-center rounded-full",
+                isReply ? "h-6 w-6" : "h-8 w-8",
+              )}
+            >
+              <span
+                className={cn(
+                  "text-muted-foreground font-medium",
+                  isReply ? "text-[10px]" : "text-xs",
+                )}
+              >
                 {name?.charAt(0).toUpperCase()}
               </span>
             </div>
@@ -145,56 +201,112 @@ const NewsCommentCard = ({
           {!isEditing ? (
             <>
               {/* Header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div>
-                    <span className="font-medium">
-                      {name} {isOwner && "(আপনি)"}
+              <div className="flex items-start justify-between">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={cn(
+                        "font-medium",
+                        isReply ? "text-sm" : "text-base",
+                      )}
+                    >
+                      {name}{" "}
+                      {isOwner && (
+                        <span className="text-accent text-[10px] font-normal">
+                          (আপনি)
+                        </span>
+                      )}
                     </span>
-                    {email && (
-                      <span className="text-muted-foreground text-sm">
-                        {" "}
-                        - {email}
+                    {is_pinned && (
+                      <span className="bg-accent/10 text-accent flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium">
+                        <Pin size={10} fill="currentColor" /> পিন করা
                       </span>
                     )}
+                    <span className="text-muted-foreground text-[10px]">
+                      {formatDate(new Date(created_at), "relative")}
+                    </span>
                   </div>
-                  <span className="text-muted-foreground text-sm">
-                    {formatDate(new Date(created_at), "relative")}
-                  </span>
                   {is_edited && (
-                    <span className="text-muted-foreground text-xs">
+                    <span className="text-muted-foreground text-[10px]">
                       (সম্পাদিত)
                     </span>
                   )}
                 </div>
 
                 {/* Action Buttons */}
-                {isOwner && isControllable && (
-                  <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1">
+                  {onReply && !isReply && (
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setIsEditing(true)}
-                      disabled={isLoading}
-                      className="text-foreground h-8 w-8 p-0"
+                      onClick={() => onReply(_id, user?._id)}
+                      className="h-8 w-8 p-0"
+                      title="উত্তর দিন"
                     >
-                      <Edit2 size={14} />
+                      <Reply size={14} className="text-muted-foreground" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleDeleteComment}
-                      disabled={isLoading}
-                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 size={14} />
-                    </Button>
-                  </div>
-                )}
+                  )}
+                  {isOwner && isControllable && (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsEditing(true)}
+                        disabled={isLoading}
+                        className="text-foreground h-8 w-8 p-0"
+                      >
+                        <Edit2 size={14} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleDeleteComment}
+                        disabled={isLoading}
+                        className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 size={14} />
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Content */}
-              <p className="whitespace-pre-wrap">{content}</p>
+              <p
+                className={cn(
+                  "whitespace-pre-wrap",
+                  isReply ? "text-sm" : "text-base",
+                )}
+              >
+                {content}
+              </p>
+
+              {/* Reactions & Meta */}
+              <div className="flex items-center gap-4 pt-1">
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => handleReaction("like")}
+                    className="hover:bg-muted flex items-center gap-1 rounded-full px-2 py-1 text-xs transition-colors"
+                  >
+                    <ThumbsUp size={14} className="text-muted-foreground" />
+                    <span>{reaction_counts?.like || 0}</span>
+                  </button>
+                  <button
+                    onClick={() => handleReaction("dislike")}
+                    className="hover:bg-muted flex items-center gap-1 rounded-full px-2 py-1 text-xs transition-colors"
+                  >
+                    <ThumbsDown size={14} className="text-muted-foreground" />
+                    <span>{reaction_counts?.dislike || 0}</span>
+                  </button>
+                </div>
+
+                {reply_count! > 0 && !isReply && (
+                  <div className="text-muted-foreground flex items-center gap-1 text-[11px]">
+                    <MessageCircle size={12} />
+                    <span>{formatCount(reply_count || 0)} টি উত্তর</span>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             /* Edit Form */
@@ -255,6 +367,22 @@ const NewsCommentCard = ({
           )}
         </div>
       </div>
+
+      {/* Replies */}
+      {replies && replies.length > 0 && !isReply && (
+        <div className="mt-4 space-y-4">
+          {replies.map((reply) => (
+            <NewsCommentCard
+              key={reply._id}
+              guest_token={guest_token}
+              comment={reply}
+              onUpdate={onUpdate}
+              onDelete={onDelete}
+              isReply={true}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -275,6 +403,10 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [saveCredentials, setSaveCredentials] = useState(false);
+  const [replyTo, setReplyTo] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   // Get saved credentials from cookies
   const [savedName, setSavedName] = useState(Cookies.get("guest_name") || "");
@@ -290,7 +422,7 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
     const loadComments = async () => {
       setIsLoading(true);
       try {
-        const { data, meta } = await fetchComments({ news: news?._id });
+        const { data, meta } = await fetchThreadedComments(news?._id as string);
         setComments(data || []);
         setMeta(meta || {});
       } catch (error) {
@@ -300,10 +432,10 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
       }
     };
 
-    if (news) {
+    if (news?._id) {
       loadComments();
     }
-  }, [news]);
+  }, [news?._id]);
 
   // Set saveCredentials checkbox if credentials exist
   useEffect(() => {
@@ -312,7 +444,7 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
     }
   }, [savedName, savedEmail]);
 
-  // Submit new comment
+  // Submit new comment or reply
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -334,16 +466,45 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
 
     setIsSubmitting(true);
     try {
-      const { data } = await createComment({
-        news: news?._id,
-        name,
-        email,
-        content,
-      });
+      let result;
+      if (replyTo) {
+        result = await createCommentReply(replyTo.id, {
+          name,
+          email,
+          content,
+        });
+      } else {
+        result = await createComment({
+          news: news?._id,
+          name,
+          email,
+          content,
+        });
+      }
+
+      const { data } = result;
 
       if (data?._id) {
-        setComments((prev) => [data, ...prev]);
-        setMeta((prev) => ({ ...prev, total: (prev.total || 0) + 1 }));
+        if (replyTo) {
+          // Update the parent comment with the new reply locally
+          setComments((prev) =>
+            prev.map((c) => {
+              if (c._id === replyTo.id) {
+                return {
+                  ...c,
+                  replies: [...(c.replies || []), data],
+                  reply_count: (c.reply_count || 0) + 1,
+                };
+              }
+              return c;
+            }),
+          );
+          setReplyTo(null);
+        } else {
+          setComments((prev) => [data, ...prev]);
+          setMeta((prev) => ({ ...prev, total: (prev.total || 0) + 1 }));
+        }
+
         // Reset only content field, keep name and email if saved
         const form = formRef.current;
         if (!form) return;
@@ -381,17 +542,54 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
     }
   };
 
-  // Handle comment update
+  // Handle comment update (works for both top-level and nested)
   const handleUpdateComment = (id: string, updatedComment: TComment) => {
-    setComments((prev) =>
-      prev.map((comment) => (comment._id === id ? updatedComment : comment)),
-    );
+    setComments((prev) => {
+      return prev.map((c) => {
+        if (c._id === id) return updatedComment;
+        if (c.replies) {
+          return {
+            ...c,
+            replies: c.replies.map((r) => (r._id === id ? updatedComment : r)),
+          };
+        }
+        return c;
+      });
+    });
   };
 
   // Handle comment delete
   const handleDeleteComment = (id: string) => {
-    setComments((prev) => prev.filter((comment) => comment._id !== id));
+    setComments((prev) => {
+      // Check if it's a top level comment
+      const filtered = prev.filter((c) => c._id !== id);
+      if (filtered.length !== prev.length) return filtered;
+
+      // If not, check replies
+      return prev.map((c) => {
+        if (c.replies) {
+          return {
+            ...c,
+            replies: c.replies.filter((r) => r._id !== id),
+            reply_count: c.replies.some((r) => r._id === id)
+              ? Math.max(0, (c.reply_count || 1) - 1)
+              : c.reply_count,
+          };
+        }
+        return c;
+      });
+    });
     setMeta((prev) => ({ ...prev, total: Math.max((prev.total || 1) - 1, 0) }));
+  };
+
+  const handleReplyClick = (parentId: string, replyToUserId?: string) => {
+    const parentComment = comments.find((c) => c._id === parentId);
+    if (parentComment) {
+      setReplyTo({ id: parentId, name: parentComment.name });
+      // Scroll to form
+      formRef.current?.scrollIntoView({ behavior: "smooth" });
+      contentRef.current?.focus();
+    }
   };
 
   return (
@@ -438,6 +636,23 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
               onSubmit={handleSubmitComment}
               className="mt-4 space-y-4 px-0.5"
             >
+              {replyTo && (
+                <div className="bg-muted flex items-center justify-between rounded-md px-3 py-2 text-sm">
+                  <div className="flex items-center gap-2">
+                    <CornerDownRight size={14} />
+                    <span>
+                      <strong>{replyTo.name}</strong>-কে উত্তর দিচ্ছেন
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setReplyTo(null)}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              )}
               <div className="space-y-2">
                 <FormControl
                   type="text"
@@ -456,7 +671,9 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
                 <textarea
                   ref={contentRef}
                   name="content"
-                  placeholder="আপনার মন্তব্য লিখুন..."
+                  placeholder={
+                    replyTo ? "আপনার উত্তর লিখুন..." : "আপনার মন্তব্য লিখুন..."
+                  }
                   className={cn(
                     formControlVariants({
                       variant: "default",
@@ -493,7 +710,11 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
                   disabled={isSubmitting}
                 >
                   <Send size={16} />
-                  {isSubmitting ? "পাঠানো হচ্ছে..." : "মন্তব্য পাঠান"}
+                  {isSubmitting
+                    ? "পাঠানো হচ্ছে..."
+                    : replyTo
+                      ? "উত্তর পাঠান"
+                      : "মন্তব্য পাঠান"}
                 </Button>
               </div>
             </form>
@@ -524,6 +745,7 @@ const NewsCommentSection: React.FC<NewsCommentSectionProps> = ({ news }) => {
                     guest_token={meta?.guest_token}
                     onUpdate={handleUpdateComment}
                     onDelete={handleDeleteComment}
+                    onReply={handleReplyClick}
                   />
                 ))}
               </div>
