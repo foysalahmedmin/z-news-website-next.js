@@ -15,15 +15,22 @@ export type TContentType =
   | "photo-essay";
 
 export type TSensitivityLevel = "public" | "sensitive" | "restricted";
-
 export type TFile = {
   _id: string;
-  url: string;
   name: string;
-  path: string;
-  file_name: string;
-  type: string;
+  original_name: string;
+  filename: string;
+  url: string;
+  mimetype: string;
+  size: number;
+  provider: "local" | "gcs";
   caption?: string;
+  metadata: {
+    path?: string;
+    bucket?: string;
+    extension?: string;
+    file_type?: string;
+  };
 };
 
 export type TNews = {
